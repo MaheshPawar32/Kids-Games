@@ -19,7 +19,9 @@ Install Flutter stable and Android Studio / Android SDK, then run:
 ```bash
 git clone https://github.com/MaheshPawar32/Kids-Games.git
 cd Kids-Games
-flutter create --platforms=android --org com.dev --project-name kidsgames .
+# Generate Android files separately so the existing Dart source is preserved.
+flutter create --platforms=android --org com.dev --project-name kidsgames /tmp/kidsgames_android
+cp -R /tmp/kidsgames_android/android ./android
 flutter pub get
 dart format lib test
 flutter analyze
