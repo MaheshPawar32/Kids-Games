@@ -1,0 +1,1 @@
+All bundled assets must be original or properly licensed for commercial use. Keep core learning content available offline. Do not add BrightBuddies artwork. SVG buddy and island artwork in this starter is original placeholder art, not final 3D production content.
