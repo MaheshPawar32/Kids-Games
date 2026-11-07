@@ -48,3 +48,25 @@ Record:
 ## Usage rule
 
 Use the 3D-look SVGs in Flutter UI cards, category tiles, onboarding, loading states and decorative backgrounds. Do not use them as substitutes for the Blender/GLB deliverables. Mark a production 3D asset complete only after the real GLB is committed and loaded successfully by Flutter Scene.
+
+
+## Educational 3D library — generator definitions
+
+The Blender generator `blender/scripts/create_learning_asset_library.py` defines
+71 independent runtime models and writes a matching editable `.blend` source
+scene for each model under `blender/output/learning_assets/`.
+
+| Category | Count | Runtime directory |
+|---|---:|---|
+| Number tokens 0–20 | 21 | `assets/models/numbers/` |
+| Alphabet tokens A–Z | 26 | `assets/models/letters/` |
+| Geometric shapes | 10 | `assets/models/shapes/` |
+| Game props | 11 | `assets/models/props/` |
+| Modular environments | 3 | `assets/models/environments/` |
+| **Total** | **71** | |
+
+These are generator-defined outputs, not a claim that the generated files have
+already passed CI or visual review. Once a workflow artifact is produced, record
+its run ID, file sizes, SHA-256 values and glTF Validator results here. Keep the
+existing acceptance rule: runtime load and device review are required before
+production approval.
