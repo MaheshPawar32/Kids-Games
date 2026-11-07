@@ -29,6 +29,14 @@ For each character:
 - [ ] Optimized GLB export
 - [ ] Flutter Scene import and animation smoke test on Android
 
+## Reusable 3D icon library
+
+- [ ] Generate 13 separate GLB icon meshes: star, trophy, gift, heart, home, book, settings, sound, play, pause, lock, medal and puzzle piece
+- [ ] Validate GLB headers and Khronos glTF structure
+- [ ] Review every icon from the intended Flutter Scene camera angle
+- [ ] Add Flutter Scene icon-gallery smoke test and performance budget
+- [ ] Record final icon previews, file sizes and source revision in the manifest
+
 ## Environments and props
 
 - [ ] Real 3D playground floating island
