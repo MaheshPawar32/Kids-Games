@@ -585,7 +585,7 @@ class _ThreeDIconGalleryDialogState extends State<_ThreeDIconGalleryDialog> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             DropdownButtonFormField<String>(
-              value: _selectedGroup,
+              initialValue: _selectedGroup,
               decoration: const InputDecoration(
                 labelText: 'Asset collection',
                 border: OutlineInputBorder(),
