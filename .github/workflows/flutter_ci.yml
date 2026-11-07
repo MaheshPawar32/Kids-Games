@@ -40,12 +40,22 @@ jobs:
           sudo apt-get install -y blender
           blender --version
       - name: Generate editable Blender source and GLB
-        run: blender --background --python blender/scripts/create_baby_lion.py
+        env:
+          GITHUB_WORKSPACE: ${{ github.workspace }}
+        run: |
+          set -euxo pipefail
+          pwd
+          blender --background --python "$GITHUB_WORKSPACE/blender/scripts/create_baby_lion.py"
       - name: Verify generated files
         run: |
-          test -s blender/output/baby_lion.blend
-          test -s assets/models/characters/baby_lion.glb
-          ls -lh blender/output/baby_lion.blend assets/models/characters/baby_lion.glb
+          set -euxo pipefail
+          echo "Workspace: $GITHUB_WORKSPACE"
+          echo "Generated Blender/GLB files:"
+          find "$GITHUB_WORKSPACE" -type f \( -name "*.blend" -o -name "*.glb" \) -print
+          ls -lah "$GITHUB_WORKSPACE/blender" "$GITHUB_WORKSPACE/blender/output" "$GITHUB_WORKSPACE/assets/models/characters"
+          test -s "$GITHUB_WORKSPACE/blender/output/baby_lion.blend"
+          test -s "$GITHUB_WORKSPACE/assets/models/characters/baby_lion.glb"
+          ls -lh "$GITHUB_WORKSPACE/blender/output/baby_lion.blend" "$GITHUB_WORKSPACE/assets/models/characters/baby_lion.glb"
       - name: Upload 3D asset files
         uses: actions/upload-artifact@v4
         with:
