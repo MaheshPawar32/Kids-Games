@@ -108,6 +108,7 @@ void main() {
     expect(find.text('Great matching! You found the circle.'), findsOneWidget);
     expect(find.text('1'), findsOneWidget);
   });
+
   testWidgets('catalogue activities open a playable round and show results', (
     tester,
   ) async {
@@ -140,7 +141,7 @@ void main() {
     }
 
     expect(find.text('Wonderful work!'), findsOneWidget);
-    expect(find.text('You got 5 out of 5 correct.'), findsOneWidget);
+    // Complete Picture rotates its correct option through indices 0, 2, 0, 2, 0.
+    expect(find.text('You got 3 out of 5 correct.'), findsOneWidget);
   });
-
 }
