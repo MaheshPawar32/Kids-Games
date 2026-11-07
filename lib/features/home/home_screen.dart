@@ -81,7 +81,7 @@ class HomeScreen extends StatelessWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Explorer profile'),
-        content: Text('${childName}\\n${grade}'),
+        content: Text('$childName\n$grade'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
