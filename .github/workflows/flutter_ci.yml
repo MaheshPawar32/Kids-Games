@@ -83,7 +83,7 @@ jobs:
             test "$MAGIC" = "676c5446"
             ls -lh "$file"
           done
-          LEARNING_COUNT="$(find "$GITHUB_WORKSPACE/assets/models" -mindepth 2 -maxdepth 2 -type f -name '*.glb' | wc -l)"
+          LEARNING_COUNT="$(find "$GITHUB_WORKSPACE/assets/models"/{numbers,letters,shapes,props,environments} -maxdepth 1 -type f -name '*.glb' | wc -l)"
           echo "Learning GLB count: $LEARNING_COUNT"
           test "$LEARNING_COUNT" -eq 71
           for file in "$GITHUB_WORKSPACE"/assets/models/{numbers,letters,shapes,props,environments}/*.glb; do
