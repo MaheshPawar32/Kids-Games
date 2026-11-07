@@ -286,7 +286,7 @@ def main():
     jobs = []
     for n in range(21):
         label = str(n)
-        jobs.append(("numbers", f"number_{n:02d}", lambda m, v=label: text_token(v, m[n % len(m)])))
+        jobs.append(("numbers", f"number_{n:02d}", lambda m, v=label: text_token(v, m[int(v) % len(m)])))
     for letter in string.ascii_uppercase:
         jobs.append(("letters", f"letter_{letter.lower()}", lambda m, v=letter: text_token(v, m[ord(v) % len(m)])))
     for i, shape in enumerate(("cube","sphere","cone","cylinder","triangular_prism","star","heart","oval","rectangle","diamond")):
