@@ -190,7 +190,9 @@ def build():
     ])
 
     scene = bpy.context.scene
-    scene.render.engine = "BLENDER_EEVEE_NEXT"
+    # Blender 4.0 (Ubuntu CI) uses BLENDER_EEVEE; newer releases use EEVEE_NEXT.
+    engine_items = {item.identifier for item in scene.render.bl_rna.properties["engine"].enum_items}
+    scene.render.engine = "BLENDER_EEVEE_NEXT" if "BLENDER_EEVEE_NEXT" in engine_items else "BLENDER_EEVEE"
     scene.render.resolution_x = 900
     scene.render.resolution_y = 900
     scene.render.resolution_percentage = 100
