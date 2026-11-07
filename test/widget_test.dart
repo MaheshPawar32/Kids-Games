@@ -78,4 +78,30 @@ void main() {
     expect(find.text('Game world'), findsOneWidget);
     expect(find.text('Complete Picture'), findsOneWidget);
   });
+
+  testWidgets('Shape Matching opens and accepts the correct answer', (
+    tester,
+  ) async {
+    final repository = _FakeChildProfileRepository(
+      profile: const ChildProfile(name: 'Sam', grade: 'Grade 1'),
+    );
+
+    await tester.pumpWidget(KidsGamesApp(profileRepository: repository));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Games').last);
+    await tester.pumpAndSettle();
+
+    final shapeTile = find.byKey(const Key('activity_shape_matching'));
+    await tester.ensureVisible(shapeTile);
+    await tester.tap(shapeTile);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Find the same shape'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('shape_option_circle')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Great matching! You found the circle.'), findsOneWidget);
+    expect(find.text('1'), findsWidgets);
+  });
 }
