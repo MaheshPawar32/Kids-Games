@@ -1,9 +1,73 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220">
-<ellipse cx="111" cy="189" rx="88" ry="15" fill="#3D6EB4" opacity=".22"/>
-<path d="M26 111q-8-27 20-34 8-39 49-31 28-34 62-7 42-2 44 40 29 26-2 48-12 28-47 25H68q-37 0-42-41" fill="#74D9B0" stroke="#3B9F89" stroke-width="5"/>
-<path d="m49 135 122 0-26 48q-34 20-70 0z" fill="#B87955"/>
-<path d="M91 78q-2-34 25-43 20-7 31 12-21-4-25 18" fill="#58B98A" stroke="#378E72" stroke-width="4"/><path d="M111 81q13-32 42-27 17 3 19 23-22-11-36 8" fill="#7ADBAA" stroke="#378E72" stroke-width="4"/>
-<path d="M89 113q0-26 22-26t22 26" fill="#F6C66F" stroke="#D99B46" stroke-width="4"/><path d="M104 87v-16h15v16" fill="#E98662"/><path d="M100 72h23l-12-13z" fill="#F5A15E"/>
-<circle cx="39" cy="44" r="11" fill="#FFF3B0"/><path d="M39 25v-8m0 54v-8M20 44h-8m54 0h-8" stroke="#FFF3B0" stroke-width="4" stroke-linecap="round"/>
-<path d="M164 39q-7-10-14 0 7 10 14 0m0 0q7-10 14 0-7 10-14 0" fill="#FFF" opacity=".9"/><path d="M55 126q8-12 16 0m89 0q8-12 16 0" fill="none" stroke="#FFF" stroke-width="4" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+<title id="title">Adventure Island</title>
+<desc id="desc">A magical floating green island with a tiny pastel castle, rounded trees, sparkling water and layered rocky sides in a glossy storybook 3D style.</desc>
+<defs>
+  <linearGradient id="skyCloud" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFF"/><stop offset="1" stop-color="#CDEBFF"/></linearGradient>
+  <linearGradient id="grass" x1="110" y1="155" x2="405" y2="352" gradientUnits="userSpaceOnUse"><stop stop-color="#B6F29B"/><stop offset=".38" stop-color="#6EDB9F"/><stop offset=".78" stop-color="#35B987"/><stop offset="1" stop-color="#208C75"/></linearGradient>
+  <linearGradient id="soil" x1="115" y1="285" x2="403" y2="479" gradientUnits="userSpaceOnUse"><stop stop-color="#D99A6A"/><stop offset=".36" stop-color="#B9765A"/><stop offset=".75" stop-color="#89516A"/><stop offset="1" stop-color="#59436E"/></linearGradient>
+  <linearGradient id="rock" x1="165" y1="322" x2="328" y2="470" gradientUnits="userSpaceOnUse"><stop stop-color="#F4C18C"/><stop offset="1" stop-color="#A96D64"/></linearGradient>
+  <linearGradient id="water" x1="250" y1="340" x2="294" y2="492" gradientUnits="userSpaceOnUse"><stop stop-color="#A6F1F0"/><stop offset=".45" stop-color="#4BC9E4"/><stop offset="1" stop-color="#3995D0"/></linearGradient>
+  <linearGradient id="castle" x1="200" y1="149" x2="314" y2="287" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF4CE"/><stop offset=".58" stop-color="#FFD28A"/><stop offset="1" stop-color="#E99B66"/></linearGradient>
+  <linearGradient id="roof" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#A9A0F5"/><stop offset="1" stop-color="#6357BE"/></linearGradient>
+  <radialGradient id="sunGlow" cx="0" cy="0" r="1" gradientTransform="matrix(0 88 -88 0 407 96)" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF7C5"/><stop offset="1" stop-color="#FFE08A" stop-opacity="0"/></radialGradient>
+</defs>
+<ellipse cx="255" cy="462" rx="190" ry="27" fill="#4D82B1" opacity=".13"/>
+<circle cx="409" cy="92" r="82" fill="url(#sunGlow)"/>
+<circle cx="409" cy="92" r="39" fill="#FFE28D"/>
+<path d="M42 109c14-20 44-19 55 1 19-18 54-8 58 17H31c-2-7 2-14 11-18Z" fill="url(#skyCloud)" opacity=".88"/>
+<path d="M325 73c11-17 36-16 45 1 16-15 44-7 47 14H316c-2-6 2-12 9-15Z" fill="url(#skyCloud)" opacity=".8"/>
+<!-- back rock silhouette and island underside -->
+<path d="M63 288c13-42 47-58 85-45 30-35 72-45 113-24 39-27 89-22 121 7 40-10 73 20 74 60 21 47-3 83-43 96-42 42-107 62-160 71-70 13-139-8-180-45-38-35-39-86-10-120Z" fill="#65466F" opacity=".22" transform="translate(0 13)"/>
+<path d="M63 280c13-42 47-58 85-45 30-35 72-45 113-24 39-27 89-22 121 7 40-10 73 20 74 60 21 47-3 83-43 96-42 42-107 62-160 71-70 13-139-8-180-45-38-35-39-86-10-120Z" fill="url(#soil)" stroke="#86576B" stroke-width="8"/>
+<!-- floating rock facets -->
+<path d="M110 333c42 18 76 28 117 26l-25 74c-42-7-74-22-96-48l4-52Z" fill="url(#rock)" opacity=".88"/>
+<path d="M252 357c45 7 85-4 122-27l18 55c-41 37-89 54-145 59l5-87Z" fill="#7D526F" opacity=".55"/>
+<path d="m180 412 34 34m-8-78 31 36m83-39-22 40" fill="none" stroke="#F8C18C" stroke-width="8" stroke-linecap="round" opacity=".45"/>
+<!-- waterfall -->
+<path d="M270 345c12 8 25 8 39-1l17 99c-18 18-38 20-58 5l2-103Z" fill="url(#water)"/>
+<path d="M281 362c6 28 8 53 6 77m19-82c8 30 10 50 8 70" fill="none" stroke="#D8FFFF" stroke-width="8" stroke-linecap="round" opacity=".72"/>
+<path d="M266 435c17 12 38 11 60-1" fill="none" stroke="#D7FFFF" stroke-width="8" stroke-linecap="round"/>
+<!-- grassy top -->
+<path d="M58 278c-8-35 21-63 59-58 22-42 70-51 108-27 32-40 89-46 126-13 44-12 82 15 83 55 29 19 25 59-6 76-42 24-102 34-171 34-81 1-148-7-182-31-22-15-30-22-17-36Z" fill="url(#grass)" stroke="#27966F" stroke-width="9"/>
+<path d="M85 271c16-28 48-37 78-25m48-44c18-15 46-17 65-8m76 9c19-5 44 2 58 17" fill="none" stroke="#D7FFC0" stroke-width="11" stroke-linecap="round" opacity=".72"/>
+<path d="M103 303c40 15 84 22 130 22m103-7c41-3 77-14 101-28" fill="none" stroke="#1F9D79" stroke-width="10" stroke-linecap="round" opacity=".4"/>
+<!-- grass tufts -->
+<path d="M98 247q-8-22 5-32 2 19 11 24 1-26 20-33-6 24-2 42" fill="#52C989" stroke="#238E71" stroke-width="4" stroke-linejoin="round"/>
+<path d="M379 252q-5-20 8-28 1 17 10 22 3-23 20-28-7 22-4 37" fill="#5AD08F" stroke="#238E71" stroke-width="4" stroke-linejoin="round"/>
+<!-- left rounded tree -->
+<path d="M134 256c4-35 0-62-8-82h25c-1 27 2 49 11 69l-28 13Z" fill="#9A674B"/>
+<circle cx="123" cy="153" r="39" fill="#2B9E79" opacity=".25" transform="translate(0 7)"/>
+<circle cx="123" cy="147" r="39" fill="#5ACB8C"/>
+<circle cx="96" cy="165" r="26" fill="#76DA9C"/>
+<circle cx="148" cy="169" r="26" fill="#3BB781"/>
+<ellipse cx="112" cy="127" rx="18" ry="9" fill="#C0F6B7" opacity=".62" transform="rotate(-28 112 127)"/>
+<!-- right rounded tree -->
+<path d="M366 260c-2-28 4-51 13-69h24c-15 27-17 49-13 75l-24-6Z" fill="#9A674B"/>
+<circle cx="389" cy="159" r="39" fill="#258F70" opacity=".25" transform="translate(0 7)"/>
+<circle cx="389" cy="153" r="39" fill="#58C887"/>
+<circle cx="362" cy="169" r="25" fill="#77D99B"/>
+<circle cx="416" cy="174" r="25" fill="#32AC7D"/>
+<ellipse cx="378" cy="133" rx="18" ry="9" fill="#C0F6B7" opacity=".62" transform="rotate(-28 378 133)"/>
+<!-- stepping stones -->
+<ellipse cx="173" cy="294" rx="18" ry="8" fill="#F5CF9B" opacity=".78"/>
+<ellipse cx="211" cy="309" rx="13" ry="6" fill="#F5CF9B" opacity=".78"/>
+<ellipse cx="340" cy="298" rx="17" ry="7" fill="#F5CF9B" opacity=".78"/>
+<!-- tiny castle base -->
+<path d="M207 188h109v97H207z" fill="url(#castle)" stroke="#D39161" stroke-width="7" stroke-linejoin="round"/>
+<path d="M193 192v-49h38v49m60 0v-49h38v49" fill="#FFE6B0" stroke="#D39161" stroke-width="7" stroke-linejoin="round"/>
+<path d="m187 147 25-35 25 35m47 0 25-35 25 35" fill="url(#roof)" stroke="#6658B9" stroke-width="7" stroke-linejoin="round"/>
+<path d="M197 111v-19m84 19V92" stroke="#FFE08B" stroke-width="6" stroke-linecap="round"/>
+<path d="M234 285v-43c0-18 12-31 27-31s27 13 27 31v43Z" fill="#9A6CBB" stroke="#76539A" stroke-width="7"/>
+<path d="M243 244c3-13 10-19 18-19" fill="none" stroke="#DCC7F5" stroke-width="7" stroke-linecap="round"/>
+<rect x="218" y="205" width="17" height="23" rx="8" fill="#A9DDF6" stroke="#C18B6E" stroke-width="4"/>
+<rect x="288" y="205" width="17" height="23" rx="8" fill="#A9DDF6" stroke="#C18B6E" stroke-width="4"/>
+<!-- flags -->
+<path d="M211 93V65" stroke="#8A69B8" stroke-width="5" stroke-linecap="round"/>
+<path d="M214 67q20-13 37 0-17 15-37 2Z" fill="#F48EAA"/>
+<path d="M295 93V65" stroke="#8A69B8" stroke-width="5" stroke-linecap="round"/>
+<path d="M298 67q20-13 37 0-17 15-37 2Z" fill="#F48EAA"/>
+<!-- magical sparkle -->
+<path d="m67 183 9 22 22 9-22 9-9 22-9-22-22-9 22-9z" fill="#FFF1A8"/>
+<path d="m450 208 6 15 15 6-15 6-6 15-6-15-15-6 15-6z" fill="#FFF1A8"/>
+<circle cx="159" cy="88" r="6" fill="#FFF"/><circle cx="346" cy="91" r="5" fill="#FFF"/>
 </svg>
