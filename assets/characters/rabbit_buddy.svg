@@ -1,12 +1,56 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">
-<defs><linearGradient id="bunny" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFF0DF"/><stop offset="1" stop-color="#E8C9FA"/></linearGradient></defs>
-<ellipse cx="62" cy="39" rx="17" ry="38" transform="rotate(-12 62 39)" fill="#F7E8F3" stroke="#C99ACB" stroke-width="4"/>
-<ellipse cx="105" cy="36" rx="17" ry="38" transform="rotate(12 105 36)" fill="#F7E8F3" stroke="#C99ACB" stroke-width="4"/>
-<ellipse cx="62" cy="39" rx="7" ry="25" transform="rotate(-12 62 39)" fill="#F5A9C6"/><ellipse cx="105" cy="36" rx="7" ry="25" transform="rotate(12 105 36)" fill="#F5A9C6"/>
-<circle cx="83" cy="91" r="62" fill="url(#bunny)" stroke="#C99ACB" stroke-width="4"/>
-<ellipse cx="83" cy="110" rx="39" ry="27" fill="#FFF8F2"/>
-<ellipse cx="63" cy="85" rx="6" ry="9" fill="#293653"/><ellipse cx="103" cy="85" rx="6" ry="9" fill="#293653"/>
-<circle cx="65" cy="82" r="2" fill="#FFF"/><circle cx="105" cy="82" r="2" fill="#FFF"/>
-<path d="M77 104q6-7 12 0-6 10-12 0" fill="#E986A8"/><path d="M83 112q-8 10-15 2m15-2q8 10 15 2" fill="none" stroke="#79556B" stroke-width="3" stroke-linecap="round"/>
-<circle cx="43" cy="106" r="8" fill="#F5A9C6" opacity=".65"/><circle cx="123" cy="106" r="8" fill="#F5A9C6" opacity=".65"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+<title id="title">Rabbit Buddy</title>
+<desc id="desc">A gentle cream and lilac bunny with tall pink-lined ears, a mint outfit and glossy toy-like cheeks.</desc>
+<defs>
+  <linearGradient id="bunnyFur" x1="131" y1="60" x2="387" y2="427" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFDF7"/><stop offset=".42" stop-color="#F8EAF8"/><stop offset=".78" stop-color="#E6CBEF"/><stop offset="1" stop-color="#B99BCF"/></linearGradient>
+  <linearGradient id="bunnyEar" x1="170" y1="30" x2="238" y2="250" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFDF9"/><stop offset=".55" stop-color="#F1DDF0"/><stop offset="1" stop-color="#CCACD8"/></linearGradient>
+  <linearGradient id="bunnyPink" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFC1D2"/><stop offset="1" stop-color="#E77EAB"/></linearGradient>
+  <linearGradient id="bunnyCream" x1="160" y1="255" x2="359" y2="408" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFDF6"/><stop offset="1" stop-color="#F1DDE6"/></linearGradient>
+  <linearGradient id="bunnyDress" x1="180" y1="349" x2="336" y2="473" gradientUnits="userSpaceOnUse"><stop stop-color="#9EF0D6"/><stop offset=".48" stop-color="#54D4B9"/><stop offset="1" stop-color="#219A99"/></linearGradient>
+  <linearGradient id="bunnyEye" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#4C526F"/><stop offset="1" stop-color="#202740"/></linearGradient>
+  <radialGradient id="bunnyGlow" cx="0" cy="0" r="1" gradientTransform="matrix(30 100 -110 33 183 113)" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF" stop-opacity=".78"/><stop offset="1" stop-color="#FFF" stop-opacity="0"/></radialGradient>
+</defs>
+<ellipse cx="257" cy="473" rx="139" ry="20" fill="#5A4678" opacity=".13"/>
+<!-- ears behind the head -->
+<path d="M160 215c-29-81-50-171-13-190 38-19 85 53 109 166l-96 24Z" fill="#B99FCB" opacity=".35" transform="translate(0 8)"/>
+<path d="M351 215c29-81 50-171 13-190-38-19-85 53-109 166l96 24Z" fill="#B99FCB" opacity=".35" transform="translate(0 8)"/>
+<path d="M160 208c-29-81-50-171-13-190 38-19 85 53 109 166l-96 24Z" fill="url(#bunnyEar)" stroke="#C8A8D3" stroke-width="8"/>
+<path d="M183 179c-21-71-30-118-18-126 15-9 40 43 58 113l-40 13Z" fill="url(#bunnyPink)"/>
+<path d="M351 208c29-81 50-171 13-190-38-19-85 53-109 166l96 24Z" fill="url(#bunnyEar)" stroke="#C8A8D3" stroke-width="8"/>
+<path d="M329 179c21-71 30-118 18-126-15-9-40 43-58 113l40 13Z" fill="url(#bunnyPink)"/>
+<!-- body and feet -->
+<path d="M176 351c-23 31-40 75-25 92 14 16 51 8 83-11l-5-70-53-11Z" fill="#C7A7D5"/>
+<path d="M338 351c23 31 40 75 25 92-14 16-51 8-83-11l5-70 53-11Z" fill="#B994CE"/>
+<ellipse cx="184" cy="442" rx="39" ry="19" fill="#FFF8F2"/>
+<ellipse cx="328" cy="442" rx="39" ry="19" fill="#FFF8F2"/>
+<path d="M165 334c-16 41-13 91 17 116 22 18 48 16 74 16s52 2 74-16c30-25 33-75 17-116l-39-30H204l-39 30Z" fill="url(#bunnyDress)" stroke="#4FAF9C" stroke-width="8"/>
+<path d="M201 350c18-15 35-22 55-22s37 7 55 22" fill="none" stroke="#D9FFF2" stroke-width="9" stroke-linecap="round" opacity=".75"/>
+<path d="M235 336c-5 25 5 43 21 43s26-18 21-43" fill="#C9FFF0" opacity=".72"/>
+<circle cx="256" cy="408" r="9" fill="#F6D178" stroke="#D8A54F" stroke-width="3"/>
+<!-- arms -->
+<path d="M166 345c-34 7-57 35-48 56 9 18 37 18 61 3l25-34-38-25Z" fill="#F2DDEF" stroke="#C8A8D3" stroke-width="8"/>
+<path d="M346 345c34 7 57 35 48 56-9 18-37 18-61 3l-25-34 38-25Z" fill="#EBD8F0" stroke="#C8A8D3" stroke-width="8"/>
+<!-- head -->
+<path d="M95 228c0-94 68-157 161-157s161 63 161 157c0 105-68 174-161 174S95 333 95 228Z" fill="#B99BCF" opacity=".23" transform="translate(0 9)"/>
+<path d="M95 219c0-94 68-157 161-157s161 63 161 157c0 105-68 174-161 174S95 324 95 219Z" fill="url(#bunnyFur)" stroke="#C6A8D3" stroke-width="9"/>
+<path d="M112 189c16-74 68-118 137-121-63 19-96 69-97 132-28 34-34 79-19 121-24-31-31-79-21-132Z" fill="url(#bunnyGlow)"/>
+<!-- cheeks and muzzle -->
+<path d="M139 272c-4 38 21 82 52 96 20 10 43 11 65 11s45-1 65-11c31-14 56-58 52-96-27-31-67-45-117-45s-90 14-117 45Z" fill="url(#bunnyCream)"/>
+<ellipse cx="157" cy="291" rx="24" ry="13" fill="#F7A7C0" opacity=".52"/>
+<ellipse cx="355" cy="291" rx="24" ry="13" fill="#F7A7C0" opacity=".52"/>
+<ellipse cx="256" cy="293" rx="17" ry="12" fill="url(#bunnyPink)"/>
+<path d="M256 306v14m0 0c-16 17-32 11-39 2m39-2c16 17 32 11 39 2" fill="none" stroke="#805A74" stroke-width="7" stroke-linecap="round"/>
+<!-- eyes -->
+<path d="M170 214c12-13 32-16 48-6m76 0c16-10 36-7 48 6" fill="none" stroke="#BCA0CB" stroke-width="8" stroke-linecap="round"/>
+<ellipse cx="194" cy="239" rx="17" ry="24" fill="url(#bunnyEye)"/>
+<ellipse cx="318" cy="239" rx="17" ry="24" fill="url(#bunnyEye)"/>
+<ellipse cx="199" cy="231" rx="6" ry="8" fill="#FFF"/>
+<ellipse cx="323" cy="231" rx="6" ry="8" fill="#FFF"/>
+<circle cx="187" cy="247" r="3" fill="#A6C9E7" opacity=".75"/>
+<circle cx="311" cy="247" r="3" fill="#A6C9E7" opacity=".75"/>
+<!-- forehead tuft and bow -->
+<path d="M222 76c-13-24-2-39 18-31 7-21 28-19 30 2 20-7 31 8 18 27-20-9-43-7-66 2Z" fill="#FFFDF7" stroke="#C6A8D3" stroke-width="5" stroke-linejoin="round"/>
+<path d="M344 130c-24-19-42-16-48 1-7 18 11 27 30 22-9 15 3 29 20 22 21-9 18-29-2-45Z" fill="url(#bunnyPink)" stroke="#D77DA6" stroke-width="5"/>
+<circle cx="338" cy="151" r="10" fill="#FFE4ED"/>
+<path d="M142 153c20-35 51-54 85-61" fill="none" stroke="#FFF" stroke-width="12" stroke-linecap="round" opacity=".62"/>
 </svg>
