@@ -51,4 +51,9 @@ flutter:
     - assets/illustrations/
     - assets/icons/
     - assets/models/characters/
-    - assets/models/icons/\n    - assets/models/numbers/\n    - assets/models/letters/\n    - assets/models/shapes/\n    - assets/models/props/\n    - assets/models/environments/
+    - assets/models/icons/
+    - assets/models/numbers/
+    - assets/models/letters/
+    - assets/models/shapes/
+    - assets/models/props/
+    - assets/models/environments/
