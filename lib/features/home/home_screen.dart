@@ -292,7 +292,7 @@ class _GamesPage extends StatelessWidget {
             ),
           ),
         ),
-        _ActivityGrid(activities: starterActivities),
+        const _ActivityGrid(activities: starterActivities),
       ],
     );
   }
@@ -345,7 +345,7 @@ class _ActivityGrid extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(22),
                   boxShadow: const [
-                    const BoxShadow(
+                    BoxShadow(
                       color: Color(0x1025365B),
                       blurRadius: 16,
                       offset: Offset(0, 7),
