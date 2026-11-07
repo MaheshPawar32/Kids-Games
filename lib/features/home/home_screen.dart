@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:velocity_x/velocity_x.dart';
 
+import '../../app/store/kids_games_store.dart';
 import '../../app/theme/app_theme.dart';
 import '../games/activity.dart';
-import '../games/shape_matching/shape_matching_game_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({
     required this.childName,
     required this.grade,
@@ -14,13 +16,6 @@ class HomeScreen extends StatefulWidget {
 
   final String childName;
   final String grade;
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
 
   static const _destinations = [
     NavigationDestination(icon: Icon(Icons.home_rounded), label: 'Home'),
@@ -32,58 +27,61 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: IndexedStack(
-          index: _selectedIndex,
-          children: [
-            _HomeDashboard(
-              childName: widget.childName,
-              grade: widget.grade,
-              onProfileTap: _showProfile,
-            ),
-            const _FeatureLandingPage(
-              title: 'Learning worlds',
-              subtitle: 'Choose a world and discover something new.',
-              items: [
-                _LandingItem('Alphabet & Phonics', 'Letters, sounds and first words', '🔤', 0xFFFFD36E),
-                _LandingItem('Numbers & Maths', 'Count, compare and solve', '🔢', 0xFF8FD8F4),
-                _LandingItem('Shapes & Patterns', 'Explore colors and patterns', '🔺', 0xFF9DE2C2),
-                _LandingItem('Animals & Nature', 'Meet the world around you', '🦋', 0xFFFFA98F),
-                _LandingItem('Stories & Reading', 'Listen, read and imagine', '📚', 0xFFC8B7F7),
-                _LandingItem('Science Discovery', 'Ask, explore and experiment', '🔬', 0xFF8FD8F4),
-              ],
-            ),
-            const _GamesPage(),
-            const _FeatureLandingPage(
-              title: 'Creative studio',
-              subtitle: 'A space for drawing, music and imagination.',
-              items: [
-                _LandingItem('Drawing & Coloring', 'Make your own colorful artwork', '🎨', 0xFFFFA98F),
-                _LandingItem('Guided Drawing', 'Follow friendly step-by-step hints', '✏️', 0xFFFFD36E),
-                _LandingItem('Music & Rhythm', 'Explore sounds and simple rhythms', '🎵', 0xFFB7A8F5),
-              ],
-            ),
-            const _RewardsPage(),
-          ],
+    return VxBuilder<KidsGamesStore>(
+      mutations: const {SelectHomeTab},
+      builder: (context, store, status) => Scaffold(
+        body: SafeArea(
+          child: IndexedStack(
+            index: store.selectedTabIndex,
+            children: [
+              _HomeDashboard(
+                childName: childName,
+                grade: grade,
+                onProfileTap: () => _showProfile(context),
+              ),
+              const _FeatureLandingPage(
+                title: 'Learning worlds',
+                subtitle: 'Choose a world and discover something new.',
+                items: [
+                  _LandingItem('Alphabet & Phonics', 'Letters, sounds and first words', '🔤', 0xFFFFD36E),
+                  _LandingItem('Numbers & Maths', 'Count, compare and solve', '🔢', 0xFF8FD8F4),
+                  _LandingItem('Shapes & Patterns', 'Explore colors and patterns', '🔺', 0xFF9DE2C2),
+                  _LandingItem('Animals & Nature', 'Meet the world around you', '🦋', 0xFFFFA98F),
+                  _LandingItem('Stories & Reading', 'Listen, read and imagine', '📚', 0xFFC8B7F7),
+                  _LandingItem('Science Discovery', 'Ask, explore and experiment', '🔬', 0xFF8FD8F4),
+                ],
+              ),
+              const _GamesPage(),
+              const _FeatureLandingPage(
+                title: 'Creative studio',
+                subtitle: 'A space for drawing, music and imagination.',
+                items: [
+                  _LandingItem('Drawing & Coloring', 'Make your own colorful artwork', '🎨', 0xFFFFA98F),
+                  _LandingItem('Guided Drawing', 'Follow friendly step-by-step hints', '✏️', 0xFFFFD36E),
+                  _LandingItem('Music & Rhythm', 'Explore sounds and simple rhythms', '🎵', 0xFFB7A8F5),
+                ],
+              ),
+              const _RewardsPage(),
+            ],
+          ),
         ),
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: (index) {
-          setState(() => _selectedIndex = index);
-        },
-        destinations: _destinations,
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: store.selectedTabIndex,
+          onDestinationSelected: (index) {
+            SelectHomeTab(index);
+          },
+          destinations: _destinations,
+        ),
       ),
     );
   }
 
-  void _showProfile() {
+  void _showProfile(BuildContext context) {
     showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Explorer profile'),
-        content: Text('${widget.childName}\n${widget.grade}'),
+        content: Text('${childName}\\n${grade}'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
@@ -326,11 +324,7 @@ class _ActivityGrid extends StatelessWidget {
               key: Key('activity_${activity.id}'),
               onTap: () {
                 if (activity.id == 'shape_matching') {
-                  Navigator.of(context).push<void>(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const ShapeMatchingGameScreen(),
-                    ),
-                  );
+                  context.push<void>('/games/shape-matching');
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

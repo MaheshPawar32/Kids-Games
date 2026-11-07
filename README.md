@@ -5,7 +5,7 @@ Premium playful 3D educational game app for children from Nursery through Grade 
 ## Product direction
 
 - Flutter/Dart, Android only
-- Android application ID: `com.dev.kidsgames` (intended; generated Android project still needs to be created and verified)
+- Android application ID: `com.dev.kidsgames`
 - Offline-first; no mandatory account
 - Flutter Scene for genuine real-time 3D (GLB/glTF, PBR, camera and skeletal animation)
 - Flame for separate 2D mini-games
@@ -16,9 +16,7 @@ Premium playful 3D educational game app for children from Nursery through Grade 
 
 ## Compatibility baseline
 
-The remote GitHub Actions runner used Flutter stable 3.47.9 / Dart 3.13.7. Flutter Scene 0.24.3 documents Flutter 3.47 stable or newer and requires Flutter GPU to be enabled on Android for shipped builds.
-
-The local execution workspace used for the current audit does not include Flutter, Dart, Android SDK/adb or Blender. Use the audit and dependency documents for exact setup and toolchain gaps.
+The GitHub Actions runner is pinned to Flutter stable 3.47.9 / Dart 3.13.7. Flutter Scene 0.24.3 requires Flutter 3.47 stable or newer. Native rendering uses Flutter GPU, which must be enabled in the Android manifest for shipped builds.
 
 ## Current implementation status
 
@@ -26,37 +24,48 @@ Existing useful foundation:
 - Child onboarding and grade selection
 - Local child profile persistence through SharedPreferencesAsync
 - Five-tab Home/Learn/Games/Create/Rewards shell
+- VxStore/VxState holds the selected home tab
+- GoRouter handles onboarding/home and the Shape Matching route
 - 15-item educational activity catalogue
 - One playable five-round Shape Matching activity
 
+Declared foundation dependencies:
+- Flame and Flame Audio
+- Flutter Scene 0.24.3 (pinned for initial integration)
+- VelocityX, GoRouter and Flutter animation packages
+- Hive CE, SharedPreferences and path_provider
+- vector_math, build_runner, Hive CE generator and mocktail
+
 Not yet implemented:
-- Flutter Scene and actual GLB loading
+- Flutter Scene runtime prototype, asset build hook and actual GLB loading
 - Flame game foundation
-- Hive CE and VelocityX VxStore migration
-- GoRouter
-- Generated Android project and Flutter GPU manifest flag
+- Hive CE repositories/adapters and profile migration
+- Generated Android project in the repository
 - Blender source assets and production GLB exports
-- Animal World, Number Adventure, Alphabet World, Color Match, Puzzle World
+- Animal World, Number Adventure, Alphabet World, Color Match and Puzzle World
 - Parent gate/dashboard, rewards persistence and production progress tracking
 
 Do not treat the SVG buddies/island as 3D models. They are only vector illustrations.
 
-## Start-up (current repository state)
+## Setup on macOS
 
-Install Flutter stable 3.47.9 or later, Android Studio and an Android SDK. Then:
+Install Flutter stable 3.47.9 or newer, Android Studio and an Android SDK. Then:
 
 ```bash
 git clone https://github.com/MaheshPawar32/Kids-Games.git
 cd Kids-Games
 bash tool/setup_android.sh
 flutter pub get
-dart format .
+bash tool/setup_flutter_scene.sh
+dart format lib test
 flutter analyze
 flutter test
-flutter run
+flutter run --enable-flutter-gpu
 ```
 
-The Android setup script currently generates the platform folder and sets the application ID/minimum SDK. Flutter GPU manifest integration is part of Phase 1 and is not yet completed.
+The Android setup script creates the Android platform folder, verifies `com.dev.kidsgames`, sets minSdk 24 and adds Flutter GPU metadata. The Scene setup script runs the official asset-pipeline initializer and skills installer. It refuses to modify an existing custom `hook/build.dart`; merge generated instructions manually if a custom hook exists.
+
+The current chat workspace has no local Flutter/Android SDK/Blender toolchain, so the scripts have not been executed here. GitHub Actions validates Dart source and dependency resolution; a local Android build and physical-device GPU check remain necessary.
 
 ## Build
 
@@ -64,7 +73,7 @@ The Android setup script currently generates the platform folder and sets the ap
 flutter build apk --debug
 ```
 
-Production Scene work must also use the Android Flutter GPU setting documented in [DEPENDENCIES.md](docs/DEPENDENCIES.md) and the Flutter Scene setup pipeline.
+Release build and device GPU validation remain release-readiness tasks.
 
 ## Project documentation
 

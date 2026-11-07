@@ -13,13 +13,17 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.47.9'
           channel: stable
           cache: true
       - name: Install dependencies
         run: flutter pub get
       - name: Check Dart formatting
-        run: dart format lib test
+        run: dart format --set-exit-if-changed lib test
       - name: Analyze
         run: flutter analyze
       - name: Test
         run: flutter test
+      - name: Android debug build (when platform project is committed)
+        if: ${{ hashFiles('android/app/build.gradle', 'android/app/build.gradle.kts') != '' }}
+        run: flutter build apk --debug

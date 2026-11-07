@@ -1,22 +1,48 @@
 name: kidsgames
-description: A playful, offline-first educational games app for children.
+description: A premium, playful, offline-first educational games app for children.
 publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.11.0 <4.0.0'
+  sdk: '>=3.13.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
   flutter_svg: ^2.0.17
+
+  # 2D gameplay and offline game audio.
+  flame: ^1.38.2
+  flame_audio: ^2.12.2
+
+  # Real-time 3D. Keep this exact until a tested migration is approved.
+  flutter_scene: 0.24.3
+
+  # Application state and navigation.
+  velocity_x: ^4.3.1
+  go_router: ^18.1.3
+
+  # Flutter UI motion and short decorative animations.
+  flutter_animate: ^4.5.2
+  lottie: ^3.8.2
+
+  # Offline structured storage and application directories.
+  hive_ce: ^2.22.0
+  hive_ce_flutter: ^2.5.0
   shared_preferences: ^2.5.6
+  path_provider: ^2.1.6
+
+  # Scene vector/matrix types.
+  vector_math: ^2.4.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
+  build_runner: ^2.17.1
+  hive_ce_generator: ^1.12.1
+  mocktail: ^1.0.5
 
 flutter:
   uses-material-design: true

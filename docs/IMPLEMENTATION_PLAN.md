@@ -8,22 +8,23 @@ This is the phase gate and delivery checklist for the premium 3D Android app. An
 - [x] Record missing Android platform project and missing production 3D assets
 - [x] Verify Flutter Scene's minimum stable SDK requirement against remote CI
 - [x] Record toolchain and validation limitations
-- [ ] Confirm final green CI after lint fixes
+- [x] Confirm green CI for analyzer and all four existing widget tests after fixes
 
 ## Phase 1 — Flutter compatibility and foundation
 
-- [ ] Pin the Flutter stable/Dart baseline in CI to Flutter 3.47.9 (Dart 3.13.7), or a later tested stable
-- [ ] Set the project Dart lower bound to the chosen package baseline
-- [ ] Resolve package versions and commit `pubspec.lock`
-- [ ] Add target dependencies in controlled groups; test VelocityX 4.3.1 against Flutter 3.47.9 before committing to VxStore architecture
-- [ ] Generate Android-only platform project
-- [ ] Verify `applicationId = com.dev.kidsgames`
-- [ ] Set the intended minimum SDK after checking all resolved plugin requirements
-- [ ] Enable Flutter GPU in AndroidManifest.xml inside `<application>`
-- [ ] Run `dart run flutter_scene:init`; inspect the generated build hook and merge rather than overwrite any future custom hook
-- [ ] Run `dart run flutter_scene:skills` and read installed API guidance
-- [ ] Add baseline design tokens and shared widgets while preserving existing screens
-- [ ] Create a clean dependency and CI baseline
+- [x] Pin GitHub Actions to Flutter stable 3.47.9 (Dart 3.13.7)
+- [x] Set the Dart lower bound to 3.13 for the Lottie 3.8.2 dependency
+- [x] Declare Flame, Flame Audio, Flutter Scene, VelocityX, GoRouter, animations, Hive CE, path_provider and utility/test packages
+- [x] Implement VxStore/VxState for main-tab selection
+- [x] Integrate GoRouter for loading, setup, home and Shape Matching routes
+- [x] Add a guarded Android-only platform setup script that verifies app ID/minSdk and enables Flutter GPU metadata
+- [x] Add a Flutter Scene setup script that installs the official asset pipeline and coding-agent skills without overwriting an existing custom build hook
+- [ ] Resolve dependencies on CI and record the resulting solver output
+- [ ] Generate and commit pubspec.lock
+- [ ] Generate Android platform folder locally and inspect Gradle/manifest settings
+- [ ] Run flutter_scene:init and flutter_scene:skills on the development workstation; inspect generated files
+- [ ] Compile the VxStore integration against the pinned dependency graph
+- [ ] Verify an Android debug APK build
 
 ## Phase 2 — Flutter Scene 3D prototype
 
@@ -77,14 +78,15 @@ Each module must implement the common lifecycle and result contract, provide chi
 ## Phase 7 — Application screens and navigation
 
 - [ ] Splash and onboarding flow
-- [ ] Child profile setup
+- [x] Child profile setup
 - [ ] Home playground with real 3D character/environment
 - [ ] Game categories and library
 - [ ] Game introduction, gameplay, pause, completion and results
 - [ ] Rewards and progress
 - [ ] Parent gate and parent dashboard
 - [ ] Settings, About and privacy
-- [ ] GoRouter navigation and deep-link policy (child routes remain internal/offline)
+- [x] GoRouter navigation for core entry and Shape Matching routes
+- [ ] GoRouter parent-gate route protection and child-route policy
 
 ## Phase 8 — Local data, rewards and parent tools
 

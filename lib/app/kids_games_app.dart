@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:velocity_x/velocity_x.dart';
 
+import '../features/games/shape_matching/shape_matching_game_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/onboarding/child_profile.dart';
 import '../features/onboarding/child_profile_repository.dart';
 import '../features/onboarding/child_setup_screen.dart';
+import 'store/kids_games_store.dart';
 import 'theme/app_theme.dart';
 
 class KidsGamesApp extends StatefulWidget {
@@ -21,10 +25,15 @@ class KidsGamesApp extends StatefulWidget {
 class _KidsGamesAppState extends State<KidsGamesApp> {
   late final ChildProfileRepository _profileRepository =
       widget.profileRepository ?? PreferencesChildProfileRepository();
+  final KidsGamesStore _store = KidsGamesStore();
+  final ChangeNotifier _routerRefresh = ChangeNotifier();
 
+  GoRouter? _router;
   ChildProfile? _profile;
   bool _isLoading = true;
   bool _hasLoadError = false;
+
+  GoRouter get _appRouter => _router ??= _createRouter();
 
   @override
   void initState() {
@@ -33,10 +42,14 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
   }
 
   Future<void> _loadProfile() async {
-    setState(() {
-      _isLoading = true;
-      _hasLoadError = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+        _hasLoadError = false;
+      });
+      _routerRefresh.notifyListeners();
+    }
+
     try {
       final profile = await _profileRepository.loadProfile();
       if (!mounted) return;
@@ -44,12 +57,14 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
         _profile = profile;
         _isLoading = false;
       });
+      _routerRefresh.notifyListeners();
     } catch (_) {
       if (!mounted) return;
       setState(() {
         _hasLoadError = true;
         _isLoading = false;
       });
+      _routerRefresh.notifyListeners();
     }
   }
 
@@ -57,28 +72,91 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
     await _profileRepository.saveProfile(profile);
     if (!mounted) return;
     setState(() => _profile = profile);
+    _routerRefresh.notifyListeners();
+  }
+
+  GoRouter _createRouter() {
+    return GoRouter(
+      initialLocation: '/loading',
+      refreshListenable: _routerRefresh,
+      redirect: (context, state) {
+        final currentPath = state.matchedLocation;
+
+        if (_isLoading) {
+          return currentPath == '/loading' ? null : '/loading';
+        }
+
+        if (_hasLoadError) {
+          return currentPath == '/error' ? null : '/error';
+        }
+
+        if (_profile == null) {
+          return currentPath == '/setup' ? null : '/setup';
+        }
+
+        if (currentPath == '/loading' ||
+            currentPath == '/setup' ||
+            currentPath == '/error') {
+          return '/home';
+        }
+
+        return null;
+      },
+      routes: [
+        GoRoute(
+          path: '/loading',
+          builder: (context, state) => const _AppLoadingScreen(),
+        ),
+        GoRoute(
+          path: '/error',
+          builder: (context, state) =>
+              _ProfileLoadErrorScreen(onRetry: _loadProfile),
+        ),
+        GoRoute(
+          path: '/setup',
+          builder: (context, state) => ChildSetupScreen(
+            onComplete: _saveProfile,
+          ),
+        ),
+        GoRoute(
+          path: '/home',
+          builder: (context, state) {
+            final profile = _profile;
+            if (profile == null) {
+              return const _AppLoadingScreen();
+            }
+            return HomeScreen(
+              childName: profile.name,
+              grade: profile.grade,
+            );
+          },
+        ),
+        GoRoute(
+          path: '/games/shape-matching',
+          builder: (context, state) => const ShapeMatchingGameScreen(),
+        ),
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    _router?.dispose();
+    _routerRefresh.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Kids Games',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      home: _buildEntryScreen(),
+    return VxState(
+      store: _store,
+      child: MaterialApp.router(
+        title: 'Kids Games',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light,
+        routerConfig: _appRouter,
+      ),
     );
-  }
-
-  Widget _buildEntryScreen() {
-    if (_isLoading) return const _AppLoadingScreen();
-    if (_hasLoadError) {
-      return _ProfileLoadErrorScreen(onRetry: _loadProfile);
-    }
-    final profile = _profile;
-    if (profile == null) {
-      return ChildSetupScreen(onComplete: _saveProfile);
-    }
-    return HomeScreen(childName: profile.name, grade: profile.grade);
   }
 }
 
