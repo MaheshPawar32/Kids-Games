@@ -8,20 +8,18 @@ A fresh, English-only, offline-first educational games app for children from Nur
 - Playful premium 3D visual direction using original illustrations, layered surfaces, gradients and motion
 - No BrightBuddies branding or assets
 - Core experience works offline
-- Parent Zone protected by a parent gate
+- Parent Zone will be protected by a parent gate
 
-## Current setup
-This repository contains the initial Flutter application source, theme foundation, original starter SVG assets and an activity catalogue.
+## Requirements
+- Flutter 3.41 or newer (Dart 3.11+)
+- Android Studio and Android SDK
+- Android deployment minimum: API 24
 
-## Create the Android project files
-Install Flutter stable and Android Studio / Android SDK, then run:
-
+## Setup on macOS
 ```bash
 git clone https://github.com/MaheshPawar32/Kids-Games.git
 cd Kids-Games
-# Generate Android files separately so the existing Dart source is preserved.
-flutter create --platforms=android --org com.dev --project-name kidsgames /tmp/kidsgames_android
-cp -R /tmp/kidsgames_android/android ./android
+bash tool/setup_android.sh
 flutter pub get
 dart format lib test
 flutter analyze
@@ -29,28 +27,42 @@ flutter test
 flutter run
 ```
 
-If Flutter asks to overwrite existing Dart files, keep the repository versions. The generated Android application ID should be `com.dev.kidsgames`.
+The setup script creates only the Android platform folder and does not overwrite the existing Dart source. It sets the generated Android application ID to `com.dev.kidsgames` and the minimum SDK to 24.
 
 ## Build
 ```bash
 flutter build apk --release
 ```
 
+APK output:
+`build/app/outputs/flutter-apk/app-release.apk`
+
+## Current implementation
+- First-run child onboarding with first name and grade selection
+- Local profile save/restore using SharedPreferencesAsync
+- Child-specific home greeting
+- Five-tab navigation: Home, Learn, Games, Create and Rewards
+- Fifteen activity catalogue entries
+- Original starter SVG buddy and adventure-world illustrations
+
+The game cards and learning-world entries are catalogue/UI scaffolds. The actual playable mini-games and learning modules will be implemented in the next stages.
+
 ## Project structure
 ```
 lib/
   app/
-  core/
+    theme/
   features/
+    onboarding/
     home/
     games/
-  shared/
 assets/
   characters/
   illustrations/
   icons/
-test/
 docs/
+tool/
+test/
 ```
 
 ## Initial activity catalogue
@@ -59,7 +71,8 @@ Complete Picture, Shadow Matching, Color Matching, Shape Matching, Alphabet Matc
 ## Development principles
 - Keep learning content and game logic separate from widgets.
 - Bundle assets and content needed for core activities.
-- Save progress locally; never require an account for core play.
+- Save profile and progress locally; never require an account for core play.
 - Use age-appropriate, accessible interactions and large touch targets.
 - No child-facing chat, social feed, external links or targeted advertising.
 - Do not add network permissions or analytics without a reviewed requirement.
+- Starter SVGs are placeholders; replace them with original optimized 3D renders as asset production progresses.
