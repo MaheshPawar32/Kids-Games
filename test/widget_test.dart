@@ -108,4 +108,37 @@ void main() {
     expect(find.text('Great matching! You found the circle.'), findsOneWidget);
     expect(find.text('1'), findsOneWidget);
   });
+  testWidgets('catalogue activities open a playable round and show results', (
+    tester,
+  ) async {
+    final repository = _FakeChildProfileRepository(
+      profile: const ChildProfile(name: 'Ava', grade: 'Grade 1'),
+    );
+
+    await tester.pumpWidget(KidsGamesApp(profileRepository: repository));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Games').last);
+    await tester.pumpAndSettle();
+
+    final tile = find.byKey(const Key('activity_complete_picture'));
+    await tester.ensureVisible(tile);
+    await tester.pumpAndSettle();
+    await tester.tap(tile);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Complete Picture'), findsOneWidget);
+    expect(find.text('Choose the piece that completes the picture.'), findsOneWidget);
+
+    for (var round = 0; round < 5; round++) {
+      await tester.tap(find.byKey(const Key('answer_0')));
+      await tester.pumpAndSettle();
+      final next = find.text(round == 4 ? 'See my score' : 'Next');
+      await tester.tap(next);
+      await tester.pumpAndSettle();
+    }
+
+    expect(find.text('Wonderful work!'), findsOneWidget);
+    expect(find.text('You got 5 out of 5 correct.'), findsOneWidget);
+  });
+
 }
