@@ -324,19 +324,7 @@ class _ActivityGrid extends StatelessWidget {
             clipBehavior: Clip.antiAlias,
             child: InkWell(
               key: Key('activity_${activity.id}'),
-              onTap: () {
-                if (activity.id == 'shape_matching') {
-                  context.push<void>('/games/shape-matching');
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'This activity is coming in a future game update.',
-                      ),
-                    ),
-                  );
-                }
-              },
+              onTap: () => context.push<void>('/games/${activity.id}'),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(22),
