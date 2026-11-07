@@ -137,6 +137,9 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
           path: '/games/:activityId',
           builder: (context, state) {
             final activityId = state.pathParameters['activityId'];
+            if (activityId == 'shape_matching') {
+              return const ShapeMatchingGameScreen();
+            }
             final matches = starterActivities.where((item) => item.id == activityId);
             if (matches.isEmpty) return const _UnknownActivityScreen();
             return ActivityGameScreen(activity: matches.first);
