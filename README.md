@@ -43,9 +43,10 @@ APK output:
 - Child-specific home greeting
 - Five-tab navigation: Home, Learn, Games, Create and Rewards
 - Fifteen activity catalogue entries
+- Playable Shape Matching game with five rounds, visual answers, feedback, score and replay
 - Original starter SVG buddy and adventure-world illustrations
 
-The game cards and learning-world entries are catalogue/UI scaffolds. The actual playable mini-games and learning modules will be implemented in the next stages.
+The other fourteen games and the learning-world entries are catalogue/UI scaffolds until their individual gameplay is implemented.
 
 ## Project structure
 ```
@@ -56,6 +57,7 @@ lib/
     onboarding/
     home/
     games/
+      shape_matching/
 assets/
   characters/
   illustrations/
