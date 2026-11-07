@@ -1,50 +1,55 @@
-# 3D asset production backlog
+# Asset TODO — genuine 3D production assets
 
-No items below are exported production models yet. Do not create empty GLBs or mark placeholder meshes as complete.
+The repository contains SVG UI artwork, some styled to look like glossy 3D toys. **No production GLB character or environment model is claimed complete.**
 
-## Characters
+## SVG UI artwork created
 
-- [ ] Baby lion — body, head, ears, paws, eyes, mouth, tail; child-safe proportions
-- [ ] Elephant — trunk, ears, tusks (rounded/non-threatening), body and feet
-- [ ] Rabbit — long ears, muzzle, paws and tail
-- [ ] Panda — head, eye patches, body and paws
-- [ ] Monkey — face, ears, hands, feet and curled tail
-- [ ] Optional later buddy: fox character matching the current SVG mascot
+- [x] Baby lion — `assets/characters/baby_lion_3d_style.svg`
+- [x] Elephant — `assets/characters/elephant_3d_style.svg`
+- [x] Monkey — `assets/characters/monkey_3d_style.svg`
+- [x] Rabbit — `assets/characters/rabbit_3d_style.svg`
+- [x] Panda — `assets/characters/panda_3d_style.svg`
+- [x] Floating-island playground — `assets/illustrations/playground_3d_style.svg`
 
-For each character, create:
-- [ ] Editable Blender source
-- [ ] Clean topology and mobile-friendly mesh
-- [ ] UVs and packed texture/material resources
+These are 2D vector UI assets with depth effects, not GLB models.
+
+## Blender / GLB character deliverables
+
+- [ ] Baby lion: editable `.blend`, optimized `.glb`, rig, idle, blink, walk, run, jump, celebrate
+- [ ] Elephant: editable `.blend`, optimized `.glb`, rig, idle, blink, walk, run, jump, celebrate
+- [ ] Rabbit: editable `.blend`, optimized `.glb`, rig and required clips
+- [ ] Panda: editable `.blend`, optimized `.glb`, rig and required clips
+- [ ] Monkey: editable `.blend`, optimized `.glb`, rig and required clips
+
+For each character:
+- [ ] Child-friendly proportions and clean mobile topology
+- [ ] UV mapping and packed texture/material resources
 - [ ] PBR base color, roughness and subtle normal detail
-- [ ] Rig and named armature
-- [ ] Idle, blink, walk, run, jump and celebrate clips
-- [ ] Optimized GLB export and Flutter Scene import smoke test
+- [ ] Named armature and documented animation clips
+- [ ] Optimized GLB export
+- [ ] Flutter Scene import and animation smoke test on Android
 
 ## Environments and props
 
-- [ ] Premium playground environment
-- [ ] Trees and plants (modular)
-- [ ] Grass, rocks and background props
-- [ ] Ball
-- [ ] Cube, sphere, triangular prism and cylinder
+- [ ] Real 3D playground floating island
+- [ ] Modular trees, plants, grass, rocks and habitat props
+- [ ] Ball, cube, sphere, triangular prism and cylinder
 - [ ] Number tokens 0–20
 - [ ] Alphabet tokens A–Z
-- [ ] Treasure chest
-- [ ] Coins
-- [ ] Stars
-- [ ] Reusable habitat/object sets for Animal World
+- [ ] Treasure chest, coins and stars
+- [ ] Reusable Animal World habitat sets
 
-## Asset pipeline and release checks
+## Pipeline and release checks
 
 - [ ] Blender export script with deterministic settings
 - [ ] Asset naming validator
-- [ ] GLB structural validation (gltf-validator)
-- [ ] Scene load smoke tests for each model
+- [ ] GLB structural validation with gltf-validator
+- [ ] Scene load smoke tests for every model
 - [ ] Texture memory budget check
-- [ ] PBR material/lighting review on Android
-- [ ] Animation playback and disposal test
-- [ ] Asset licence/source metadata captured in ASSET_MANIFEST.md
+- [ ] PBR material and lighting review on Android
+- [ ] Animation playback and resource disposal tests
+- [ ] Licence/source metadata recorded in ASSET_MANIFEST.md
 
 ## Acceptance rule
 
-An asset is complete only when the editable `.blend` source, valid optimized `.glb` export, documented animation clips, licence/source record and runtime import test are all present. A render or SVG illustration alone does not satisfy this rule.
+An asset is complete only when its editable `.blend` source, valid optimized `.glb` export, documented animation clips, licence/source record and runtime import test are all present. A render or SVG illustration alone does not satisfy this rule.
