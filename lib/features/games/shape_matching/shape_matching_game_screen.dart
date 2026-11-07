@@ -179,10 +179,7 @@ class _ShapeMatchingGameScreenState extends State<ShapeMatchingGameScreen> {
           Row(
             children: [
               Text(
-                'ROUND ' +
-                    (_questionIndex + 1).toString() +
-                    ' OF ' +
-                    _questions.length.toString(),
+                'ROUND ${_questionIndex + 1} OF ${_questions.length}',
                 style: const TextStyle(
                   color: AppTheme.ink,
                   fontWeight: FontWeight.w900,
@@ -308,7 +305,7 @@ class _ShapeMatchingGameScreenState extends State<ShapeMatchingGameScreen> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(22),
                 child: InkWell(
-                  key: Key('shape_option_' + shape.name),
+                  key: Key('shape_option_${shape.name}'),
                   borderRadius: BorderRadius.circular(22),
                   onTap: answered ? null : () => _selectAnswer(shape),
                   child: AnimatedContainer(
@@ -374,12 +371,8 @@ class _ShapeMatchingGameScreenState extends State<ShapeMatchingGameScreen> {
                   Expanded(
                     child: Text(
                       _isAnswerCorrect
-                          ? 'Great matching! You found the ' +
-                              _question.target.label.toLowerCase() +
-                              '.'
-                          : 'Good try! The matching shape is ' +
-                              _question.target.label.toLowerCase() +
-                              '.',
+                          ? 'Great matching! You found the ${_question.target.label.toLowerCase()}.'
+                          : 'Good try! The matching shape is ${_question.target.label.toLowerCase()}.',
                       style: const TextStyle(
                         color: AppTheme.ink,
                         fontWeight: FontWeight.w700,
@@ -441,8 +434,7 @@ class _ShapeMatchingGameScreenState extends State<ShapeMatchingGameScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              _score.toString() + ' out of ' + _questions.length.toString() +
-                  ' correct',
+              '$_score out of ${_questions.length} correct',
               style: const TextStyle(
                 color: AppTheme.ink,
                 fontSize: 18,
