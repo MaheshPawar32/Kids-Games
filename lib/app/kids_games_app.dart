@@ -26,7 +26,7 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
   late final ChildProfileRepository _profileRepository =
       widget.profileRepository ?? PreferencesChildProfileRepository();
   final KidsGamesStore _store = KidsGamesStore();
-  final ChangeNotifier _routerRefresh = ChangeNotifier();
+  final ValueNotifier<int> _routerRefresh = ValueNotifier<int>(0);
 
   GoRouter? _router;
   ChildProfile? _profile;
@@ -47,7 +47,7 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
         _isLoading = true;
         _hasLoadError = false;
       });
-      _routerRefresh.notifyListeners();
+      _routerRefresh.value++;
     }
 
     try {
@@ -57,14 +57,14 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
         _profile = profile;
         _isLoading = false;
       });
-      _routerRefresh.notifyListeners();
+      _routerRefresh.value++;
     } catch (_) {
       if (!mounted) return;
       setState(() {
         _hasLoadError = true;
         _isLoading = false;
       });
-      _routerRefresh.notifyListeners();
+      _routerRefresh.value++;
     }
   }
 
@@ -72,7 +72,7 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
     await _profileRepository.saveProfile(profile);
     if (!mounted) return;
     setState(() => _profile = profile);
-    _routerRefresh.notifyListeners();
+    _routerRefresh.value++;
   }
 
   GoRouter _createRouter() {
