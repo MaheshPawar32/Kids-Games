@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../../app/theme/app_theme.dart';
@@ -562,10 +564,10 @@ class _ShapePainter extends CustomPainter {
         final innerRadius = outerRadius * 0.43;
         for (var point = 0; point < 10; point++) {
           final radius = point.isEven ? outerRadius : innerRadius;
-          final angle = -1.57079632679 + point * 0.62831853072;
+          final angle = -math.pi / 2 + point * math.pi / 5;
           final position = Offset(
-            center.dx + radius * _cos(angle),
-            center.dy + radius * _sin(angle),
+            center.dx + radius * math.cos(angle),
+            center.dy + radius * math.sin(angle),
           );
           if (point == 0) {
             path.moveTo(position.dx, position.dy);
@@ -575,34 +577,6 @@ class _ShapePainter extends CustomPainter {
         }
         return path..close();
     }
-  }
-
-  double _cos(double value) {
-    return _trig(value, true);
-  }
-
-  double _sin(double value) {
-    return _trig(value, false);
-  }
-
-  double _trig(double value, bool cosine) {
-    // Fixed angle geometry avoids importing a game/physics engine.
-    return cosine ? _cosineApprox(value) : _sineApprox(value);
-  }
-
-  double _cosineApprox(double value) {
-    return _sineApprox(value + 1.57079632679);
-  }
-
-  double _sineApprox(double value) {
-    final x = value % 6.28318530718;
-    final normalized = x > 3.14159265359 ? x - 6.28318530718 : x;
-    final x2 = normalized * normalized;
-    return normalized *
-        (1 -
-            x2 / 6 +
-            (x2 * x2) / 120 -
-            (x2 * x2 * x2) / 5040);
   }
 
   @override
