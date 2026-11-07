@@ -44,9 +44,9 @@ APK output:
 - Five-tab navigation: Home, Learn, Games, Create and Rewards
 - Fifteen activity catalogue entries
 - Playable Shape Matching game with five rounds, visual answers, feedback, score and replay
-- Original starter SVG buddy and adventure-world illustrations
+- Upgraded 3D-style SVG fox, rabbit and panda buddies, floating adventure island and app-icon artwork
 
-The other fourteen games and the learning-world entries are catalogue/UI scaffolds until their individual gameplay is implemented.
+The characters and island are layered vector illustrations that simulate a dimensional toy-like 3D appearance; they are not rotatable 3D models. The other fourteen games and learning-world entries are catalogue/UI scaffolds until their individual gameplay is implemented.
 
 ## Project structure
 ```
@@ -77,4 +77,4 @@ Complete Picture, Shadow Matching, Color Matching, Shape Matching, Alphabet Matc
 - Use age-appropriate, accessible interactions and large touch targets.
 - No child-facing chat, social feed, external links or targeted advertising.
 - Do not add network permissions or analytics without a reviewed requirement.
-- Starter SVGs are placeholders; replace them with original optimized 3D renders as asset production progresses.
+- See [assets/README.md](assets/README.md) for the illustration style and production guidance.
