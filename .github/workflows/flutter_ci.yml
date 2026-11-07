@@ -48,22 +48,36 @@ jobs:
           set -euxo pipefail
           pwd
           blender --background --python "$GITHUB_WORKSPACE/blender/scripts/create_baby_lion.py"
+      - name: Generate reusable 3D icon pack
+        env:
+          GITHUB_WORKSPACE: ${{ github.workspace }}
+          PYTHONPATH: /usr/lib/python3/dist-packages
+        run: |
+          set -euxo pipefail
+          blender --background --python "$GITHUB_WORKSPACE/blender/scripts/create_3d_icon_pack.py"
       - name: Verify generated files
         run: |
           set -euxo pipefail
           echo "Workspace: $GITHUB_WORKSPACE"
-          echo "Generated Blender/GLB files:"
-          find "$GITHUB_WORKSPACE" -type f \( -name "*.blend" -o -name "*.glb" \) -print
-          ls -lah "$GITHUB_WORKSPACE/blender" "$GITHUB_WORKSPACE/blender/output" "$GITHUB_WORKSPACE/assets/models/characters"
           test -s "$GITHUB_WORKSPACE/blender/output/baby_lion.blend"
           test -s "$GITHUB_WORKSPACE/assets/models/characters/baby_lion.glb"
-          ls -lh "$GITHUB_WORKSPACE/blender/output/baby_lion.blend" "$GITHUB_WORKSPACE/assets/models/characters/baby_lion.glb"
+          ICON_COUNT="$(find "$GITHUB_WORKSPACE/assets/models/icons" -maxdepth 1 -type f -name '*.glb' | wc -l)"
+          echo "3D icon GLB count: $ICON_COUNT"
+          test "$ICON_COUNT" -eq 13
+          for file in "$GITHUB_WORKSPACE/assets/models/characters/baby_lion.glb" "$GITHUB_WORKSPACE"/assets/models/icons/*.glb; do
+            test -s "$file"
+            MAGIC="$(od -An -tx1 -N4 "$file" | tr -d ' \n')"
+            test "$MAGIC" = "676c5446"
+            ls -lh "$file"
+          done
+          ls -lh "$GITHUB_WORKSPACE/blender/output/baby_lion.blend"
       - name: Upload 3D asset files
         uses: actions/upload-artifact@v4
         with:
-          name: baby-lion-3d-assets
+          name: kids-games-3d-assets
           path: |
             blender/output/baby_lion.blend
             assets/models/characters/baby_lion.glb
+            assets/models/icons/*.glb
           if-no-files-found: error
           retention-days: 30
