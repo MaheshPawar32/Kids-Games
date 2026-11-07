@@ -99,7 +99,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Find the same shape'), findsOneWidget);
-    await tester.tap(find.byKey(const Key('shape_option_circle')));
+    final circleOption = find.byKey(const Key('shape_option_circle'));
+    await tester.ensureVisible(circleOption);
+    await tester.pumpAndSettle();
+    await tester.tap(circleOption);
     await tester.pumpAndSettle();
 
     expect(find.text('Great matching! You found the circle.'), findsOneWidget);
