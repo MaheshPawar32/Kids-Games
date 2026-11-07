@@ -102,6 +102,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Great matching! You found the circle.'), findsOneWidget);
-    expect(find.text('1'), findsWidgets);
+    expect(find.text('1'), findsOneWidget);
   });
 }
