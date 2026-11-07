@@ -1,11 +1,78 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kidsgames/app/kids_games_app.dart';
+import 'package:kidsgames/features/onboarding/child_profile.dart';
+import 'package:kidsgames/features/onboarding/child_profile_repository.dart';
+
+class _FakeChildProfileRepository implements ChildProfileRepository {
+  _FakeChildProfileRepository({this.profile});
+
+  ChildProfile? profile;
+
+  @override
+  Future<void> clearProfile() async {
+    profile = null;
+  }
+
+  @override
+  Future<ChildProfile?> loadProfile() async => profile;
+
+  @override
+  Future<void> saveProfile(ChildProfile value) async {
+    profile = value;
+  }
+}
 
 void main() {
-  testWidgets('shows the Kids Games home screen', (tester) async {
-    await tester.pumpWidget(const KidsGamesApp());
-    expect(find.text('Hello, Explorer!'), findsOneWidget);
-    expect(find.text('Play & learn'), findsOneWidget);
-    expect(find.text('Complete Picture'), findsOneWidget);
+  testWidgets('first launch completes child setup and opens the home screen', (
+    tester,
+  ) async {
+    final repository = _FakeChildProfileRepository();
+
+    await tester.pumpWidget(KidsGamesApp(profileRepository: repository));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Welcome to your play world!'), findsOneWidget);
+
+    await tester.enterText(
+      find.byKey(const Key('child_name_field')),
+      'Ava',
+    );
+    await tester.tap(find.byKey(const Key('grade_Grade 1')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('start_adventure_button')));
+    await tester.pumpAndSettle();
+
+    expect(repository.profile?.name, 'Ava');
+    expect(repository.profile?.grade, 'Grade 1');
+    expect(find.text('Hello, Ava!'), findsOneWidget);
+    expect(find.text('Try a game'), findsOneWidget);
+  });
+
+  testWidgets('saved child profile skips onboarding', (tester) async {
+    final repository = _FakeChildProfileRepository(
+      profile: const ChildProfile(name: 'Leo', grade: 'UKG'),
+    );
+
+    await tester.pumpWidget(KidsGamesApp(profileRepository: repository));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Hello, Leo!'), findsOneWidget);
+    expect(find.text('Welcome to your play world!'), findsNothing);
+  });
+
+  testWidgets('bottom navigation switches to the games tab', (tester) async {
+    final repository = _FakeChildProfileRepository(
+      profile: const ChildProfile(name: 'Mia', grade: 'Grade 2'),
+    );
+
+    await tester.pumpWidget(KidsGamesApp(profileRepository: repository));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Games').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Game world'), findsOneWidget);
+    expect(find.text('What Comes Next'), findsOneWidget);
   });
 }
