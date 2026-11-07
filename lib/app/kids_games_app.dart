@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:velocity_x/velocity_x.dart';
 
+import '../features/games/activity.dart';
+import '../features/games/activity_game_screen.dart';
 import '../features/games/shape_matching/shape_matching_game_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/onboarding/child_profile.dart';
@@ -132,6 +134,15 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
           },
         ),
         GoRoute(
+          path: '/games/:activityId',
+          builder: (context, state) {
+            final activityId = state.pathParameters['activityId'];
+            final matches = starterActivities.where((item) => item.id == activityId);
+            if (matches.isEmpty) return const _UnknownActivityScreen();
+            return ActivityGameScreen(activity: matches.first);
+          },
+        ),
+        GoRoute(
           path: '/games/shape-matching',
           builder: (context, state) => const ShapeMatchingGameScreen(),
         ),
@@ -158,6 +169,16 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
       ),
     );
   }
+}
+
+class _UnknownActivityScreen extends StatelessWidget {
+  const _UnknownActivityScreen();
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(title: const Text('Game not found')),
+        body: const Center(child: Text('This game is not available yet.')),
+      );
 }
 
 class _AppLoadingScreen extends StatelessWidget {
