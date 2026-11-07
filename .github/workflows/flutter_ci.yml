@@ -19,6 +19,9 @@ jobs:
         run: flutter pub get
       - name: Check Dart formatting
         run: dart format lib test
+      - name: Diagnostic formatted home source
+        if: always()
+        run: nl -ba lib/features/home/home_screen.dart | sed -n '340,420p'
       - name: Analyze
         run: flutter analyze
       - name: Test
