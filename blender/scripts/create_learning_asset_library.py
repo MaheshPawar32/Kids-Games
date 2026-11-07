@@ -254,7 +254,7 @@ def build_environment(name, mats):
     else:
         for i in range(5):
             x = -1.35 + i*0.68
-            cube("Learning_Block", (x,0.1,0.35), (0.48,0.48,0.55), PALETTE[i % len(PALETTE)], 0.07)
+            cube("Learning_Block", (x,0.1,0.35), (0.48,0.48,0.55), mats[i % len(mats)], 0.07)
         sphere("Learning_Cloud", (0,0.9,0.8), (0.65,0.35,0.3), CREAM)
 
 
