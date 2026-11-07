@@ -1,10 +1,53 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">
-<defs><linearGradient id="panda" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFF"/><stop offset="1" stop-color="#DCE8F4"/></linearGradient></defs>
-<circle cx="42" cy="42" r="24" fill="#303C54"/><circle cx="124" cy="42" r="24" fill="#303C54"/>
-<circle cx="83" cy="87" r="65" fill="url(#panda)" stroke="#AAB8CB" stroke-width="4"/>
-<ellipse cx="58" cy="82" rx="16" ry="22" transform="rotate(25 58 82)" fill="#303C54"/><ellipse cx="108" cy="82" rx="16" ry="22" transform="rotate(-25 108 82)" fill="#303C54"/>
-<ellipse cx="60" cy="80" rx="5" ry="7" fill="#FFF"/><ellipse cx="106" cy="80" rx="5" ry="7" fill="#FFF"/>
-<ellipse cx="83" cy="111" rx="35" ry="24" fill="#FFF"/><ellipse cx="83" cy="103" rx="9" ry="7" fill="#303C54"/>
-<path d="M83 110q-8 12-16 3m16-3q8 12 16 3" fill="none" stroke="#303C54" stroke-width="3" stroke-linecap="round"/>
-<circle cx="45" cy="113" r="8" fill="#F2A5A0" opacity=".65"/><circle cx="121" cy="113" r="8" fill="#F2A5A0" opacity=".65"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+<title id="title">Panda Buddy</title>
+<desc id="desc">A cuddly panda cub with glossy black ears, shiny eyes and a soft golden-yellow hoodie, rendered as a dimensional toy character.</desc>
+<defs>
+  <linearGradient id="pandaWhite" x1="131" y1="70" x2="390" y2="430" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF"/><stop offset=".45" stop-color="#F2F6FC"/><stop offset=".83" stop-color="#D8E3F0"/><stop offset="1" stop-color="#AAB9CC"/></linearGradient>
+  <linearGradient id="pandaBlack" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#46536A"/><stop offset=".42" stop-color="#202D43"/><stop offset="1" stop-color="#0E1729"/></linearGradient>
+  <linearGradient id="pandaHoodie" x1="153" y1="351" x2="357" y2="483" gradientUnits="userSpaceOnUse"><stop stop-color="#FFE38D"/><stop offset=".52" stop-color="#FFC64D"/><stop offset="1" stop-color="#E69535"/></linearGradient>
+  <linearGradient id="pandaMuzzle" x1="180" y1="267" x2="330" y2="390" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF"/><stop offset="1" stop-color="#E7EDF5"/></linearGradient>
+  <radialGradient id="pandaGlow" cx="0" cy="0" r="1" gradientTransform="matrix(5 130 -130 5 184 105)" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF" stop-opacity=".8"/><stop offset="1" stop-color="#FFF" stop-opacity="0"/></radialGradient>
+</defs>
+<ellipse cx="256" cy="474" rx="140" ry="20" fill="#3D4C68" opacity=".14"/>
+<!-- ears -->
+<circle cx="145" cy="145" r="72" fill="#101A2D" opacity=".2" transform="translate(0 9)"/>
+<circle cx="367" cy="145" r="72" fill="#101A2D" opacity=".2" transform="translate(0 9)"/>
+<circle cx="145" cy="137" r="72" fill="url(#pandaBlack)" stroke="#111B2B" stroke-width="8"/>
+<circle cx="367" cy="137" r="72" fill="url(#pandaBlack)" stroke="#111B2B" stroke-width="8"/>
+<ellipse cx="126" cy="113" rx="31" ry="19" fill="#8392A8" opacity=".24" transform="rotate(-27 126 113)"/>
+<ellipse cx="348" cy="113" rx="31" ry="19" fill="#8392A8" opacity=".24" transform="rotate(-27 348 113)"/>
+<!-- body -->
+<path d="M160 355c-28 35-42 81-22 100 18 16 55 8 87-13l-3-68-62-19Z" fill="#C4D0DF"/>
+<path d="M352 355c28 35 42 81 22 100-18 16-55 8-87-13l3-68 62-19Z" fill="#B9C8DA"/>
+<ellipse cx="185" cy="449" rx="37" ry="17" fill="#F8FAFE"/>
+<ellipse cx="327" cy="449" rx="37" ry="17" fill="#F8FAFE"/>
+<path d="M164 343c-22 31-25 79-4 105 23 28 58 31 96 31s73-3 96-31c21-26 18-74-4-105l-43-21H207l-43 21Z" fill="url(#pandaHoodie)" stroke="#CF8D38" stroke-width="8"/>
+<path d="M208 354c12-18 28-27 48-27s36 9 48 27" fill="none" stroke="#FFF0B9" stroke-width="10" stroke-linecap="round"/>
+<path d="M230 335c-3 26 8 44 26 44s29-18 26-44" fill="#FFE9AC"/>
+<circle cx="256" cy="405" r="10" fill="#F5F9FF" stroke="#D99E4B" stroke-width="4"/>
+<!-- arms -->
+<path d="M162 343c-33 10-53 37-43 58 9 18 35 18 59 3l27-34-43-27Z" fill="url(#pandaWhite)" stroke="#263249" stroke-width="8"/>
+<path d="M350 343c33 10 53 37 43 58-9 18-35 18-59 3l-27-34 43-27Z" fill="url(#pandaWhite)" stroke="#263249" stroke-width="8"/>
+<!-- head -->
+<path d="M93 224c0-98 69-164 163-164s163 66 163 164c0 106-69 176-163 176S93 330 93 224Z" fill="#9EADBF" opacity=".22" transform="translate(0 9)"/>
+<path d="M93 215c0-98 69-164 163-164s163 66 163 164c0 106-69 176-163 176S93 321 93 215Z" fill="url(#pandaWhite)" stroke="#B8C5D5" stroke-width="9"/>
+<path d="M110 188c17-79 73-122 144-128-62 20-95 66-96 134-28 36-35 81-20 125-25-35-34-82-28-131Z" fill="url(#pandaGlow)"/>
+<!-- eye patches -->
+<ellipse cx="183" cy="235" rx="39" ry="54" transform="rotate(25 183 235)" fill="url(#pandaBlack)"/>
+<ellipse cx="329" cy="235" rx="39" ry="54" transform="rotate(-25 329 235)" fill="url(#pandaBlack)"/>
+<ellipse cx="190" cy="235" rx="16" ry="22" fill="#101A2D"/>
+<ellipse cx="322" cy="235" rx="16" ry="22" fill="#101A2D"/>
+<ellipse cx="195" cy="227" rx="6" ry="8" fill="#FFF"/>
+<ellipse cx="327" cy="227" rx="6" ry="8" fill="#FFF"/>
+<circle cx="184" cy="242" r="3" fill="#A8C9E9" opacity=".7"/>
+<circle cx="316" cy="242" r="3" fill="#A8C9E9" opacity=".7"/>
+<!-- muzzle -->
+<ellipse cx="256" cy="302" rx="100" ry="70" fill="url(#pandaMuzzle)"/>
+<ellipse cx="169" cy="302" rx="19" ry="12" fill="#F4A5A4" opacity=".48"/>
+<ellipse cx="343" cy="302" rx="19" ry="12" fill="#F4A5A4" opacity=".48"/>
+<path d="M238 280q18-17 36 0-18 22-36 0Z" fill="#182237"/>
+<path d="M256 293v18m0 0c-17 21-34 13-43 3m43-3c17 21 34 13 43 3" fill="none" stroke="#59657A" stroke-width="7" stroke-linecap="round"/>
+<!-- subtle forehead sparkle -->
+<path d="M146 147c22-32 55-54 94-60" fill="none" stroke="#FFF" stroke-width="12" stroke-linecap="round" opacity=".68"/>
+<path d="M320 356c14 7 26 19 32 31" fill="none" stroke="#FFF5CE" stroke-width="7" stroke-linecap="round" opacity=".75"/>
 </svg>
