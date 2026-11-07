@@ -9,14 +9,28 @@
 - [ ] Run dependency resolution, analyzer and widget tests
 
 ## Phase 2 — Onboarding and navigation
-- Splash and welcome
-- Parent gate
-- Child profile and grade selection (Nursery, LKG, UKG, Grades 1–5)
-- Child home and five-tab navigation
-- Adventure map and world selection
+- [ ] Splash and welcome
+- [ ] Parent gate
+- [x] Child profile and grade selection (Nursery, LKG, UKG, Grades 1–5)
+- [x] Child home and five-tab navigation
+- [ ] Adventure map and world selection
 
 ## Phase 3 — Mini-games
-Implement all 15 activities with configurable content, clear instructions, accessible feedback, retry and difficulty progression.
+- [x] Shape Matching (five playable rounds, feedback, score and replay)
+- [ ] Complete Picture
+- [ ] Shadow Matching
+- [ ] Color Matching
+- [ ] Alphabet Matching
+- [ ] Animal Recognition
+- [ ] Odd One Out
+- [ ] Big & Small
+- [ ] Missing Numbers
+- [ ] Missing Shapes
+- [ ] Find Differences
+- [ ] Magic Counting
+- [ ] Number Sequencing
+- [ ] What Comes Next
+- [ ] Jigsaw Puzzles
 
 ## Phase 4 — Learning and creativity
 Phonics, tracing, spelling, vocabulary, mathematics, drawing, coloring, guided drawing, music, stories, science discovery and life skills.
