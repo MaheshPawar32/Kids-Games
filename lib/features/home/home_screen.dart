@@ -5,6 +5,8 @@ import 'package:velocity_x/velocity_x.dart';
 
 import '../../app/store/kids_games_store.dart';
 import '../../app/theme/app_theme.dart';
+import '../../core/assets/kids_games_3d_assets.dart';
+import '../../core/widgets/three_d_asset_preview.dart';
 import '../games/activity.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -504,15 +506,41 @@ class _RewardsPage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 116,
-              height: 116,
-              decoration: const BoxDecoration(
-                color: Color(0xFFFFF1D4),
-                shape: BoxShape.circle,
+            InkWell(
+              borderRadius: BorderRadius.circular(58),
+              onTap: () {
+                showDialog<void>(
+                  context: context,
+                  builder: (dialogContext) => AlertDialog(
+                    title: const Text('3D trophy preview'),
+                    content: SizedBox(
+                      width: 260,
+                      height: 240,
+                      child: ThreeDAssetPreview(
+                        assetPath: KidsGames3DAssets.iconPath('trophy'),
+                        scale: 1.0,
+                        semanticsLabel: 'Three dimensional golden trophy',
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(dialogContext).pop(),
+                        child: const Text('Close'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              child: Container(
+                width: 116,
+                height: 116,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFFFF1D4),
+                  shape: BoxShape.circle,
+                ),
+                alignment: Alignment.center,
+                child: const Text('🏆', style: TextStyle(fontSize: 60)),
               ),
-              alignment: Alignment.center,
-              child: const Text('🏆', style: TextStyle(fontSize: 60)),
             ),
             const SizedBox(height: 22),
             Text(
