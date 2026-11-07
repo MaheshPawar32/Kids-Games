@@ -2,19 +2,25 @@
 
 Audit date: 2026-11-07
 
-This manifest lists files that actually exist in the repository. A design note or TODO is not proof that an exported model, texture, sound or animation exists.
+This manifest lists assets that actually exist in the repository. SVG illustrations are UI artwork; they are not real-time 3D models.
 
-## Existing assets
+## Existing SVG artwork
 
-| Asset ID | Repository path | Format | Current purpose | Production 3D model? |
+| Asset ID | Repository path | Format | Purpose | Genuine 3D? |
 |---|---|---|---|---|
-| `buddy_fox_svg` | `assets/characters/fox_buddy.svg` | SVG | Small UI mascot illustration | No |
-| `buddy_rabbit_svg` | `assets/characters/rabbit_buddy.svg` | SVG | Small UI mascot illustration | No |
-| `buddy_panda_svg` | `assets/characters/panda_buddy.svg` | SVG | Small UI mascot illustration | No |
-| `adventure_island_svg` | `assets/illustrations/adventure_island.svg` | SVG | Decorative 3D-style vector illustration | No |
-| `app_icon_svg` | `assets/icons/app_icon.svg` | SVG | Source artwork for future launcher icon generation | No |
+| `buddy_fox_svg` | `assets/characters/fox_buddy.svg` | SVG | Existing small UI mascot | No |
+| `buddy_rabbit_svg` | `assets/characters/rabbit_buddy.svg` | SVG | Existing small UI mascot | No |
+| `buddy_panda_svg` | `assets/characters/panda_buddy.svg` | SVG | Existing small UI mascot | No |
+| `baby_lion_3d_style_svg` | `assets/characters/baby_lion_3d_style.svg` | SVG | Glossy 3D-look Animal World UI artwork | No |
+| `elephant_3d_style_svg` | `assets/characters/elephant_3d_style.svg` | SVG | Glossy 3D-look Animal World UI artwork | No |
+| `monkey_3d_style_svg` | `assets/characters/monkey_3d_style.svg` | SVG | Glossy 3D-look Animal World UI artwork | No |
+| `rabbit_3d_style_svg` | `assets/characters/rabbit_3d_style.svg` | SVG | Glossy 3D-look buddy/activity artwork | No |
+| `panda_3d_style_svg` | `assets/characters/panda_3d_style.svg` | SVG | Glossy 3D-look buddy/activity artwork | No |
+| `adventure_island_svg` | `assets/illustrations/adventure_island.svg` | SVG | Existing decorative island illustration | No |
+| `playground_3d_style_svg` | `assets/illustrations/playground_3d_style.svg` | SVG | Layered floating-island playground UI artwork | No |
+| `app_icon_svg` | `assets/icons/app_icon.svg` | SVG | Source artwork for launcher icon generation | No |
 
-The SVGs are vector illustrations with gradient/shading techniques. They are not meshes, are not rigged, cannot be rotated as 3D objects and do not satisfy the requested Blender/GLB asset deliverable.
+The new SVGs use gradients, layered forms, highlights, soft shadows and shading to create a toy-like 3D appearance. They remain 2D vector paths: they cannot provide genuine perspective camera movement, skeletal animation, mesh transforms or PBR rendering.
 
 ## Genuine 3D assets found
 
@@ -26,7 +32,7 @@ The SVGs are vector illustrations with gradient/shading techniques. They are not
 - Environment maps/HDRs: none
 - Exported texture atlases: none
 
-## Asset metadata required for every production entry
+## Metadata required for every production 3D entry
 
 Record:
 - Stable asset ID and semantic name
@@ -37,8 +43,8 @@ Record:
 - Mesh/triangle count, materials, texture sizes and compression
 - Skeleton and animation clip names/durations
 - Licence, author/creator and commercial redistribution rights
-- First supported app build and any known renderer limitations
+- First supported app build and known renderer limitations
 
-## Manifest status
+## Usage rule
 
-No production 3D asset is marked complete yet. Update this table only after a real Blender export is committed and opened successfully by the Flutter Scene asset pipeline.
+Use the 3D-look SVGs in Flutter UI cards, category tiles, onboarding, loading states and decorative backgrounds. Do not use them as substitutes for the Blender/GLB deliverables. Mark a production 3D asset complete only after the real GLB is committed and loaded successfully by Flutter Scene.
