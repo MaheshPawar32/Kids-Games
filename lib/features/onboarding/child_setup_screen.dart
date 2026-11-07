@@ -117,6 +117,7 @@ class _ChildSetupScreenState extends State<ChildSetupScreen> {
               TextField(
                 key: const Key('child_name_field'),
                 controller: _nameController,
+                onChanged: (_) => setState(() {}),
                 textCapitalization: TextCapitalization.words,
                 maxLength: 20,
                 decoration: InputDecoration(
