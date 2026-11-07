@@ -31,3 +31,25 @@ Do not mark Baby Lion complete until:
 The starter uses separate toy-like mesh parts attached to named bones. A production
 artist should refine the sculpt, topology, UVs, texture detail, facial expression,
 deformation quality and the remaining animation set (blink, walk, run and jump).
+
+
+## Generate the reusable 3D icon pack
+
+From the repository root:
+
+```bash
+blender --background --python blender/scripts/create_3d_icon_pack.py
+```
+
+The generator creates separate, independently loadable GLB assets under
+`assets/models/icons/`:
+
+- `star.glb`, `trophy.glb`, `gift.glb`, `heart.glb`
+- `home.glb`, `book.glb`, `settings.glb`, `sound.glb`
+- `play.glb`, `pause.glb`, `lock.glb`, `medal.glb`
+- `puzzle_piece.glb`
+
+The icon models use a shared bright toy-like PBR palette and rounded geometry.
+They are standalone 3D meshes; they are not flattened SVG or PNG icons. The
+generator is an initial production pipeline and every model still requires
+visual review, structural validation and a Flutter Scene load test before release.
