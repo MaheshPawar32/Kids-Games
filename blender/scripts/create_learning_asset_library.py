@@ -296,9 +296,9 @@ def main():
         jobs.append(("shapes", shape, lambda m, v=shape, i=i: build_shape(v, m[i % len(m)])))
     prop_names = ("ball","treasure_chest","coin","reward_star","puzzle_piece","tree","bush","rock","flower","cloud","platform")
     for i, prop in enumerate(prop_names):
-        jobs.append(("props", prop, lambda m, v=prop, i=i: build_prop(v, [m[i % len(m)], m[(i+1)%len(m)], m[(i+2)%len(m)]])))
+        jobs.append(("props", prop, lambda m, v=prop, i=i: build_prop(v, [m[i % 8], m[(i+1)%8], m[(i+2)%8], m[8]])))
     for i, env in enumerate(("playground_island","animal_habitat","learning_island")):
-        jobs.append(("environments", env, lambda m, v=env, i=i: build_environment(v, [m[i%len(m)],m[(i+1)%len(m)],m[(i+2)%len(m)]])))
+        jobs.append(("environments", env, lambda m, v=env, i=i: build_environment(v, [m[i % 8], m[(i+1) % 8], m[(i+2) % 8], m[8]])))
     for category, name, builder in jobs:
         export_one(category, name, builder)
     print("LEARNING_ASSET_LIBRARY_COMPLETE", len(jobs))
