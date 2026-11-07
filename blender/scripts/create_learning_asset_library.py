@@ -193,7 +193,8 @@ def build_shape(shape, mat):
 
 
 def build_prop(name, mats):
-    main, accent, green = mats
+    main, accent, green = mats[:3]
+    cream = mats[3]
     if name == "ball":
         sphere("Play_Ball", (0,0,0), (0.7,0.7,0.7), main)
         for z in (-0.28, 0.28):
@@ -208,7 +209,7 @@ def build_prop(name, mats):
         cylinder("Coin_Emboss", (0,-0.10,0), 0.34, 0.04, accent, 32)
     elif name == "reward_star":
         star_mesh(main)
-        sphere("Star_Glint", (-0.22,-0.16,0.28), (0.08,0.03,0.08), CREAM)
+        sphere("Star_Glint", (-0.22,-0.16,0.28), (0.08,0.03,0.08), cream)
     elif name == "puzzle_piece":
         cube("Puzzle_Square", (0,0,0), (0.9,0.28,0.9), main, 0.10)
         sphere("Puzzle_Knob", (0,-0.02,0.48), (0.2,0.18,0.2), main)
@@ -229,14 +230,15 @@ def build_prop(name, mats):
             sphere("Flower_Petal", (math.cos(a)*0.25,0,0.18+math.sin(a)*0.25), (0.18,0.12,0.18), accent)
     elif name == "cloud":
         for x,z,s in [(-0.35,0,(0.42,0.34,0.34)),(0,0.16,(0.52,0.38,0.42)),(0.38,0,(0.4,0.32,0.32))]:
-            sphere("Cloud_Puff", (x,0,z), s, CREAM)
+            sphere("Cloud_Puff", (x,0,z), s, cream)
     elif name == "platform":
         cylinder("Floating_Platform", (0,0,-0.12), 1.0, 0.32, green, 64)
         cylinder("Platform_Top", (0,0,0.06), 0.88, 0.08, main, 64)
 
 
 def build_environment(name, mats):
-    main, accent, green = mats
+    main, accent, green = mats[:3]
+    cream = mats[3]
     # A compact diorama with a round floating base and reusable toy props.
     cylinder("Island_Base", (0,0,-0.28), 2.25, 0.52, accent, 64)
     cylinder("Grass_Top", (0,0,0.0), 2.12, 0.20, green, 64)
@@ -255,12 +257,13 @@ def build_environment(name, mats):
         for i in range(5):
             x = -1.35 + i*0.68
             cube("Learning_Block", (x,0.1,0.35), (0.48,0.48,0.55), mats[i % len(mats)], 0.07)
-        sphere("Learning_Cloud", (0,0.9,0.8), (0.65,0.35,0.3), CREAM)
+        sphere("Learning_Cloud", (0,0.9,0.8), (0.65,0.35,0.3), cream)
 
 
 def export_one(category, name, builder):
     clear_scene()
     palette_mats = [material(category + "_" + str(i), color) for i, color in enumerate(PALETTE)]
+    palette_mats.append(material(category + "_cream", CREAM))
     builder(palette_mats)
     out_dir = os.path.join(ASSET_ROOT, category)
     src_dir = os.path.join(SOURCE_ROOT, category)
