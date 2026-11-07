@@ -1,35 +1,102 @@
-# Architecture
+# Kids Games — target architecture
 
-## Initial approach
-Use a feature-first Flutter structure with clear presentation, application, domain and data boundaries as the codebase grows. Avoid introducing a state-management package until the first persistent features are designed.
+This document describes the required architecture. Items remain planned until the implementation and validation checklist is complete.
 
-## Planned layers
-- Presentation: screens, reusable widgets, visual states and accessibility.
-- Application: feature controllers and user workflows.
-- Domain: entities, activity rules, scoring and use cases.
-- Data: local repositories, bundled content and persistence adapters.
+## Application foundation
 
-## Feature areas
-- onboarding and child profiles
-- home and adventure map
-- learning worlds and activity catalogue
-- 15 mini-games
-- phonics, tracing, vocabulary and mathematics
-- drawing, coloring, music and interactive stories
-- science discovery and life skills
-- buddies, rewards and daily missions
-- progress, revision and mistake review
-- parent zone, screen time and accessibility
-- offline content manager
+- Flutter/Dart Android app, package ID `com.dev.kidsgames`.
+- Offline-first: all core instructions, game levels and required assets ship locally.
+- GoRouter owns page navigation and guarded parent-only routes.
+- VelocityX VxStore/VxState is the selected app/session state mechanism, subject to a compatibility spike with Flutter 3.47.9 before broad adoption.
+- SharedPreferences stores small settings only.
+- Hive CE stores child profile, progress, game sessions, rewards and app settings that need structured persistence.
+- Keep presentation widgets, game rules, storage adapters and renderers separated.
 
-## Offline-first rules
-- Bundle all core activity instructions, question sets, illustrations and audio.
-- Save profile, progress, settings and artwork locally.
-- Keep the child experience usable in airplane mode.
-- Treat network features as optional future additions requiring a privacy review.
+## Renderer boundaries
 
-## 3D visual strategy
-Use Flutter for navigation, layouts, cards, controls and most mini-games. Prefer optimized pre-rendered transparent 3D illustrations and short animation assets for characters and worlds. Use Flame for selected 2D game loops. Introduce a real-time 3D renderer only for a feature that truly needs camera or object manipulation.
+### Flutter UI
+Owns app layout, buttons, overlays, accessibility, screen transitions and parent controls. Use reusable widgets from the design system.
 
-## Privacy and child safety
-No public chat, social profiles, location tracking, unnecessary permissions or child-facing external links. Parent-only controls must be protected by a parent gate. Avoid targeted advertising and collect as little child data as possible.
+### Flutter Scene
+Owns true 3D rendering: GLB scenes, node transforms, camera, PBR materials, lighting, skeletal animation, picking and 3D effects. Flutter Scene is a separate scene graph, not a Flame component.
+
+### Flame
+Owns 2D mini-game components, sprites, input, collision, 2D particles and game-loop effects. Flame's component tree remains separate from Flutter Scene's graph.
+
+### Shared game session
+A renderer-agnostic application/domain controller owns game lifecycle, level, scoring, pause/resume, completion, persistence and result events. A game screen composes either a Scene view, Flame widget or a mixture of separately composed renderer views, but the controllers do not merge their render trees.
+
+## Suggested module layout
+
+```
+lib/
+  app/
+    router/
+    theme/
+    store/
+  core/
+    audio/
+    accessibility/
+    persistence/
+    game_session/
+    widgets/
+  features/
+    onboarding/
+    home/
+    game_library/
+    animal_world/
+    shape_sorter/
+    number_adventure/
+    alphabet_world/
+    color_match/
+    puzzle_world/
+    progress/
+    rewards/
+    parent/
+    settings/
+  data/
+    hive/
+    repositories/
+    content/
+  domain/
+    models/
+    rules/
+    repositories/
+assets/
+  models/
+  textures/
+  materials/
+  scenes/
+  audio/
+  images/
+  icons/
+  fonts/
+blender/
+  characters/
+  environments/
+  animations/
+  export_scripts/
+```
+
+## Common game lifecycle
+
+Every module uses the same session contract:
+
+`initialize → loadAssets → start → pause/resume → restart → complete → dispose`
+
+The controller exposes result events and progress changes. Rendering-specific code translates those events into Scene or Flame behaviour.
+
+## Dependency responsibilities
+
+- `flutter_scene`: genuine 3D engine and build-time glTF pipeline.
+- `flame` / `flame_audio`: 2D game loop, components, sprite effects and offline audio.
+- `velocity_x`: VxStore/VxState and selected UI convenience APIs; verify actual package API.
+- `go_router`: app route tree and parent-gate route protection.
+- `hive_ce` / `hive_ce_flutter`: structured offline storage.
+- `shared_preferences`: lightweight preferences.
+- `flutter_animate` / `lottie`: UI animation where appropriate; not a substitute for character rigging.
+- `vector_math`: vector and matrix types used by Scene integrations.
+
+## Privacy
+
+No child-facing chat, public profiles, social network, location tracking, mandatory login or targeted advertising. Keep parent-only controls behind a parent gate. Defer Firebase and AdMob until there is an explicit configuration and privacy/Families review.

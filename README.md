@@ -1,80 +1,80 @@
 # Kids Games
 
-A fresh, English-only, offline-first educational games app for children from Nursery through Grade 5.
+Premium playful 3D educational game app for children from Nursery through Grade 5.
 
 ## Product direction
-- Flutter, Android only
-- Package ID: `com.dev.kidsgames`
-- Playful premium 3D visual direction using original illustrations, layered surfaces, gradients and motion
-- No BrightBuddies branding or assets
-- Core experience works offline
-- Parent Zone will be protected by a parent gate
 
-## Requirements
-- Flutter 3.41 or newer (Dart 3.11+)
-- Android Studio and Android SDK
-- Android deployment minimum: API 24
+- Flutter/Dart, Android only
+- Android application ID: `com.dev.kidsgames` (intended; generated Android project still needs to be created and verified)
+- Offline-first; no mandatory account
+- Flutter Scene for genuine real-time 3D (GLB/glTF, PBR, camera and skeletal animation)
+- Flame for separate 2D mini-games
+- Blender source files and optimized GLB exports for production character/environment assets
+- VelocityX VxStore/VxState, GoRouter and Hive CE as the required state/navigation/storage architecture
+- No Riverpod, Provider, GetX or BLoC
+- No BrightBuddies branding or artwork
 
-## Setup on macOS
+## Compatibility baseline
+
+The remote GitHub Actions runner used Flutter stable 3.47.9 / Dart 3.13.7. Flutter Scene 0.24.3 documents Flutter 3.47 stable or newer and requires Flutter GPU to be enabled on Android for shipped builds.
+
+The local execution workspace used for the current audit does not include Flutter, Dart, Android SDK/adb or Blender. Use the audit and dependency documents for exact setup and toolchain gaps.
+
+## Current implementation status
+
+Existing useful foundation:
+- Child onboarding and grade selection
+- Local child profile persistence through SharedPreferencesAsync
+- Five-tab Home/Learn/Games/Create/Rewards shell
+- 15-item educational activity catalogue
+- One playable five-round Shape Matching activity
+
+Not yet implemented:
+- Flutter Scene and actual GLB loading
+- Flame game foundation
+- Hive CE and VelocityX VxStore migration
+- GoRouter
+- Generated Android project and Flutter GPU manifest flag
+- Blender source assets and production GLB exports
+- Animal World, Number Adventure, Alphabet World, Color Match, Puzzle World
+- Parent gate/dashboard, rewards persistence and production progress tracking
+
+Do not treat the SVG buddies/island as 3D models. They are only vector illustrations.
+
+## Start-up (current repository state)
+
+Install Flutter stable 3.47.9 or later, Android Studio and an Android SDK. Then:
+
 ```bash
 git clone https://github.com/MaheshPawar32/Kids-Games.git
 cd Kids-Games
 bash tool/setup_android.sh
 flutter pub get
-dart format lib test
+dart format .
 flutter analyze
 flutter test
 flutter run
 ```
 
-The setup script creates only the Android platform folder and does not overwrite the existing Dart source. It sets the generated Android application ID to `com.dev.kidsgames` and the minimum SDK to 24.
+The Android setup script currently generates the platform folder and sets the application ID/minimum SDK. Flutter GPU manifest integration is part of Phase 1 and is not yet completed.
 
 ## Build
+
 ```bash
-flutter build apk --release
+flutter build apk --debug
 ```
 
-APK output:
-`build/app/outputs/flutter-apk/app-release.apk`
+Production Scene work must also use the Android Flutter GPU setting documented in [DEPENDENCIES.md](docs/DEPENDENCIES.md) and the Flutter Scene setup pipeline.
 
-## Current implementation
-- First-run child onboarding with first name and grade selection
-- Local profile save/restore using SharedPreferencesAsync
-- Child-specific home greeting
-- Five-tab navigation: Home, Learn, Games, Create and Rewards
-- Fifteen activity catalogue entries
-- Playable Shape Matching game with five rounds, visual answers, feedback, score and replay
-- Upgraded 3D-style SVG fox, rabbit and panda buddies, floating adventure island and app-icon artwork
+## Project documentation
 
-The characters and island are layered vector illustrations that simulate a dimensional toy-like 3D appearance; they are not rotatable 3D models. The other fourteen games and learning-world entries are catalogue/UI scaffolds until their individual gameplay is implemented.
-
-## Project structure
-```
-lib/
-  app/
-    theme/
-  features/
-    onboarding/
-    home/
-    games/
-      shape_matching/
-assets/
-  characters/
-  illustrations/
-  icons/
-docs/
-tool/
-test/
-```
-
-## Initial activity catalogue
-Complete Picture, Shadow Matching, Color Matching, Shape Matching, Alphabet Matching, Animal Recognition, Odd One Out, Big & Small, Missing Numbers, Missing Shapes, Find Differences, Magic Counting, Number Sequencing, What Comes Next, Jigsaw Puzzles.
-
-## Development principles
-- Keep learning content and game logic separate from widgets.
-- Bundle assets and content needed for core activities.
-- Save profile and progress locally; never require an account for core play.
-- Use age-appropriate, accessible interactions and large touch targets.
-- No child-facing chat, social feed, external links or targeted advertising.
-- Do not add network permissions or analytics without a reviewed requirement.
-- See [assets/README.md](assets/README.md) for the illustration style and production guidance.
+- [Repository audit](docs/REPOSITORY_AUDIT.md)
+- [Implementation plan](docs/IMPLEMENTATION_PLAN.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Dependencies](docs/DEPENDENCIES.md)
+- [Asset manifest](docs/ASSET_MANIFEST.md)
+- [Asset TODO](docs/ASSET_TODO.md)
+- [3D asset guidelines](docs/3D_ASSET_GUIDELINES.md)
+- [Performance plan](docs/PERFORMANCE.md)
+- [Testing plan](docs/TESTING.md)
+- [Changelog](docs/CHANGELOG.md)
