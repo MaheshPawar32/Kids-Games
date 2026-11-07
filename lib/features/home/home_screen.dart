@@ -508,29 +508,10 @@ class _RewardsPage extends StatelessWidget {
           children: [
             InkWell(
               borderRadius: BorderRadius.circular(58),
-              onTap: () {
-                showDialog<void>(
-                  context: context,
-                  builder: (dialogContext) => AlertDialog(
-                    title: const Text('3D trophy preview'),
-                    content: SizedBox(
-                      width: 260,
-                      height: 240,
-                      child: ThreeDAssetPreview(
-                        assetPath: KidsGames3DAssets.iconPath('trophy'),
-                        scale: 1.0,
-                        semanticsLabel: 'Three dimensional golden trophy',
-                      ),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(dialogContext).pop(),
-                        child: const Text('Close'),
-                      ),
-                    ],
-                  ),
-                );
-              },
+              onTap: () => showDialog<void>(
+                context: context,
+                builder: (_) => const _ThreeDIconGalleryDialog(),
+              ),
               child: Container(
                 width: 116,
                 height: 116,
@@ -556,6 +537,79 @@ class _RewardsPage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+
+class _ThreeDIconGalleryDialog extends StatefulWidget {
+  const _ThreeDIconGalleryDialog();
+
+  @override
+  State<_ThreeDIconGalleryDialog> createState() =>
+      _ThreeDIconGalleryDialogState();
+}
+
+class _ThreeDIconGalleryDialogState extends State<_ThreeDIconGalleryDialog> {
+  String _selectedIcon = 'trophy';
+
+  String _labelFor(String id) {
+    return id
+        .split('_')
+        .map((word) => word[0].toUpperCase() + word.substring(1))
+        .join(' ');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('3D icon gallery'),
+      content: SizedBox(
+        width: 320,
+        height: 390,
+        child: Column(
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: ColoredBox(
+                  color: const Color(0xFFF4F6FB),
+                  child: ThreeDAssetPreview(
+                    key: ValueKey(_selectedIcon),
+                    assetPath: KidsGames3DAssets.iconPath(_selectedIcon),
+                    scale: 1.0,
+                    semanticsLabel: '3D ${_labelFor(_selectedIcon)} icon',
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 6,
+              runSpacing: 2,
+              children: [
+                for (final iconId in KidsGames3DAssets.icons.keys)
+                  ChoiceChip(
+                    label: Text(_labelFor(iconId)),
+                    selected: iconId == _selectedIcon,
+                    onSelected: (selected) {
+                      if (selected) {
+                        setState(() => _selectedIcon = iconId);
+                      }
+                    },
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Close'),
+        ),
+      ],
     );
   }
 }
