@@ -29,3 +29,29 @@ jobs:
       - name: Android debug build (when platform project is committed)
         if: ${{ hashFiles('android/app/build.gradle', 'android/app/build.gradle.kts') != '' }}
         run: flutter build apk --debug
+
+  generate-baby-lion-3d:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Blender
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y blender
+          blender --version
+      - name: Generate editable Blender source and GLB
+        run: blender --background --python blender/scripts/create_baby_lion.py
+      - name: Verify generated files
+        run: |
+          test -s blender/output/baby_lion.blend
+          test -s assets/models/characters/baby_lion.glb
+          ls -lh blender/output/baby_lion.blend assets/models/characters/baby_lion.glb
+      - name: Upload 3D asset files
+        uses: actions/upload-artifact@v4
+        with:
+          name: baby-lion-3d-assets
+          path: |
+            blender/output/baby_lion.blend
+            assets/models/characters/baby_lion.glb
+          if-no-files-found: error
+          retention-days: 30
