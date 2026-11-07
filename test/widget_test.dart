@@ -40,7 +40,10 @@ void main() {
     );
     await tester.tap(find.byKey(const Key('grade_Grade 1')));
     await tester.pump();
-    await tester.tap(find.byKey(const Key('start_adventure_button')));
+
+    final startButton = find.byKey(const Key('start_adventure_button'));
+    await tester.ensureVisible(startButton);
+    await tester.tap(startButton);
     await tester.pumpAndSettle();
 
     expect(repository.profile?.name, 'Ava');
@@ -73,6 +76,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Game world'), findsOneWidget);
-    expect(find.text('What Comes Next'), findsOneWidget);
+    expect(find.text('Complete Picture'), findsOneWidget);
   });
 }
