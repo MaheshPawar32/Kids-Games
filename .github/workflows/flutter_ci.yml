@@ -61,6 +61,13 @@ jobs:
         run: |
           set -euxo pipefail
           blender --background --python "$GITHUB_WORKSPACE/blender/scripts/create_3d_icon_pack.py"
+      - name: Generate educational numbers, letters, shapes, props and environments
+        env:
+          GITHUB_WORKSPACE: ${{ github.workspace }}
+          PYTHONPATH: /usr/lib/python3/dist-packages
+        run: |
+          set -euxo pipefail
+          blender --background --python "$GITHUB_WORKSPACE/blender/scripts/create_learning_asset_library.py"
       - name: Verify generated files
         run: |
           set -euxo pipefail
@@ -76,6 +83,17 @@ jobs:
             test "$MAGIC" = "676c5446"
             ls -lh "$file"
           done
+          LEARNING_COUNT="$(find "$GITHUB_WORKSPACE/assets/models" -mindepth 2 -maxdepth 2 -type f -name '*.glb' | wc -l)"
+          echo "Learning GLB count: $LEARNING_COUNT"
+          test "$LEARNING_COUNT" -eq 71
+          for file in "$GITHUB_WORKSPACE"/assets/models/{numbers,letters,shapes,props,environments}/*.glb; do
+            test -s "$file"
+            MAGIC="$(od -An -tx1 -N4 "$file" | tr -d ' \\n')"
+            test "$MAGIC" = "676c5446"
+          done
+          BLEND_COUNT="$(find "$GITHUB_WORKSPACE/blender/output/learning_assets" -type f -name '*.blend' | wc -l)"
+          echo "Editable learning .blend count: $BLEND_COUNT"
+          test "$BLEND_COUNT" -eq 71
           ls -lh "$GITHUB_WORKSPACE/blender/output/baby_lion.blend"
       - name: Upload 3D asset files
         uses: actions/upload-artifact@v4
@@ -85,5 +103,11 @@ jobs:
             blender/output/baby_lion.blend
             assets/models/characters/baby_lion.glb
             assets/models/icons/*.glb
+            assets/models/numbers/*.glb
+            assets/models/letters/*.glb
+            assets/models/shapes/*.glb
+            assets/models/props/*.glb
+            assets/models/environments/*.glb
+            blender/output/learning_assets/
           if-no-files-found: error
           retention-days: 30
