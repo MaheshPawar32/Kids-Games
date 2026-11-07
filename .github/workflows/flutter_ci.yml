@@ -8,9 +8,15 @@ on:
 
 jobs:
   analyze-and-test:
+    needs: generate-baby-lion-3d
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Download generated 3D asset bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: kids-games-3d-assets
+          path: .
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.47.9'
