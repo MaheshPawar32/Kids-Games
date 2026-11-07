@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Explorer profile'),
-        content: Text(widget.childName + '\n' + widget.grade),
+        content: Text('${widget.childName}\n${widget.grade}'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
@@ -134,7 +134,7 @@ class _HomeDashboard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Hello, ' + childName + '!',
+                        'Hello, $childName!',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -144,7 +144,7 @@ class _HomeDashboard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        grade + ' explorer',
+                        '$grade explorer',
                         style: const TextStyle(
                           color: Color(0xFF7B86A0),
                           fontSize: 12,
@@ -323,7 +323,7 @@ class _ActivityGrid extends StatelessWidget {
             borderRadius: BorderRadius.circular(22),
             clipBehavior: Clip.antiAlias,
             child: InkWell(
-              key: Key('activity_' + activity.id),
+              key: Key('activity_${activity.id}'),
               onTap: () {
                 if (activity.id == 'shape_matching') {
                   Navigator.of(context).push<void>(
@@ -345,7 +345,7 @@ class _ActivityGrid extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(22),
                   boxShadow: const [
-                    BoxShadow(
+                    const BoxShadow(
                       color: Color(0x1025365B),
                       blurRadius: 16,
                       offset: Offset(0, 7),
