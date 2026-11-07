@@ -94,6 +94,7 @@ void main() {
 
     final shapeTile = find.byKey(const Key('activity_shape_matching'));
     await tester.ensureVisible(shapeTile);
+    await tester.pumpAndSettle();
     await tester.tap(shapeTile);
     await tester.pumpAndSettle();
 
