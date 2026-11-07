@@ -15,7 +15,7 @@ import math
 import os
 from mathutils import Vector
 
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+ROOT = os.path.abspath(os.environ.get("GITHUB_WORKSPACE", os.path.join(os.path.dirname(__file__), "..", "..")))
 BLEND_OUT = os.path.join(ROOT, "blender", "output", "baby_lion.blend")
 GLB_OUT = os.path.join(ROOT, "assets", "models", "characters", "baby_lion.glb")
 
@@ -219,6 +219,10 @@ def build():
     )
     print("Baby Lion source saved:", BLEND_OUT)
     print("Baby Lion GLB exported:", GLB_OUT)
+    for output_path in (BLEND_OUT, GLB_OUT):
+        if not os.path.isfile(output_path) or os.path.getsize(output_path) == 0:
+            raise RuntimeError(f"Expected generated asset is missing or empty: {output_path}")
+        print(f"Verified output: {output_path} ({os.path.getsize(output_path)} bytes)")
     print("Review the model and verify both clips before marking the asset complete.")
 
 
