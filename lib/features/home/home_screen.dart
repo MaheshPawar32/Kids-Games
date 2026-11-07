@@ -551,7 +551,19 @@ class _ThreeDIconGalleryDialog extends StatefulWidget {
 }
 
 class _ThreeDIconGalleryDialogState extends State<_ThreeDIconGalleryDialog> {
-  String _selectedIcon = 'trophy';
+  static const _groups = <String, Map<String, String>>{
+    'Icons': KidsGames3DAssets.icons,
+    'Numbers': KidsGames3DAssets.numbers,
+    'Alphabet': KidsGames3DAssets.letters,
+    'Shapes': KidsGames3DAssets.shapes,
+    'Props': KidsGames3DAssets.props,
+    'Environments': KidsGames3DAssets.environments,
+  };
+
+  String _selectedGroup = 'Icons';
+  String _selectedAsset = 'trophy';
+
+  Map<String, String> get _assets => _groups[_selectedGroup]!;
 
   String _labelFor(String id) {
     return id
@@ -562,44 +574,79 @@ class _ThreeDIconGalleryDialogState extends State<_ThreeDIconGalleryDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final selectedPath = _assets[_selectedAsset]!;
+
     return AlertDialog(
-      title: const Text('3D icon gallery'),
+      title: const Text('3D learning asset gallery'),
       content: SizedBox(
-        width: 320,
-        height: 390,
+        width: 360,
+        height: 440,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            DropdownButtonFormField<String>(
+              value: _selectedGroup,
+              decoration: const InputDecoration(
+                labelText: 'Asset collection',
+                border: OutlineInputBorder(),
+                isDense: true,
+              ),
+              items: [
+                for (final group in _groups.keys)
+                  DropdownMenuItem(value: group, child: Text(group)),
+              ],
+              onChanged: (group) {
+                if (group == null) return;
+                setState(() {
+                  _selectedGroup = group;
+                  _selectedAsset = _groups[group]!.keys.first;
+                });
+              },
+            ),
+            const SizedBox(height: 12),
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(18),
                 child: ColoredBox(
                   color: const Color(0xFFF4F6FB),
                   child: ThreeDAssetPreview(
-                    key: ValueKey(_selectedIcon),
-                    assetPath: KidsGames3DAssets.iconPath(_selectedIcon),
+                    key: ValueKey(selectedPath),
+                    assetPath: selectedPath,
                     scale: 1.0,
-                    semanticsLabel: '3D ${_labelFor(_selectedIcon)} icon',
+                    semanticsLabel:
+                        '3D ${_labelFor(_selectedAsset)} preview',
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 12),
-            Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 6,
-              runSpacing: 2,
-              children: [
-                for (final iconId in KidsGames3DAssets.icons.keys)
-                  ChoiceChip(
-                    label: Text(_labelFor(iconId)),
-                    selected: iconId == _selectedIcon,
-                    onSelected: (selected) {
-                      if (selected) {
-                        setState(() => _selectedIcon = iconId);
-                      }
-                    },
-                  ),
-              ],
+            const SizedBox(height: 8),
+            Text(
+              '${_labelFor(_selectedAsset)} · ${_assets.length} assets in this collection',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.labelLarge,
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 88,
+              child: SingleChildScrollView(
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 6,
+                  runSpacing: 2,
+                  children: [
+                    for (final assetId in _assets.keys)
+                      ChoiceChip(
+                        label: Text(_labelFor(assetId)),
+                        selected: assetId == _selectedAsset,
+                        onSelected: (selected) {
+                          if (selected) {
+                            setState(() => _selectedAsset = assetId);
+                          }
+                        },
+                      ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
