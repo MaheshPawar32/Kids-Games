@@ -53,3 +53,32 @@ The icon models use a shared bright toy-like PBR palette and rounded geometry.
 They are standalone 3D meshes; they are not flattened SVG or PNG icons. The
 generator is an initial production pipeline and every model still requires
 visual review, structural validation and a Flutter Scene load test before release.
+
+## Generate the complete educational 3D library
+
+Run:
+
+```bash
+blender --background --python blender/scripts/create_learning_asset_library.py
+```
+
+The generator creates **71 individual GLB models** and matching editable Blender
+source scenes:
+
+- 21 number tokens: 0–20 (`assets/models/numbers/number_00.glb` … `number_20.glb`)
+- 26 alphabet tokens: A–Z (`assets/models/letters/letter_a.glb` … `letter_z.glb`)
+- 10 shapes: cube, sphere, cone, cylinder, triangular prism, star, heart, oval,
+  rectangle and diamond
+- 11 reusable props: ball, treasure chest, coin, reward star, puzzle piece,
+  tree, bush, rock, flower, cloud and platform
+- 3 modular dioramas: playground island, animal habitat and learning island
+
+Each asset is exported independently for on-demand loading. Editable source scenes
+are written under `blender/output/learning_assets/<category>/`. The CI workflow
+checks the expected count, non-empty files and GLB magic header, then uploads the
+GLB and .blend files as the `kids-games-3d-assets` artifact.
+
+These are procedural starter meshes. They still need visual inspection, Khronos
+glTF validation, camera framing review, Flutter Scene load testing and real-device
+performance review before release approval. The pipeline does not claim that
+geometry, text readability or materials have passed those reviews.
