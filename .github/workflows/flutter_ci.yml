@@ -37,11 +37,13 @@ jobs:
       - name: Install Blender
         run: |
           sudo apt-get update
-          sudo apt-get install -y blender
+          sudo apt-get install -y blender python3-numpy
           blender --version
+          python3 -c "import numpy; print('System NumPy:', numpy.__version__)"
       - name: Generate editable Blender source and GLB
         env:
           GITHUB_WORKSPACE: ${{ github.workspace }}
+          PYTHONPATH: /usr/lib/python3/dist-packages
         run: |
           set -euxo pipefail
           pwd
