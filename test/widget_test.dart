@@ -92,7 +92,7 @@ void main() {
     await tester.tap(find.text('Games').last);
     await tester.pumpAndSettle();
 
-    final shapeTile = find.byKey(const Key('activity_shape_matching'));
+    final shapeTile = find.byKey(const Key('activity_shape_matching')).last;
     await tester.ensureVisible(shapeTile);
     await tester.pumpAndSettle();
     await tester.tap(shapeTile);
@@ -133,6 +133,8 @@ void main() {
       await tester.tap(find.byKey(const Key('answer_0')));
       await tester.pumpAndSettle();
       final next = find.text(round == 4 ? 'See my score' : 'Next');
+      await tester.ensureVisible(next);
+      await tester.pumpAndSettle();
       await tester.tap(next);
       await tester.pumpAndSettle();
     }
