@@ -193,13 +193,13 @@ def build_book(m):
 
 
 def build_gear(m):
-    cylinder("Gear_Core", (0, 0, 0), 0.38, 0.20, m["blue"], rotation=(0, 0, 0))
-    cylinder("Gear_Hub", (0, 0, 0.12), 0.16, 0.10, m["yellow"], rotation=(0, 0, 0))
+    cylinder("Gear_Core", (0, 0, 0), 0.38, 0.20, m["blue"])
+    cylinder("Gear_Hub", (0, -0.13, 0), 0.16, 0.10, m["yellow"])
     for i in range(8):
         angle = 2 * math.pi * i / 8
-        x, y = math.cos(angle) * 0.46, math.sin(angle) * 0.46
-        tooth = cube("Gear_Tooth", (x, y, 0), (0.20, 0.20, 0.22), m["blue"], 0.035)
-        tooth.rotation_euler[2] = angle
+        x, z = math.cos(angle) * 0.46, math.sin(angle) * 0.46
+        tooth = cube("Gear_Tooth", (x, 0, z), (0.20, 0.22, 0.20), m["blue"], 0.035)
+        tooth.rotation_euler[1] = -angle
 
 
 def build_speaker(m):
