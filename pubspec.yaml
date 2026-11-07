@@ -50,3 +50,5 @@ flutter:
     - assets/characters/
     - assets/illustrations/
     - assets/icons/
+    - assets/models/characters/
+    - assets/models/icons/
