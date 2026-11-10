@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../app/theme/app_theme.dart';
+import '../../../data/repositories/game_session_repository.dart';
 
 class _OddOneOutRound {
   const _OddOneOutRound({
@@ -89,7 +90,9 @@ const _rounds = <_OddOneOutRound>[
 ];
 
 class OddOneOutGameScreen extends StatefulWidget {
-  const OddOneOutGameScreen({super.key});
+  const OddOneOutGameScreen({required this.sessionRepository, super.key});
+
+  final GameSessionRepository sessionRepository;
 
   @override
   State<OddOneOutGameScreen> createState() => _OddOneOutGameScreenState();
@@ -100,6 +103,8 @@ class _OddOneOutGameScreenState extends State<OddOneOutGameScreen> {
   int _score = 0;
   int? _selectedIndex;
   bool _finished = false;
+  bool _saving = false;
+  bool _saveError = false;
 
   _OddOneOutRound get _round => _rounds[_roundIndex];
   bool get _isCorrect => _selectedIndex == _round.oddIndex;
@@ -112,14 +117,34 @@ class _OddOneOutGameScreenState extends State<OddOneOutGameScreen> {
     });
   }
 
-  void _next() {
-    setState(() {
-      if (_roundIndex == _rounds.length - 1) {
+  Future<void> _next() async {
+    if (_roundIndex == _rounds.length - 1) {
+      setState(() {
         _finished = true;
-      } else {
-        _roundIndex++;
-        _selectedIndex = null;
+        _saving = true;
+        _saveError = false;
+      });
+      final completedAt = DateTime.now();
+      try {
+        await widget.sessionRepository.recordSession(
+          GameSession(
+            id: 'odd_one_out_${completedAt.microsecondsSinceEpoch}',
+            activityId: 'odd_one_out',
+            score: _score,
+            totalRounds: _rounds.length,
+            completedAt: completedAt,
+          ),
+        );
+      } on Object {
+        if (mounted) setState(() => _saveError = true);
+      } finally {
+        if (mounted) setState(() => _saving = false);
       }
+      return;
+    }
+    setState(() {
+      _roundIndex++;
+      _selectedIndex = null;
     });
   }
 
@@ -129,6 +154,8 @@ class _OddOneOutGameScreenState extends State<OddOneOutGameScreen> {
       _score = 0;
       _selectedIndex = null;
       _finished = false;
+      _saving = false;
+      _saveError = false;
     });
   }
 
@@ -316,6 +343,17 @@ class _OddOneOutGameScreenState extends State<OddOneOutGameScreen> {
               'You spotted $_score out of ${_rounds.length} odd ones.',
               style: const TextStyle(fontSize: 18),
               textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              _saving
+                  ? 'Saving your progress…'
+                  : _saveError
+                      ? 'Progress could not be saved. Please try again.'
+                      : 'Progress saved on this device.',
+              key: const Key('session_save_status'),
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 22),
             SizedBox(
