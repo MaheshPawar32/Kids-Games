@@ -164,7 +164,8 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
         ),
         GoRoute(
           path: '/games/shape-matching',
-          builder: (context, state) => const ShapeMatchingGameScreen(),
+          builder: (context, state) =>
+              ShapeMatchingGameScreen(sessionRepository: _gameSessionRepository),
         ),
       ],
     );
