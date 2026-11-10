@@ -241,16 +241,20 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
               ]
             : null,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(piece.emoji, style: const TextStyle(fontSize: 28)),
-          const SizedBox(width: 5),
-          Text(
-            placed ? '${piece.label} ✓' : piece.label,
-            style: const TextStyle(fontWeight: FontWeight.w900),
-          ),
-        ],
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(piece.emoji, style: const TextStyle(fontSize: 28)),
+            const SizedBox(width: 5),
+            Text(
+              placed ? '${piece.label} ✓' : piece.label,
+              style: const TextStyle(fontWeight: FontWeight.w900),
+            ),
+          ],
+        ),
       ),
     );
   }
