@@ -144,4 +144,47 @@ void main() {
     // Complete Picture rotates its correct option through indices 0, 2, 0, 2, 0.
     expect(find.text('You got 3 out of 5 correct.'), findsOneWidget);
   });
+
+  testWidgets('Jigsaw Puzzles requires dragging every piece into its slot', (
+    tester,
+  ) async {
+    final repository = _FakeChildProfileRepository(
+      profile: const ChildProfile(name: 'Ava', grade: 'Grade 1'),
+    );
+
+    await tester.view.setPhysicalSize(const Size(800, 1200));
+    await tester.view.setDevicePixelRatio(1);
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(KidsGamesApp(profileRepository: repository));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Games').last);
+    await tester.pumpAndSettle();
+
+    final tile = find.byKey(const Key('activity_jigsaw_puzzles'));
+    await tester.ensureVisible(tile);
+    await tester.pumpAndSettle();
+    await tester.tap(tile);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Build the sunny garden!'), findsOneWidget);
+
+    for (final id in ['sun', 'cloud', 'tree', 'flower']) {
+      final piece = find.byKey(Key('jigsaw_piece_$id'));
+      final slot = find.byKey(Key('jigsaw_slot_$id'));
+      await tester.ensureVisible(piece);
+      await tester.pumpAndSettle();
+      await tester.drag(piece, tester.getCenter(slot) - tester.getCenter(piece));
+      await tester.pumpAndSettle();
+    }
+
+    expect(find.text('Beautifully completed!'), findsOneWidget);
+    expect(find.text('Completed in 4 moves'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('replay_jigsaw_button')));
+    await tester.pumpAndSettle();
+    expect(find.text('Build the sunny garden!'), findsOneWidget);
+    expect(find.text('0/4'), findsOneWidget);
+  });
 }
