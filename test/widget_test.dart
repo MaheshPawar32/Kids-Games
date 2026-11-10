@@ -193,11 +193,19 @@ void main() {
       await gesture.up();
       await tester.pumpAndSettle();
 
-      expect(
-        find.text('${index + 1}/4'),
-        findsOneWidget,
-        reason: 'Dragging the $id piece should fill its matching slot.',
-      );
+      if (index < pieceIds.length - 1) {
+        expect(
+          find.text('${index + 1}/4'),
+          findsOneWidget,
+          reason: 'Dragging the $id piece should fill its matching slot.',
+        );
+      } else {
+        expect(
+          find.text('Beautifully completed!'),
+          findsOneWidget,
+          reason: 'The final correct piece should complete the puzzle.',
+        );
+      }
     }
 
     expect(find.text('Beautifully completed!'), findsOneWidget);
