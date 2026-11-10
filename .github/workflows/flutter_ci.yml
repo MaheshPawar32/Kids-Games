@@ -43,7 +43,7 @@ jobs:
       - name: Verify Android application identity and Flutter GPU configuration
         run: |
           set -euxo pipefail
-          grep -Eq 'applicationId.*com\\.dev\\.kidsgames' android/app/build.gradle* 
+          grep -Eq 'applicationId.*com\.dev\.kidsgames' android/app/build.gradle*
           grep -Eq 'minSdk(Version)?[[:space:]]*(=[[:space:]]*|[[:space:]]+)24' android/app/build.gradle*
           grep -q 'io.flutter.embedding.android.EnableFlutterGPU' android/app/src/main/AndroidManifest.xml
           grep -q 'android:value="true"' android/app/src/main/AndroidManifest.xml
