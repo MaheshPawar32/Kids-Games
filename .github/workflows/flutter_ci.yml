@@ -37,9 +37,27 @@ jobs:
         run: flutter analyze
       - name: Test
         run: flutter test
-      - name: Android debug build (when platform project is committed)
-        if: ${{ hashFiles('android/app/build.gradle', 'android/app/build.gradle.kts') != '' }}
+      - name: Generate Android platform project for validation
+        if: ${{ hashFiles('android/app/build.gradle', 'android/app/build.gradle.kts') == '' }}
+        run: bash tool/setup_android.sh
+      - name: Verify Android application identity and Flutter GPU configuration
+        run: |
+          set -euxo pipefail
+          grep -Eq 'applicationId.*com\\.dev\\.kidsgames' android/app/build.gradle* 
+          grep -Eq 'minSdk(Version)?[[:space:]]*(=| )24' android/app/build.gradle*
+          grep -q 'io.flutter.embedding.android.EnableFlutterGPU' android/app/src/main/AndroidManifest.xml
+          grep -q 'android:value="true"' android/app/src/main/AndroidManifest.xml
+      - name: Build Android debug APK
         run: flutter build apk --debug
+      - name: Upload generated Android project and debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: kids-games-android-build
+          path: |
+            android/
+            build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
 
   generate-baby-lion-3d:
     runs-on: ubuntu-24.04
