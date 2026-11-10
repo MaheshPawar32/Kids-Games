@@ -5,6 +5,7 @@ import 'package:velocity_x/velocity_x.dart';
 import '../features/games/activity.dart';
 import '../features/games/activity_game_screen.dart';
 import '../features/games/shape_matching/shape_matching_game_screen.dart';
+import '../features/games/odd_one_out/odd_one_out_game_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/onboarding/child_profile.dart';
 import '../features/onboarding/child_profile_repository.dart';
@@ -139,6 +140,9 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
             final activityId = state.pathParameters['activityId'];
             if (activityId == 'shape_matching') {
               return const ShapeMatchingGameScreen();
+            }
+            if (activityId == 'odd_one_out') {
+              return const OddOneOutGameScreen();
             }
             final matches = starterActivities.where((item) => item.id == activityId);
             if (matches.isEmpty) return const _UnknownActivityScreen();
