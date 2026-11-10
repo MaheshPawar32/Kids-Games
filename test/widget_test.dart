@@ -172,13 +172,32 @@ void main() {
 
     expect(find.text('Build the sunny garden!'), findsOneWidget);
 
-    for (final id in ['sun', 'cloud', 'tree', 'flower']) {
+    final pieceIds = ['sun', 'cloud', 'tree', 'flower'];
+    for (var index = 0; index < pieceIds.length; index++) {
+      final id = pieceIds[index];
       final piece = find.byKey(Key('jigsaw_piece_$id'));
       final slot = find.byKey(Key('jigsaw_slot_$id'));
       await tester.ensureVisible(piece);
       await tester.pumpAndSettle();
-      await tester.drag(piece, tester.getCenter(slot) - tester.getCenter(piece));
+
+      final start = tester.getCenter(piece);
+      final end = tester.getCenter(slot);
+      final gesture = await tester.startGesture(start);
+      await tester.pump(const Duration(milliseconds: 100));
+      await gesture.moveTo(Offset.lerp(start, end, 0.35)!);
+      await tester.pump(const Duration(milliseconds: 100));
+      await gesture.moveTo(Offset.lerp(start, end, 0.7)!);
+      await tester.pump(const Duration(milliseconds: 100));
+      await gesture.moveTo(end);
+      await tester.pump(const Duration(milliseconds: 100));
+      await gesture.up();
       await tester.pumpAndSettle();
+
+      expect(
+        find.text('${index + 1}/4'),
+        findsOneWidget,
+        reason: 'Dragging the $id piece should fill its matching slot.',
+      );
     }
 
     expect(find.text('Beautifully completed!'), findsOneWidget);
