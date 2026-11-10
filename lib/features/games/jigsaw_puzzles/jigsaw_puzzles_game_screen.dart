@@ -66,7 +66,6 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
   }
 
   Widget _game() {
-    final remaining = _pieces.where((piece) => !_placed.contains(piece.id)).toList();
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 28),
       child: Column(
@@ -161,16 +160,21 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
             alignment: WrapAlignment.center,
             spacing: 10,
             runSpacing: 10,
-            children: remaining.map((piece) => Draggable<String>(
+            children: _pieces.map((piece) {
+            final placed = _placed.contains(piece.id);
+            final card = _pieceCard(piece, placed: placed);
+            return Draggable<String>(
               key: Key('jigsaw_piece_${piece.id}'),
               data: piece.id,
+              maxSimultaneousDrags: placed ? 0 : 1,
               feedback: Material(
                 color: Colors.transparent,
                 child: _pieceCard(piece, dragging: true),
               ),
-              childWhenDragging: Opacity(opacity: 0.25, child: _pieceCard(piece)),
-              child: _pieceCard(piece),
-            )).toList(),
+              childWhenDragging: Opacity(opacity: 0.25, child: card),
+              child: card,
+            );
+          }).toList(),
           ),
           const SizedBox(height: 14),
           Text('Moves: $_moves', textAlign: TextAlign.center,
@@ -180,7 +184,7 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
     );
   }
 
-  Widget _pieceCard(_PuzzlePiece piece, {bool dragging = false}) {
+  Widget _pieceCard(_PuzzlePiece piece, {bool dragging = false, bool placed = false}) {
     return Container(
       width: 112,
       height: 100,
@@ -195,7 +199,8 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(piece.emoji, style: const TextStyle(fontSize: 38)),
-          Text(piece.label, style: const TextStyle(fontWeight: FontWeight.w900)),
+          Text(placed ? '${piece.label} ✓' : piece.label,
+              style: const TextStyle(fontWeight: FontWeight.w900)),
         ],
       ),
     );
