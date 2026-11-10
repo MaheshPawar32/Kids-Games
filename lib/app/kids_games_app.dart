@@ -6,6 +6,7 @@ import '../features/games/activity.dart';
 import '../features/games/activity_game_screen.dart';
 import '../features/games/shape_matching/shape_matching_game_screen.dart';
 import '../features/games/odd_one_out/odd_one_out_game_screen.dart';
+import '../features/games/jigsaw_puzzles/jigsaw_puzzles_game_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/onboarding/child_profile.dart';
 import '../features/onboarding/child_profile_repository.dart';
@@ -143,6 +144,9 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
             }
             if (activityId == 'odd_one_out') {
               return const OddOneOutGameScreen();
+            }
+            if (activityId == 'jigsaw_puzzles') {
+              return const JigsawPuzzlesGameScreen();
             }
             final matches = starterActivities.where((item) => item.id == activityId);
             if (matches.isEmpty) return const _UnknownActivityScreen();
