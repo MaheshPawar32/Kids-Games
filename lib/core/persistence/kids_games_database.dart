@@ -1,4 +1,3 @@
-import 'package:hive_ce/hive_ce.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 import '../../data/repositories/game_session_repository.dart';
