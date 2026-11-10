@@ -8,16 +8,19 @@ import '../../app/theme/app_theme.dart';
 import '../../core/assets/kids_games_3d_assets.dart';
 import '../../core/widgets/three_d_asset_preview.dart';
 import '../games/activity.dart';
+import '../../data/repositories/game_session_repository.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
     required this.childName,
     required this.grade,
+    required this.gameSessionRepository,
     super.key,
   });
 
   final String childName;
   final String grade;
+  final GameSessionRepository gameSessionRepository;
 
   static const _destinations = [
     NavigationDestination(icon: Icon(Icons.home_rounded), label: 'Home'),
@@ -63,7 +66,7 @@ class HomeScreen extends StatelessWidget {
                   _LandingItem('Music & Rhythm', 'Explore sounds and simple rhythms', '🎵', 0xFFB7A8F5),
                 ],
               ),
-              const _RewardsPage(),
+              _RewardsPage(gameSessionRepository: gameSessionRepository),
             ],
           ),
         ),
@@ -484,51 +487,315 @@ class _LandingItem {
 }
 
 class _RewardsPage extends StatelessWidget {
-  const _RewardsPage();
+  const _RewardsPage({required this.gameSessionRepository});
+
+  final GameSessionRepository gameSessionRepository;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(28),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            InkWell(
-              borderRadius: BorderRadius.circular(58),
-              onTap: () => showDialog<void>(
-                context: context,
-                builder: (_) => const _ThreeDIconGalleryDialog(),
-              ),
-              child: Container(
-                width: 116,
-                height: 116,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFFF1D4),
-                  shape: BoxShape.circle,
+    return ValueListenableBuilder<int>(
+      valueListenable: gameSessionRepository.revision,
+      builder: (context, revision, child) {
+        return FutureBuilder<List<GameSession>>(
+          future: gameSessionRepository.recentSessions(limit: 100),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return const Center(
+                child: Text('Your progress could not be loaded.'),
+              );
+            }
+            if (snapshot.connectionState == ConnectionState.waiting &&
+                !snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return _buildProgress(context, snapshot.data ?? const []);
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildProgress(BuildContext context, List<GameSession> sessions) {
+    final totalCorrect = sessions.fold<int>(0, (sum, item) => sum + item.score);
+    final totalQuestions =
+        sessions.fold<int>(0, (sum, item) => sum + item.totalRounds);
+    final perfectGames = sessions
+        .where((item) => item.totalRounds > 0 && item.score == item.totalRounds)
+        .length;
+    final accuracy =
+        totalQuestions == 0 ? 0 : (totalCorrect / totalQuestions * 100).round();
+
+    final badges = <_ProgressBadge>[
+      _ProgressBadge('First Steps', 'Finish your first game', '🌱', sessions.length >= 1),
+      _ProgressBadge('Bright Spark', 'Finish five games', '✨', sessions.length >= 5),
+      _ProgressBadge('Learning Star', 'Finish fifteen games', '⭐', sessions.length >= 15),
+      _ProgressBadge('Perfect Player', 'Get every answer right', '🏆', perfectGames > 0),
+    ];
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Your progress & rewards',
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          const SizedBox(height: 6),
+          const Text('Every completed game is saved on this device.'),
+          const SizedBox(height: 18),
+          Row(
+            children: [
+              Expanded(
+                child: _ProgressStat(
+                  value: '${sessions.length}',
+                  label: 'Games played',
+                  emoji: '🎮',
                 ),
-                alignment: Alignment.center,
-                child: const Text('🏆', style: TextStyle(fontSize: 60)),
               ),
-            ),
-            const SizedBox(height: 22),
-            Text(
-              'Your reward shelf',
-              style: Theme.of(context).textTheme.headlineMedium,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Complete learning activities to earn badges and fill your shelf with surprises.',
-              textAlign: TextAlign.center,
-            ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _ProgressStat(
+                  value: '$accuracy%',
+                  label: 'Accuracy',
+                  emoji: '🎯',
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _ProgressStat(
+                  value: '$perfectGames',
+                  label: 'Perfect games',
+                  emoji: '🏆',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Text('Badge shelf', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 12),
+          for (final badge in badges) ...[
+            _BadgeTile(badge: badge),
+            const SizedBox(height: 9),
           ],
-        ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Recent games',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
+              Text(
+                '${sessions.length} saved',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          if (sessions.isEmpty)
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Column(
+                children: [
+                  Text('🧸', style: TextStyle(fontSize: 42)),
+                  SizedBox(height: 8),
+                  Text(
+                    'Your adventure starts here',
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'Play a game and your score will appear on this shelf.',
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            )
+          else
+            for (final session in sessions.take(8))
+              _SessionTile(session: session),
+          const SizedBox(height: 18),
+          OutlinedButton.icon(
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (_) => const _ThreeDIconGalleryDialog(),
+            ),
+            icon: const Icon(Icons.view_in_ar_rounded),
+            label: const Text('Explore the 3D asset gallery'),
+          ),
+        ],
       ),
     );
   }
 }
 
+class _ProgressStat extends StatelessWidget {
+  const _ProgressStat({
+    required this.value,
+    required this.label,
+    required this.emoji,
+  });
+
+  final String value;
+  final String label;
+  final String emoji;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        children: [
+          Text(emoji, style: const TextStyle(fontSize: 24)),
+          const SizedBox(height: 6),
+          Text(
+            value,
+            style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 20),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 10, color: Color(0xFF71809B)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProgressBadge {
+  const _ProgressBadge(this.title, this.description, this.emoji, this.unlocked);
+
+  final String title;
+  final String description;
+  final String emoji;
+  final bool unlocked;
+}
+
+class _BadgeTile extends StatelessWidget {
+  const _BadgeTile({required this.badge});
+
+  final _ProgressBadge badge;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: badge.unlocked
+              ? const Color(0xFFFFD36E)
+              : const Color(0xFFE7EAF2),
+        ),
+      ),
+      child: Row(
+        children: [
+          Text(
+            badge.unlocked ? badge.emoji : '🔒',
+            style: const TextStyle(fontSize: 30),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  badge.title,
+                  style: const TextStyle(fontWeight: FontWeight.w900),
+                ),
+                Text(
+                  badge.description,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ),
+          if (badge.unlocked)
+            const Icon(Icons.check_circle_rounded, color: Colors.green),
+        ],
+      ),
+    );
+  }
+}
+
+class _SessionTile extends StatelessWidget {
+  const _SessionTile({required this.session});
+
+  final GameSession session;
+
+  @override
+  Widget build(BuildContext context) {
+    final activity = starterActivities.firstWhere(
+      (item) => item.id == session.activityId,
+      orElse: () => Activity(
+        id: session.activityId,
+        title: session.activityId,
+        description: '',
+        emoji: '🎮',
+        colorValue: 0xFFEAEAF2,
+      ),
+    );
+    final date = session.completedAt.toLocal();
+    final dateLabel = '${date.day.toString().padLeft(2, '0')}/'
+        '${date.month.toString().padLeft(2, '0')}/${date.year}';
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 9),
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 46,
+            height: 46,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Color(activity.colorValue),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Text(activity.emoji, style: const TextStyle(fontSize: 24)),
+          ),
+          const SizedBox(width: 11),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  activity.title,
+                  style: const TextStyle(fontWeight: FontWeight.w900),
+                ),
+                Text(
+                  dateLabel,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ),
+          Text(
+            '${session.score}/${session.totalRounds}',
+            style: const TextStyle(fontWeight: FontWeight.w900),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class _ThreeDIconGalleryDialog extends StatefulWidget {
   const _ThreeDIconGalleryDialog();
