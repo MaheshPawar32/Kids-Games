@@ -526,7 +526,7 @@ class _RewardsPage extends StatelessWidget {
         totalQuestions == 0 ? 0 : (totalCorrect / totalQuestions * 100).round();
 
     final badges = <_ProgressBadge>[
-      _ProgressBadge('First Steps', 'Finish your first game', '🌱', sessions.length >= 1),
+      _ProgressBadge('First Steps', 'Finish your first game', '🌱', sessions.isNotEmpty),
       _ProgressBadge('Bright Spark', 'Finish five games', '✨', sessions.length >= 5),
       _ProgressBadge('Learning Star', 'Finish fifteen games', '⭐', sessions.length >= 15),
       _ProgressBadge('Perfect Player', 'Get every answer right', '🏆', perfectGames > 0),
