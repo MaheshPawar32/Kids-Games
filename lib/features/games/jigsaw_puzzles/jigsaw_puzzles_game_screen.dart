@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../app/theme/app_theme.dart';
+import '../../../data/repositories/game_session_repository.dart';
 
 class _PuzzlePiece {
   const _PuzzlePiece(this.id, this.emoji, this.label, this.color);
@@ -19,7 +20,9 @@ const _pieces = <_PuzzlePiece>[
 ];
 
 class JigsawPuzzlesGameScreen extends StatefulWidget {
-  const JigsawPuzzlesGameScreen({super.key});
+  const JigsawPuzzlesGameScreen({required this.sessionRepository, super.key});
+
+  final GameSessionRepository sessionRepository;
 
   @override
   State<JigsawPuzzlesGameScreen> createState() =>
@@ -29,6 +32,8 @@ class JigsawPuzzlesGameScreen extends StatefulWidget {
 class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
   final Set<String> _placed = <String>{};
   int _moves = 0;
+  bool _saving = false;
+  bool _saveError = false;
 
   bool get _completed => _placed.length == _pieces.length;
 
@@ -38,12 +43,38 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
       _placed.add(id);
       _moves++;
     });
+    if (_completed) _saveCompletion();
+  }
+
+  Future<void> _saveCompletion() async {
+    setState(() {
+      _saving = true;
+      _saveError = false;
+    });
+    final completedAt = DateTime.now();
+    try {
+      await widget.sessionRepository.recordSession(
+        GameSession(
+          id: 'jigsaw_puzzles_${completedAt.microsecondsSinceEpoch}',
+          activityId: 'jigsaw_puzzles',
+          score: _pieces.length,
+          totalRounds: _pieces.length,
+          completedAt: completedAt,
+        ),
+      );
+    } on Object {
+      if (mounted) setState(() => _saveError = true);
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
   }
 
   void _restart() {
     setState(() {
       _placed.clear();
       _moves = 0;
+      _saving = false;
+      _saveError = false;
     });
   }
 
@@ -294,6 +325,17 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
             Text(
               'Completed in $_moves moves',
               style: const TextStyle(fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              _saving
+                  ? 'Saving your progress…'
+                  : _saveError
+                      ? 'Progress could not be saved. Please try again.'
+                      : 'Progress saved on this device.',
+              key: const Key('session_save_status'),
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 22),
             SizedBox(
