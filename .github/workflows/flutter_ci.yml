@@ -98,11 +98,11 @@ jobs:
           fi
           git commit -m "Add generated Android platform project"
           git push origin "HEAD:${PR_HEAD_REF}"
-          curl --fail-with-body --silent --show-error -X POST \\
-            -H "Accept: application/vnd.github+json" \\
-            -H "Authorization: Bearer ${GH_TOKEN}" \\
-            https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/flutter_ci.yml/dispatches \\
-            -d "{\\\"ref\\\":\\\"${PR_HEAD_REF}\\\"}"
+          printf '{"ref":"%s"}' "${PR_HEAD_REF}" | curl --fail-with-body --silent --show-error -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/flutter_ci.yml/dispatches \
+            -d @-
 
   generate-baby-lion-3d:
     runs-on: ubuntu-24.04
