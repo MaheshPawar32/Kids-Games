@@ -7,6 +7,7 @@ import '../features/games/activity_game_screen.dart';
 import '../features/games/shape_matching/shape_matching_game_screen.dart';
 import '../features/games/odd_one_out/odd_one_out_game_screen.dart';
 import '../features/games/jigsaw_puzzles/jigsaw_puzzles_game_screen.dart';
+import '../data/repositories/game_session_repository.dart';
 import '../features/home/home_screen.dart';
 import '../features/onboarding/child_profile.dart';
 import '../features/onboarding/child_profile_repository.dart';
@@ -17,10 +18,12 @@ import 'theme/app_theme.dart';
 class KidsGamesApp extends StatefulWidget {
   const KidsGamesApp({
     this.profileRepository,
+    this.gameSessionRepository,
     super.key,
   });
 
   final ChildProfileRepository? profileRepository;
+  final GameSessionRepository? gameSessionRepository;
 
   @override
   State<KidsGamesApp> createState() => _KidsGamesAppState();
@@ -30,6 +33,8 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
   late final ChildProfileRepository _profileRepository =
       widget.profileRepository ?? PreferencesChildProfileRepository();
   final KidsGamesStore _store = KidsGamesStore();
+  late final GameSessionRepository _gameSessionRepository =
+      widget.gameSessionRepository ?? MemoryGameSessionRepository();
   final ValueNotifier<int> _routerRefresh = ValueNotifier<int>(0);
 
   GoRouter? _router;
@@ -132,6 +137,7 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
             return HomeScreen(
               childName: profile.name,
               grade: profile.grade,
+              gameSessionRepository: _gameSessionRepository,
             );
           },
         ),
@@ -140,17 +146,20 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
           builder: (context, state) {
             final activityId = state.pathParameters['activityId'];
             if (activityId == 'shape_matching') {
-              return const ShapeMatchingGameScreen();
+              return ShapeMatchingGameScreen(sessionRepository: _gameSessionRepository);
             }
             if (activityId == 'odd_one_out') {
-              return const OddOneOutGameScreen();
+              return OddOneOutGameScreen(sessionRepository: _gameSessionRepository);
             }
             if (activityId == 'jigsaw_puzzles') {
-              return const JigsawPuzzlesGameScreen();
+              return JigsawPuzzlesGameScreen(sessionRepository: _gameSessionRepository);
             }
             final matches = starterActivities.where((item) => item.id == activityId);
             if (matches.isEmpty) return const _UnknownActivityScreen();
-            return ActivityGameScreen(activity: matches.first);
+            return ActivityGameScreen(
+              activity: matches.first,
+              sessionRepository: _gameSessionRepository,
+            );
           },
         ),
         GoRoute(
