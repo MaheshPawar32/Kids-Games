@@ -84,7 +84,7 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
               ),
               const SizedBox(width: 12),
               Text(
-                '\${_placed.length}/\${_pieces.length}',
+                '${_placed.length}/${_pieces.length}',
                 style: const TextStyle(fontWeight: FontWeight.w900),
               ),
             ],
@@ -164,7 +164,7 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
               final placed = _placed.contains(piece.id);
               final card = _pieceCard(piece, placed: placed);
               return Draggable<String>(
-                key: Key('jigsaw_piece_\${piece.id}'),
+                key: Key('jigsaw_piece_${piece.id}'),
                 data: piece.id,
                 maxSimultaneousDrags: placed ? 0 : 1,
                 feedback: Material(
@@ -178,7 +178,7 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            'Moves: \$_moves',
+            'Moves: $_moves',
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Color(0xFF71809B),
@@ -193,7 +193,7 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
   Widget _buildSlot(_PuzzlePiece piece) {
     final filled = _placed.contains(piece.id);
     return DragTarget<String>(
-      key: Key('jigsaw_slot_\${piece.id}'),
+      key: Key('jigsaw_slot_${piece.id}'),
       onWillAcceptWithDetails: (details) =>
           details.data == piece.id && !filled,
       onAcceptWithDetails: (details) => _place(details.data, piece.id),
@@ -262,7 +262,7 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
             Text(piece.emoji, style: const TextStyle(fontSize: 28)),
             const SizedBox(width: 5),
             Text(
-              placed ? '\${piece.label} ✓' : piece.label,
+              placed ? '${piece.label} ✓' : piece.label,
               style: const TextStyle(fontWeight: FontWeight.w900),
             ),
           ],
@@ -292,7 +292,7 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Completed in \$_moves moves',
+              'Completed in $_moves moves',
               style: const TextStyle(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 22),
