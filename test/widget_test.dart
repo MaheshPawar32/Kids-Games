@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kidsgames/app/kids_games_app.dart';
 import 'package:kidsgames/features/onboarding/child_profile.dart';
 import 'package:kidsgames/features/onboarding/child_profile_repository.dart';
+import 'package:kidsgames/data/repositories/game_session_repository.dart';
 
 class _FakeChildProfileRepository implements ChildProfileRepository {
   _FakeChildProfileRepository({this.profile});
@@ -143,6 +144,58 @@ void main() {
     expect(find.text('Wonderful work!'), findsOneWidget);
     // Complete Picture rotates its correct option through indices 0, 2, 0, 2, 0.
     expect(find.text('You got 3 out of 5 correct.'), findsOneWidget);
+  });
+
+
+  testWidgets('completed game is saved and displayed in Rewards', (
+    tester,
+  ) async {
+    final profileRepository = _FakeChildProfileRepository(
+      profile: const ChildProfile(name: 'Ava', grade: 'Grade 1'),
+    );
+    final gameRepository = MemoryGameSessionRepository();
+
+    await tester.pumpWidget(
+      KidsGamesApp(
+        profileRepository: profileRepository,
+        gameSessionRepository: gameRepository,
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Games').last);
+    await tester.pumpAndSettle();
+
+    final tile = find.byKey(const Key('activity_complete_picture'));
+    await tester.tap(tile);
+    await tester.pumpAndSettle();
+
+    const correctAnswers = [0, 2, 0, 2, 0];
+    for (var index = 0; index < correctAnswers.length; index++) {
+      await tester.tap(find.byKey(Key('answer_${correctAnswers[index]}')));
+      await tester.pumpAndSettle();
+      final next = find.text(index == 4 ? 'See my score' : 'Next');
+      await tester.ensureVisible(next);
+      await tester.pumpAndSettle();
+      await tester.tap(next);
+      await tester.pumpAndSettle();
+    }
+
+    expect(find.text('You got 5 out of 5 correct.'), findsOneWidget);
+    expect(find.text('Progress saved on this device.'), findsOneWidget);
+    expect(await gameRepository.totalSessions(), 1);
+
+    final progress = await gameRepository.progressFor('complete_picture');
+    expect(progress.sessionsPlayed, 1);
+    expect(progress.bestScore, 5);
+    expect(progress.accuracy, 1);
+
+    await tester.tap(find.text('Rewards').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Your progress & rewards'), findsOneWidget);
+    expect(find.text('Perfect Player'), findsOneWidget);
+    expect(find.text('Complete Picture'), findsOneWidget);
+    expect(find.text('5/5'), findsOneWidget);
   });
 
   testWidgets('Jigsaw Puzzles requires dragging every piece into its slot', (
