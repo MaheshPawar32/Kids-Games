@@ -158,7 +158,14 @@ void main() {
     await tester.pumpAndSettle();
 
     final tile = find.byKey(const Key('activity_jigsaw_puzzles'));
-    await tester.ensureVisible(tile);
+    await tester.scrollUntilVisible(
+      tile,
+      400,
+      scrollable: find.descendant(
+        of: find.byType(CustomScrollView).last,
+        matching: find.byType(Scrollable),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(tile);
     await tester.pumpAndSettle();
