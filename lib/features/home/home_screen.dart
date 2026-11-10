@@ -287,7 +287,7 @@ class _GamesPage extends StatelessWidget {
               children: [
                 Text('Game world', style: Theme.of(context).textTheme.headlineMedium),
                 const SizedBox(height: 5),
-                const Text('Explore all 15 game ideas. Activities are being built in stages.'),
+                const Text('Explore all 15 offline learning activities. Pick a challenge and learn by playing.'),
               ],
             ),
           ),
