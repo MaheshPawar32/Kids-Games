@@ -11,12 +11,23 @@ concurrency:
   group: kids-games-ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: write
+  actions: write
+
 jobs:
   analyze-and-test:
     needs: generate-baby-lion-3d
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Detect whether Android platform project needs generation
+        run: |
+          if [[ -f android/app/build.gradle || -f android/app/build.gradle.kts ]]; then
+            echo "ANDROID_PROJECT_MISSING=false" >> "$GITHUB_ENV"
+          else
+            echo "ANDROID_PROJECT_MISSING=true" >> "$GITHUB_ENV"
+          fi
       - name: Download generated 3D asset bundle
         uses: actions/download-artifact@v4
         with:
@@ -49,6 +60,18 @@ jobs:
           grep -q 'android:value="true"' android/app/src/main/AndroidManifest.xml
       - name: Build Android debug APK
         run: flutter build apk --debug
+      - name: Normalize generated Android platform files
+        run: |
+          rm -f android/local.properties android/*.iml
+          cat > android/.gitignore <<'EOF'
+          .gradle/
+          local.properties
+          *.iml
+          /captures/
+          /build/
+          app/build/
+          .cxx/
+          EOF
       - name: Upload generated Android project and debug APK
         uses: actions/upload-artifact@v4
         with:
@@ -58,6 +81,28 @@ jobs:
             build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
           retention-days: 30
+      - name: Persist generated Android platform source to the feature branch
+        if: ${{ github.event_name == 'pull_request' && env.ANDROID_PROJECT_MISSING == 'true' && github.event.pull_request.head.repo.full_name == github.repository }}
+        continue-on-error: true
+        env:
+          PR_HEAD_REF: ${{ github.head_ref }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euxo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add android
+          if git diff --cached --quiet; then
+            echo "Android platform already committed; nothing to persist."
+            exit 0
+          fi
+          git commit -m "Add generated Android platform project"
+          git push origin "HEAD:${PR_HEAD_REF}"
+          curl --fail-with-body --silent --show-error -X POST \\
+            -H "Accept: application/vnd.github+json" \\
+            -H "Authorization: Bearer ${GH_TOKEN}" \\
+            https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/flutter_ci.yml/dispatches \\
+            -d "{\\\"ref\\\":\\\"${PR_HEAD_REF}\\\"}"
 
   generate-baby-lion-3d:
     runs-on: ubuntu-24.04
