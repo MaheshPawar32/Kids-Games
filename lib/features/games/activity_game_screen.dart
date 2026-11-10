@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../app/theme/app_theme.dart';
 import 'activity.dart';
+import 'activity_rounds.dart';
 
-/// A complete offline activity loop shared by the catalogue's short games.
-/// Each round has feedback, progression, pause/resume, retry and a result.
+/// Offline five-round learning loop for the catalogue's choice-based games.
+///
+/// Every activity supplies its own learning prompt, visual cue, answer set and
+/// explanation. Drag-and-drop activities use dedicated game screens.
 class ActivityGameScreen extends StatefulWidget {
   const ActivityGameScreen({required this.activity, super.key});
 
@@ -15,92 +18,27 @@ class ActivityGameScreen extends StatefulWidget {
 }
 
 class _ActivityGameScreenState extends State<ActivityGameScreen> {
-  static const _roundCount = 5;
+  late final List<ActivityRound> _rounds =
+      activityRoundsFor(widget.activity.id);
   int _round = 0;
   int _score = 0;
   int? _answer;
   bool _paused = false;
   bool _finished = false;
 
-  List<String> get _options {
-    switch (widget.activity.id) {
-      case 'alphabet_matching':
-        final base = 65 + (_round * 3);
-        return List.generate(4, (i) => String.fromCharCode(base + i));
-      case 'missing_numbers':
-      case 'magic_counting':
-      case 'number_sequencing':
-        final base = _round + 1;
-        return List.generate(4, (i) => '${base + i}');
-      case 'color_matching':
-        return const ['Red', 'Blue', 'Yellow', 'Green'];
-      case 'animal_recognition':
-        return const ['Lion', 'Elephant', 'Rabbit', 'Panda'];
-      case 'big_small':
-        return const ['Big', 'Small', 'Tall', 'Short'];
-      case 'shape_matching':
-      case 'missing_shapes':
-      case 'what_comes_next':
-        return const ['Circle', 'Square', 'Triangle', 'Star'];
-      default:
-        return const ['Piece A', 'Piece B', 'Piece C', 'Piece D'];
-    }
-  }
-
-  int get _correctIndex {
-    switch (widget.activity.id) {
-      case 'alphabet_matching':
-      case 'missing_numbers':
-      case 'magic_counting':
-      case 'number_sequencing':
-        return 0;
-      case 'color_matching':
-        return _round % 4;
-      case 'animal_recognition':
-        return (_round + 1) % 4;
-      case 'big_small':
-        return _round.isEven ? 0 : 1;
-      default:
-        return (_round * 2) % 4;
-    }
-  }
-
-  String get _prompt {
-    switch (widget.activity.id) {
-      case 'alphabet_matching':
-        return 'Which letter comes first?';
-      case 'missing_numbers':
-        return 'What number comes next?';
-      case 'magic_counting':
-        return 'How many stars are in this round?';
-      case 'number_sequencing':
-        return 'Choose the next number in the sequence.';
-      case 'color_matching':
-        return 'Find the matching color.';
-      case 'animal_recognition':
-        return 'Which animal is our friendly animal?';
-      case 'big_small':
-        return 'Choose the size shown by the picture.';
-      case 'shape_matching':
-      case 'missing_shapes':
-      case 'what_comes_next':
-        return 'Which shape completes the pattern?';
-      default:
-        return 'Choose the piece that completes the picture.';
-    }
-  }
+  ActivityRound get _currentRound => _rounds[_round];
 
   void _choose(int index) {
     if (_answer != null || _paused || _finished) return;
     setState(() {
       _answer = index;
-      if (index == _correctIndex) _score++;
+      if (index == _currentRound.correctIndex) _score++;
     });
   }
 
   void _next() {
     setState(() {
-      if (_round == _roundCount - 1) {
+      if (_round == _rounds.length - 1) {
         _finished = true;
       } else {
         _round++;
@@ -121,6 +59,15 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_rounds.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: Text(widget.activity.title)),
+        body: const Center(
+          child: Text('This learning activity is being prepared.'),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppTheme.canvas,
       appBar: AppBar(
@@ -130,18 +77,27 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
             IconButton(
               tooltip: _paused ? 'Resume game' : 'Pause game',
               onPressed: () => setState(() => _paused = !_paused),
-              icon: Icon(_paused ? Icons.play_arrow_rounded : Icons.pause_rounded),
+              icon: Icon(
+                _paused ? Icons.play_arrow_rounded : Icons.pause_rounded,
+              ),
             ),
         ],
       ),
       body: SafeArea(
-        child: _finished ? _result() : _paused ? _pause() : _play(),
+        child: _finished
+            ? _result()
+            : _paused
+                ? _pause()
+                : _play(),
       ),
     );
   }
 
   Widget _play() {
-    final options = _options;
+    final round = _currentRound;
+    final answered = _answer != null;
+    final isCorrect = answered && _answer == round.correctIndex;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(22),
       child: Column(
@@ -154,20 +110,22 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
                   borderRadius: BorderRadius.circular(20),
                   child: LinearProgressIndicator(
                     minHeight: 10,
-                    value: (_round + 1) / _roundCount,
+                    value: (_round + 1) / _rounds.length,
                     backgroundColor: Colors.white,
                     color: AppTheme.violet,
                   ),
                 ),
               ),
               const SizedBox(width: 12),
-              Text('${_round + 1}/$_roundCount',
-                  style: const TextStyle(fontWeight: FontWeight.w800)),
+              Text(
+                '${_round + 1}/${_rounds.length}',
+                style: const TextStyle(fontWeight: FontWeight.w800),
+              ),
             ],
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 24),
           Container(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.fromLTRB(18, 22, 18, 24),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [Color(widget.activity.colorValue), Colors.white],
@@ -178,32 +136,58 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
             ),
             child: Column(
               children: [
-                Text(widget.activity.emoji, style: const TextStyle(fontSize: 64)),
+                Text(
+                  widget.activity.emoji,
+                  style: const TextStyle(fontSize: 30),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  round.cue,
+                  key: const Key('round_cue'),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 34,
+                    height: 1.35,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
                 const SizedBox(height: 12),
-                Text(_prompt,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleLarge),
+                Text(
+                  round.prompt,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                ),
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: options.length,
+            itemCount: round.options.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
-              childAspectRatio: 1.45,
+              childAspectRatio: 1.28,
             ),
             itemBuilder: (context, index) {
+              final option = round.options[index];
               final selected = _answer == index;
-              final correct = index == _correctIndex;
-              final answered = _answer != null;
+              final correct = index == round.correctIndex;
               final color = answered && selected
-                  ? (correct ? const Color(0xFFE2F6EA) : const Color(0xFFFFE9E5))
+                  ? (correct
+                      ? const Color(0xFFE2F6EA)
+                      : const Color(0xFFFFE9E5))
                   : Colors.white;
+              final borderColor = selected
+                  ? (correct ? Colors.green : Colors.deepOrange)
+                  : answered && correct
+                      ? Colors.green
+                      : const Color(0xFFE7EAF2);
+
               return Material(
                 color: color,
                 borderRadius: BorderRadius.circular(20),
@@ -213,36 +197,60 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
                   onTap: answered ? null : () => _choose(index),
                   child: Container(
                     alignment: Alignment.center,
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: selected
-                            ? (correct ? Colors.green : Colors.deepOrange)
-                            : const Color(0xFFE7EAF2),
-                        width: selected ? 2 : 1,
+                        color: borderColor,
+                        width: selected || (answered && correct) ? 2 : 1,
                       ),
                     ),
-                    child: Text(options[index],
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w900)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          option.emoji,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 32),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          option.label,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
             },
           ),
-          if (_answer != null) ...[
+          if (answered) ...[
             const SizedBox(height: 18),
             Text(
-              _answer == _correctIndex ? 'Amazing! ⭐' : 'Good try! Keep learning 💛',
+              isCorrect ? 'Amazing! ⭐' : 'Good try! Keep learning 💛',
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              round.explanation,
+              key: const Key('answer_explanation'),
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
             const SizedBox(height: 14),
             FilledButton(
               onPressed: _next,
-              child: Text(_round == _roundCount - 1 ? 'See my score' : 'Next'),
+              child: Text(
+                _round == _rounds.length - 1 ? 'See my score' : 'Next',
+              ),
             ),
           ],
         ],
@@ -256,8 +264,10 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
           children: [
             const Text('⏸️', style: TextStyle(fontSize: 64)),
             const SizedBox(height: 12),
-            Text('Take a little break',
-                style: Theme.of(context).textTheme.headlineSmall),
+            Text(
+              'Take a little break',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
             const SizedBox(height: 18),
             FilledButton.icon(
               onPressed: () => setState(() => _paused = false),
@@ -276,11 +286,15 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
             children: [
               const Text('🏆', style: TextStyle(fontSize: 76)),
               const SizedBox(height: 16),
-              Text('Wonderful work!',
-                  style: Theme.of(context).textTheme.headlineMedium),
+              Text(
+                'Wonderful work!',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
               const SizedBox(height: 8),
-              Text('You got $_score out of $_roundCount correct.',
-                  style: const TextStyle(fontSize: 18)),
+              Text(
+                'You got $_score out of ${_rounds.length} correct.',
+                style: const TextStyle(fontSize: 18),
+              ),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
