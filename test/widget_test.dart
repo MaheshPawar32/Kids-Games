@@ -152,11 +152,6 @@ void main() {
       profile: const ChildProfile(name: 'Ava', grade: 'Grade 1'),
     );
 
-    await tester.view.setPhysicalSize(const Size(800, 1200));
-    await tester.view.setDevicePixelRatio(1);
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
     await tester.pumpWidget(KidsGamesApp(profileRepository: repository));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Games').last);
