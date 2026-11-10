@@ -84,7 +84,7 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
               ),
               const SizedBox(width: 12),
               Text(
-                '${_placed.length}/${_pieces.length}',
+                '\${_placed.length}/\${_pieces.length}',
                 style: const TextStyle(fontWeight: FontWeight.w900),
               ),
             ],
@@ -116,66 +116,32 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
                   ),
                 ],
               ),
-              child: GridView.builder(
-                key: const Key('jigsaw_board'),
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _pieces.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 1.45,
-                ),
-                itemBuilder: (context, index) {
-                  final piece = _pieces[index];
-                  final filled = _placed.contains(piece.id);
-                  return DragTarget<String>(
-                    key: Key('jigsaw_slot_${piece.id}'),
-                    onWillAcceptWithDetails: (details) =>
-                        details.data == piece.id && !filled,
-                    onAcceptWithDetails: (details) =>
-                        _place(details.data, piece.id),
-                    builder: (context, candidates, rejected) =>
-                        AnimatedContainer(
-                      duration: const Duration(milliseconds: 180),
-                      decoration: BoxDecoration(
-                        color: filled
-                            ? piece.color.withValues(alpha: 0.32)
-                            : const Color(0xFFF3F5FA),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: candidates.isNotEmpty
-                              ? AppTheme.violet
-                              : const Color(0xFFDCE2ED),
-                          width: candidates.isNotEmpty ? 3 : 1.5,
-                        ),
-                      ),
-                      child: Center(
-                        child: filled
-                            ? Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    piece.emoji,
-                                    style: const TextStyle(fontSize: 38),
-                                  ),
-                                  Text(
-                                    piece.label,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : const Icon(
-                                Icons.extension_rounded,
-                                size: 36,
-                                color: Color(0xFFB5BDCC),
-                              ),
-                      ),
+              // Explicitly divide the available board height between both
+              // rows. A GridView with a fixed child aspect ratio could place
+              // the second row outside a short viewport, making those slots
+              // impossible to hit with a drag.
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(child: _buildSlot(_pieces[0])),
+                        const SizedBox(width: 10),
+                        Expanded(child: _buildSlot(_pieces[1])),
+                      ],
                     ),
-                  );
-                },
+                  ),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(child: _buildSlot(_pieces[2])),
+                        const SizedBox(width: 10),
+                        Expanded(child: _buildSlot(_pieces[3])),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -198,7 +164,7 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
               final placed = _placed.contains(piece.id);
               final card = _pieceCard(piece, placed: placed);
               return Draggable<String>(
-                key: Key('jigsaw_piece_${piece.id}'),
+                key: Key('jigsaw_piece_\${piece.id}'),
                 data: piece.id,
                 maxSimultaneousDrags: placed ? 0 : 1,
                 feedback: Material(
@@ -212,7 +178,7 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            'Moves: $_moves',
+            'Moves: \$_moves',
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Color(0xFF71809B),
@@ -220,6 +186,52 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSlot(_PuzzlePiece piece) {
+    final filled = _placed.contains(piece.id);
+    return DragTarget<String>(
+      key: Key('jigsaw_slot_\${piece.id}'),
+      onWillAcceptWithDetails: (details) =>
+          details.data == piece.id && !filled,
+      onAcceptWithDetails: (details) => _place(details.data, piece.id),
+      builder: (context, candidates, rejected) => AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        decoration: BoxDecoration(
+          color: filled
+              ? piece.color.withValues(alpha: 0.32)
+              : const Color(0xFFF3F5FA),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: candidates.isNotEmpty
+                ? AppTheme.violet
+                : const Color(0xFFDCE2ED),
+            width: candidates.isNotEmpty ? 3 : 1.5,
+          ),
+        ),
+        child: Center(
+          child: filled
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      piece.emoji,
+                      style: const TextStyle(fontSize: 38),
+                    ),
+                    Text(
+                      piece.label,
+                      style: const TextStyle(fontWeight: FontWeight.w800),
+                    ),
+                  ],
+                )
+              : const Icon(
+                  Icons.extension_rounded,
+                  size: 36,
+                  color: Color(0xFFB5BDCC),
+                ),
+        ),
       ),
     );
   }
@@ -250,7 +262,7 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
             Text(piece.emoji, style: const TextStyle(fontSize: 28)),
             const SizedBox(width: 5),
             Text(
-              placed ? '${piece.label} ✓' : piece.label,
+              placed ? '\${piece.label} ✓' : piece.label,
               style: const TextStyle(fontWeight: FontWeight.w900),
             ),
           ],
@@ -280,7 +292,7 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Completed in $_moves moves',
+              'Completed in \$_moves moves',
               style: const TextStyle(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 22),
