@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:hive_ce/hive_ce.dart';
 
 class GameSession {
@@ -68,6 +69,7 @@ class ActivityProgress {
 }
 
 abstract interface class GameSessionRepository {
+  ValueListenable<int> get revision;
   Future<void> recordSession(GameSession session);
   Future<List<GameSession>> recentSessions({int limit = 20});
   Future<ActivityProgress> progressFor(String activityId);
@@ -80,6 +82,10 @@ class HiveGameSessionRepository implements GameSessionRepository {
   static const boxName = 'kids_games_sessions';
 
   final Box<dynamic>? _providedBox;
+  final ValueNotifier<int> _revision = ValueNotifier<int>(0);
+
+  @override
+  ValueListenable<int> get revision => _revision;
 
   Box<dynamic> get _box =>
       _providedBox ?? Hive.box<dynamic>(boxName);
@@ -88,6 +94,7 @@ class HiveGameSessionRepository implements GameSessionRepository {
   Future<void> recordSession(GameSession session) async {
     await _box.put(session.id, session.toMap());
     await _box.flush();
+    _revision.value++;
   }
 
   List<GameSession> _allSessions() {
@@ -148,11 +155,16 @@ class HiveGameSessionRepository implements GameSessionRepository {
 /// Production startup injects the Hive CE repository.
 class MemoryGameSessionRepository implements GameSessionRepository {
   final List<GameSession> _sessions = [];
+  final ValueNotifier<int> _revision = ValueNotifier<int>(0);
+
+  @override
+  ValueListenable<int> get revision => _revision;
 
   @override
   Future<void> recordSession(GameSession session) async {
     _sessions.removeWhere((item) => item.id == session.id);
     _sessions.add(session);
+    _revision.value++;
   }
 
   @override
