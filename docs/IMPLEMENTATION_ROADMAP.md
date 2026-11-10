@@ -8,8 +8,9 @@ Branch: `feature/complete-app-workflows`
 - [x] 15-game catalogue and reusable activity data model
 - [x] Target dependencies declared and dependency resolution verified in CI
 - [x] Blender generation scripts and CI asset validation
-- [ ] Generate and commit the Android platform project
-- [ ] Run Android debug and release builds in CI
+- [x] Generate and commit the Android platform project
+- [x] Run Android debug APK build in CI
+- [ ] Run signed Android release AAB build in CI
 
 ## Phase 2 — Onboarding and navigation
 - [x] Child profile and grade selection (Nursery, LKG, UKG, Grades 1–5)
@@ -66,7 +67,7 @@ Still required within this phase:
 - [ ] Safe reset/export safeguards and privacy controls
 
 ## Phase 7 — 3D runtime and release readiness
-- [ ] Generate Android platform project and verify application ID `com.dev.kidsgames`
+- [x] Generate Android platform project and verify application ID `com.dev.kidsgames`
 - [ ] Integrate Flutter Scene build hook and native GPU requirements
 - [ ] Verify GLB rendering, animation clips and memory behavior on physical devices
 - [ ] Integrate Flame only for game loops that need its 2D engine
