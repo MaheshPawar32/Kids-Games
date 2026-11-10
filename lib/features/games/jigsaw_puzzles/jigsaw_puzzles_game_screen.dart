@@ -59,15 +59,13 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
           icon: const Icon(Icons.arrow_back_rounded),
         ),
       ),
-      body: SafeArea(
-        child: _completed ? _result() : _game(),
-      ),
+      body: SafeArea(child: _completed ? _result() : _game()),
     );
   }
 
   Widget _game() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 28),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -85,122 +83,173 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
                 ),
               ),
               const SizedBox(width: 12),
-              Text('${_placed.length}/${_pieces.length}',
-                  style: const TextStyle(fontWeight: FontWeight.w900)),
+              Text(
+                '${_placed.length}/${_pieces.length}',
+                style: const TextStyle(fontWeight: FontWeight.w900),
+              ),
             ],
           ),
-          const SizedBox(height: 22),
-          Text('Build the sunny garden!',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headlineMedium),
-          const SizedBox(height: 6),
-          const Text('Drag each picture piece into its matching space.',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Color(0xFF71809B))),
-          const SizedBox(height: 22),
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(26),
-              boxShadow: const [
-                BoxShadow(color: Color(0x1025365B), blurRadius: 18, offset: Offset(0, 8)),
-              ],
-            ),
-            child: GridView.builder(
-              key: const Key('jigsaw_board'),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: _pieces.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
+          const SizedBox(height: 12),
+          Text(
+            'Build the sunny garden!',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          const SizedBox(height: 4),
+          const Text(
+            'Drag each picture piece into its matching space.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Color(0xFF71809B)),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(26),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x1025365B),
+                    blurRadius: 18,
+                    offset: Offset(0, 8),
+                  ),
+                ],
               ),
-              itemBuilder: (context, index) {
-                final piece = _pieces[index];
-                final filled = _placed.contains(piece.id);
-                return DragTarget<String>(
-                  key: Key('jigsaw_slot_${piece.id}'),
-                  onWillAcceptWithDetails: (details) =>
-                      details.data == piece.id && !filled,
-                  onAcceptWithDetails: (details) => _place(details.data, piece.id),
-                  builder: (context, candidates, rejected) => AnimatedContainer(
-                    duration: const Duration(milliseconds: 180),
-                    decoration: BoxDecoration(
-                      color: filled ? piece.color.withValues(alpha: 0.32) : const Color(0xFFF3F5FA),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: candidates.isNotEmpty ? AppTheme.violet : const Color(0xFFDCE2ED),
-                        width: candidates.isNotEmpty ? 3 : 1.5,
+              child: GridView.builder(
+                key: const Key('jigsaw_board'),
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _pieces.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 1.45,
+                ),
+                itemBuilder: (context, index) {
+                  final piece = _pieces[index];
+                  final filled = _placed.contains(piece.id);
+                  return DragTarget<String>(
+                    key: Key('jigsaw_slot_${piece.id}'),
+                    onWillAcceptWithDetails: (details) =>
+                        details.data == piece.id && !filled,
+                    onAcceptWithDetails: (details) =>
+                        _place(details.data, piece.id),
+                    builder: (context, candidates, rejected) =>
+                        AnimatedContainer(
+                      duration: const Duration(milliseconds: 180),
+                      decoration: BoxDecoration(
+                        color: filled
+                            ? piece.color.withValues(alpha: 0.32)
+                            : const Color(0xFFF3F5FA),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: candidates.isNotEmpty
+                              ? AppTheme.violet
+                              : const Color(0xFFDCE2ED),
+                          width: candidates.isNotEmpty ? 3 : 1.5,
+                        ),
+                      ),
+                      child: Center(
+                        child: filled
+                            ? Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    piece.emoji,
+                                    style: const TextStyle(fontSize: 38),
+                                  ),
+                                  Text(
+                                    piece.label,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : const Icon(
+                                Icons.extension_rounded,
+                                size: 36,
+                                color: Color(0xFFB5BDCC),
+                              ),
                       ),
                     ),
-                    child: Center(
-                      child: filled
-                          ? Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(piece.emoji, style: const TextStyle(fontSize: 48)),
-                                Text(piece.label, style: const TextStyle(fontWeight: FontWeight.w800)),
-                              ],
-                            )
-                          : const Icon(Icons.extension_rounded, size: 42, color: Color(0xFFB5BDCC)),
-                    ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
-          const SizedBox(height: 22),
-          const Text('PUZZLE PIECES',
-              style: TextStyle(fontSize: 11, letterSpacing: 1.2,
-                  fontWeight: FontWeight.w900, color: Color(0xFF8B95A9))),
           const SizedBox(height: 10),
+          const Text(
+            'PUZZLE PIECES',
+            style: TextStyle(
+              fontSize: 11,
+              letterSpacing: 1.2,
+              fontWeight: FontWeight.w900,
+              color: Color(0xFF8B95A9),
+            ),
+          ),
+          const SizedBox(height: 8),
           Wrap(
             alignment: WrapAlignment.center,
             spacing: 10,
-            runSpacing: 10,
+            runSpacing: 8,
             children: _pieces.map((piece) {
-            final placed = _placed.contains(piece.id);
-            final card = _pieceCard(piece, placed: placed);
-            return Draggable<String>(
-              key: Key('jigsaw_piece_${piece.id}'),
-              data: piece.id,
-              maxSimultaneousDrags: placed ? 0 : 1,
-              feedback: Material(
-                color: Colors.transparent,
-                child: _pieceCard(piece, dragging: true),
-              ),
-              childWhenDragging: Opacity(opacity: 0.25, child: card),
-              child: card,
-            );
-          }).toList(),
+              final placed = _placed.contains(piece.id);
+              final card = _pieceCard(piece, placed: placed);
+              return Draggable<String>(
+                key: Key('jigsaw_piece_${piece.id}'),
+                data: piece.id,
+                maxSimultaneousDrags: placed ? 0 : 1,
+                feedback: Material(
+                  color: Colors.transparent,
+                  child: _pieceCard(piece, dragging: true),
+                ),
+                childWhenDragging: Opacity(opacity: 0.25, child: card),
+                child: card,
+              );
+            }).toList(),
           ),
-          const SizedBox(height: 14),
-          Text('Moves: $_moves', textAlign: TextAlign.center,
-              style: const TextStyle(color: Color(0xFF71809B), fontWeight: FontWeight.w700)),
+          const SizedBox(height: 6),
+          Text(
+            'Moves: $_moves',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Color(0xFF71809B),
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _pieceCard(_PuzzlePiece piece, {bool dragging = false, bool placed = false}) {
+  Widget _pieceCard(
+    _PuzzlePiece piece, {
+    bool dragging = false,
+    bool placed = false,
+  }) {
     return Container(
       width: 112,
-      height: 100,
+      height: 72,
       decoration: BoxDecoration(
         color: piece.color,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(18),
         boxShadow: dragging
-            ? const [BoxShadow(color: Color(0x3325365B), blurRadius: 12)]
+            ? const [
+                BoxShadow(color: Color(0x3325365B), blurRadius: 12),
+              ]
             : null,
       ),
-      child: Column(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(piece.emoji, style: const TextStyle(fontSize: 38)),
-          Text(placed ? '${piece.label} ✓' : piece.label,
-              style: const TextStyle(fontWeight: FontWeight.w900)),
+          Text(piece.emoji, style: const TextStyle(fontSize: 28)),
+          const SizedBox(width: 5),
+          Text(
+            placed ? '${piece.label} ✓' : piece.label,
+            style: const TextStyle(fontWeight: FontWeight.w900),
+          ),
         ],
       ),
     );
@@ -215,15 +264,21 @@ class _JigsawPuzzlesGameScreenState extends State<JigsawPuzzlesGameScreen> {
           children: [
             const Text('🌈', style: TextStyle(fontSize: 76)),
             const SizedBox(height: 14),
-            Text('Beautifully completed!',
-                style: Theme.of(context).textTheme.headlineMedium,
-                textAlign: TextAlign.center),
+            Text(
+              'Beautifully completed!',
+              style: Theme.of(context).textTheme.headlineMedium,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 8),
-            const Text('You built the whole sunny garden!',
-                textAlign: TextAlign.center),
+            const Text(
+              'You built the whole sunny garden!',
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 8),
-            Text('Completed in $_moves moves',
-                style: const TextStyle(fontWeight: FontWeight.w800)),
+            Text(
+              'Completed in $_moves moves',
+              style: const TextStyle(fontWeight: FontWeight.w800),
+            ),
             const SizedBox(height: 22),
             SizedBox(
               width: double.infinity,
