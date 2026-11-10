@@ -3,15 +3,21 @@ import 'package:flutter/material.dart';
 import '../../app/theme/app_theme.dart';
 import 'activity.dart';
 import 'activity_rounds.dart';
+import '../../data/repositories/game_session_repository.dart';
 
 /// Offline five-round learning loop for the catalogue's choice-based games.
 ///
 /// Every activity supplies its own learning prompt, visual cue, answer set and
 /// explanation. Drag-and-drop activities use dedicated game screens.
 class ActivityGameScreen extends StatefulWidget {
-  const ActivityGameScreen({required this.activity, super.key});
+  const ActivityGameScreen({
+    required this.activity,
+    required this.sessionRepository,
+    super.key,
+  });
 
   final Activity activity;
+  final GameSessionRepository sessionRepository;
 
   @override
   State<ActivityGameScreen> createState() => _ActivityGameScreenState();
@@ -25,6 +31,8 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
   int? _answer;
   bool _paused = false;
   bool _finished = false;
+  bool _saving = false;
+  bool _saveError = false;
 
   ActivityRound get _currentRound => _rounds[_round];
 
@@ -36,14 +44,34 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
     });
   }
 
-  void _next() {
-    setState(() {
-      if (_round == _rounds.length - 1) {
+  Future<void> _next() async {
+    if (_round == _rounds.length - 1) {
+      setState(() {
         _finished = true;
-      } else {
-        _round++;
-        _answer = null;
+        _saving = true;
+        _saveError = false;
+      });
+      final completedAt = DateTime.now();
+      try {
+        await widget.sessionRepository.recordSession(
+          GameSession(
+            id: '${widget.activity.id}_${completedAt.microsecondsSinceEpoch}',
+            activityId: widget.activity.id,
+            score: _score,
+            totalRounds: _rounds.length,
+            completedAt: completedAt,
+          ),
+        );
+      } on Object {
+        if (mounted) setState(() => _saveError = true);
+      } finally {
+        if (mounted) setState(() => _saving = false);
       }
+      return;
+    }
+    setState(() {
+      _round++;
+      _answer = null;
     });
   }
 
@@ -54,6 +82,8 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
       _answer = null;
       _paused = false;
       _finished = false;
+      _saving = false;
+      _saveError = false;
     });
   }
 
@@ -294,6 +324,17 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
               Text(
                 'You got $_score out of ${_rounds.length} correct.',
                 style: const TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                _saving
+                    ? 'Saving your progress…'
+                    : _saveError
+                        ? 'Progress could not be saved. Please try again.'
+                        : 'Progress saved on this device.',
+                key: const Key('session_save_status'),
+                style: Theme.of(context).textTheme.bodySmall,
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
               SizedBox(
