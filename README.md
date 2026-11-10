@@ -5,7 +5,7 @@ A playful, offline-first educational games app for children from Nursery through
 ## Product direction
 
 - Flutter/Dart, Android only
-- Intended Android application ID: `com.dev.kidsgames`
+- Android application ID: `com.dev.kidsgames` (committed Android Gradle project; minSdk 24)
 - Offline-first; no mandatory account
 - Flutter Scene is the planned runtime for genuine GLB/glTF 3D content
 - Flame is planned for dedicated 2D mini-games
@@ -30,6 +30,8 @@ A playful, offline-first educational games app for children from Nursery through
   Find Differences, Magic Counting, Number Sequencing and What Comes Next
 - Dedicated playable Shape Matching, Odd One Out and drag-and-drop Jigsaw screens
 - Feedback, score summary and replay for the implemented game loops
+- Hive CE local game-session persistence and reactive Rewards summaries
+- Android debug APK successfully built and uploaded by CI (debug/testing only)
 - Widget tests for onboarding, navigation, selected games and Jigsaw drag/drop
 - Blender scripts for procedural model generation and CI asset-generation checks
 
@@ -37,11 +39,10 @@ The 12 choice-based activities have activity-specific visual cues, prompts, four
 
 ### Not yet implemented or not release-validated
 
-- Generated Android Gradle project, manifest, signing configuration and a verified APK/AAB build
+- Signed release configuration and verified Play Store AAB build
 - Flutter Scene runtime initialization, build hook, native GPU setup and on-device GLB rendering
 - Flame game foundation and dedicated Flame mini-games
-- Hive CE database, repositories/adapters, progress history and reward persistence
-- Saving scores, sessions, streaks, mastery and difficulty progression
+- Child-scoped progress, streaks, mastery, difficulty progression and database migrations
 - Complete Parent Gate, parent dashboard, parental controls and screen-time tools
 - Full Rewards and Progress experiences backed by persisted data
 - Full accessibility, audio narration, localization and child-friendly audio controls
@@ -69,7 +70,7 @@ flutter test
 flutter run --enable-flutter-gpu
 ```
 
-The Android setup script creates the Android platform folder, verifies `com.dev.kidsgames`, sets minSdk 24 and adds Flutter GPU metadata inside the generated manifest. The Scene setup script runs the official asset-pipeline initializer and skills installer. These scripts still require execution and review in a configured development environment.
+The committed Android project contains the `com.dev.kidsgames` application ID, minSdk 24 and Flutter GPU metadata. `tool/setup_android.sh` remains available for regenerating the platform folder if needed. The Scene setup script runs the official asset-pipeline initializer and skills installer. These scripts still require execution and review in a configured development environment.
 
 ## Build
 
@@ -78,7 +79,7 @@ flutter build apk --debug
 flutter build appbundle --release
 ```
 
-Neither Android build has been verified from this repository state. Release signing, store compliance and physical-device validation remain mandatory before publishing.
+The Android debug APK has been built successfully by GitHub Actions. A signed release AAB, store compliance and physical-device validation remain mandatory before publishing.
 
 ## Project documentation
 
