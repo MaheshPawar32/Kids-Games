@@ -189,6 +189,9 @@ void main() {
     expect(progress.bestScore, 5);
     expect(progress.accuracy, 1);
 
+    await tester.tap(find.text('Back to games'));
+    await tester.pumpAndSettle();
+    expect(find.text('Game world'), findsOneWidget);
     await tester.tap(find.text('Rewards').last);
     await tester.pumpAndSettle();
 
