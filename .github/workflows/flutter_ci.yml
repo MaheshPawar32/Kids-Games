@@ -89,6 +89,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euxo pipefail
+          ANDROID_BACKUP="$(mktemp -d)"
+          cp -a android "${ANDROID_BACKUP}/android"
+          git fetch origin "${PR_HEAD_REF}"
+          git checkout -B "${PR_HEAD_REF}" FETCH_HEAD
+          rm -rf android
+          cp -a "${ANDROID_BACKUP}/android" android
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add android
