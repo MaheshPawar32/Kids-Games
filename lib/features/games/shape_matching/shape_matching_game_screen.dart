@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../app/theme/app_theme.dart';
+import '../../../data/repositories/game_session_repository.dart';
 
 enum _ShapeKind {
   circle,
@@ -55,7 +56,9 @@ class _ShapeQuestion {
 }
 
 class ShapeMatchingGameScreen extends StatefulWidget {
-  const ShapeMatchingGameScreen({super.key});
+  const ShapeMatchingGameScreen({required this.sessionRepository, super.key});
+
+  final GameSessionRepository sessionRepository;
 
   @override
   State<ShapeMatchingGameScreen> createState() =>
@@ -115,6 +118,8 @@ class _ShapeMatchingGameScreenState extends State<ShapeMatchingGameScreen> {
   int _score = 0;
   _ShapeKind? _selectedAnswer;
   bool _finished = false;
+  bool _saving = false;
+  bool _saveError = false;
 
   _ShapeQuestion get _question => _questions[_questionIndex];
 
@@ -130,14 +135,34 @@ class _ShapeMatchingGameScreenState extends State<ShapeMatchingGameScreen> {
     });
   }
 
-  void _nextQuestion() {
-    setState(() {
-      if (_questionIndex == _questions.length - 1) {
+  Future<void> _nextQuestion() async {
+    if (_questionIndex == _questions.length - 1) {
+      setState(() {
         _finished = true;
-      } else {
-        _questionIndex++;
-        _selectedAnswer = null;
+        _saving = true;
+        _saveError = false;
+      });
+      final completedAt = DateTime.now();
+      try {
+        await widget.sessionRepository.recordSession(
+          GameSession(
+            id: 'shape_matching_${completedAt.microsecondsSinceEpoch}',
+            activityId: 'shape_matching',
+            score: _score,
+            totalRounds: _questions.length,
+            completedAt: completedAt,
+          ),
+        );
+      } on Object {
+        if (mounted) setState(() => _saveError = true);
+      } finally {
+        if (mounted) setState(() => _saving = false);
       }
+      return;
+    }
+    setState(() {
+      _questionIndex++;
+      _selectedAnswer = null;
     });
   }
 
@@ -147,6 +172,8 @@ class _ShapeMatchingGameScreenState extends State<ShapeMatchingGameScreen> {
       _score = 0;
       _selectedAnswer = null;
       _finished = false;
+      _saving = false;
+      _saveError = false;
     });
   }
 
@@ -446,6 +473,17 @@ class _ShapeMatchingGameScreenState extends State<ShapeMatchingGameScreen> {
               'Every try helps your brain grow.',
               textAlign: TextAlign.center,
               style: TextStyle(color: Color(0xFF71809B)),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              _saving
+                  ? 'Saving your progress…'
+                  : _saveError
+                      ? 'Progress could not be saved. Please try again.'
+                      : 'Progress saved on this device.',
+              key: const Key('session_save_status'),
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 26),
             SizedBox(
