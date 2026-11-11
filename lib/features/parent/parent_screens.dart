@@ -728,7 +728,7 @@ class FamilyTimeLimitScreen extends StatelessWidget {
         : 'That’s a lot of learning for today!';
     final message = bedtime
         ? 'Your family bedtime schedule is active. Come back when your family time begins again.'
-        : 'You have reached today’s ${dailyLimitMinutes}-minute app-time limit. Take a break and come back tomorrow.';
+        : 'You have reached today’s $dailyLimitMinutes-minute app-time limit. Take a break and come back tomorrow.';
     return Scaffold(
       backgroundColor: const Color(0xFFF4F6FC),
       body: SafeArea(
