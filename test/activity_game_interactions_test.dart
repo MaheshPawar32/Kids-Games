@@ -23,8 +23,12 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('complete picture uses a drag-and-drop answer target',
-      (tester) async {
+  testWidgets('complete picture accepts a dragged answer', (tester) async {
+    tester.view.physicalSize = const Size(1200, 1800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     await pumpActivity(tester, 'complete_picture');
 
     final target = find.text('Drag the answer here');
