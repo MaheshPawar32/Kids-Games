@@ -19,7 +19,7 @@ class _ProfileRepository implements ChildProfileRepository {
 
 Future<void> _completeAdultCheck(WidgetTester tester) async {
   final challenge = tester.widget<Text>(find.textContaining('×')).data!;
-  final match = RegExp(r'(\d+) × (\d+) = \?').firstMatch(challenge)!;
+  final match = RegExp(r'([0-9]+) × ([0-9]+) = \?').firstMatch(challenge)!;
   final answer = int.parse(match.group(1)!) * int.parse(match.group(2)!);
   await tester.enterText(find.byKey(const Key('parent_adult_answer')), '$answer');
   await tester.tap(find.byKey(const Key('parent_gate_continue')));
