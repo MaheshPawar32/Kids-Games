@@ -1,0 +1,58 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:kidsgames/features/create/create_studio_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
+  testWidgets('drawing studio supports undo redo and saves artwork locally', (
+    tester,
+  ) async {
+    await tester.view.setPhysicalSize(const Size(900, 1400));
+    await tester.view.setDevicePixelRatio(1);
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      const MaterialApp(home: CreateStudioScreen()),
+    );
+    await tester.pumpAndSettle();
+
+    final canvas = find.byKey(const Key('create_drawing_canvas'));
+    await tester.ensureVisible(canvas);
+    await tester.pumpAndSettle();
+    final center = tester.getCenter(canvas);
+    final gesture = await tester.startGesture(center);
+    await tester.pump(const Duration(milliseconds: 40));
+    await gesture.moveTo(center + const Offset(90, 24));
+    await tester.pump(const Duration(milliseconds: 40));
+    await gesture.up();
+    await tester.pumpAndSettle();
+
+    final undo = find.byKey(const Key('create_undo_button'));
+    await tester.ensureVisible(undo);
+    await tester.tap(undo);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('create_redo_button')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('create_redo_button')));
+    await tester.pumpAndSettle();
+
+    final save = find.byKey(const Key('create_save_button'));
+    await tester.ensureVisible(save);
+    await tester.tap(save);
+    await tester.pumpAndSettle();
+    expect(find.text('Save your picture'), findsOneWidget);
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    expect(find.text('Picture saved in your gallery.'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('create_gallery_button')));
+    await tester.pumpAndSettle();
+    expect(find.text('My gallery'), findsOneWidget);
+    expect(find.text('My picture'), findsOneWidget);
+  });
+}
