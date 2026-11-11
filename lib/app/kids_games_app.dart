@@ -33,7 +33,8 @@ class KidsGamesApp extends StatefulWidget {
   State<KidsGamesApp> createState() => _KidsGamesAppState();
 }
 
-class _KidsGamesAppState extends State<KidsGamesApp> {
+class _KidsGamesAppState extends State<KidsGamesApp>
+    with WidgetsBindingObserver {
   late final ChildProfileRepository _profileRepository =
       widget.profileRepository ?? PreferencesChildProfileRepository();
   final KidsGamesStore _store = KidsGamesStore();
@@ -54,7 +55,19 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _loadProfile();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final backgrounded = state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.detached;
+    if (!backgrounded || !_parentUnlocked || !mounted) return;
+    setState(() => _parentUnlocked = false);
+    _routerRefresh.value++;
+    _router?.go('/home');
   }
 
   Future<void> _loadProfile() async {
@@ -215,6 +228,7 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _router?.dispose();
     _routerRefresh.dispose();
     super.dispose();
