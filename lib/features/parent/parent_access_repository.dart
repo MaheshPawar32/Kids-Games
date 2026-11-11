@@ -86,7 +86,7 @@ class SecureParentAccessRepository implements ParentAccessRepository {
 
   @override
   Future<void> setPin(String pin) async {
-    if (!RegExp(r'^\\d{6}$').hasMatch(pin)) {
+    if (!RegExp(r'^\d{6}).hasMatch(pin)) {
       throw ArgumentError.value(pin, 'pin', 'PIN must contain six digits.');
     }
     final random = Random.secure();
@@ -168,6 +168,202 @@ class MemoryParentAccessRepository implements ParentAccessRepository {
   @override
   Future<void> setPin(String pin) async {
     if (!RegExp(r'^\\d{6}$').hasMatch(pin)) {
+      throw ArgumentError.value(pin, 'pin', 'PIN must contain six digits.');
+    }
+    _pin = pin;
+  }
+
+  @override
+  Future<bool> verifyPin(String pin) async => _pin == pin;
+
+  @override
+  Future<ParentControls> loadControls() async => _controls;
+
+  @override
+  Future<void> saveControls(ParentControls controls) async {
+    _controls = controls;
+  }
+}
+).hasMatch(pin)) {
+      throw ArgumentError.value(pin, 'pin', 'PIN must contain six digits.');
+    }
+    final random = Random.secure();
+    final salt = List<int>.generate(16, (_) => random.nextInt(256));
+    final derived = await _kdf.deriveKeyFromPassword(
+      password: pin,
+      nonce: salt,
+    );
+    final hash = await derived.extractBytes();
+
+    await _secureStorage.write(key: _saltKey, value: base64UrlEncode(salt));
+    await _secureStorage.write(key: _hashKey, value: base64UrlEncode(hash));
+  }
+
+  @override
+  Future<bool> verifyPin(String pin) async {
+    if (!RegExp(r'^\d{6}).hasMatch(pin)) return false;
+    final saltValue = await _secureStorage.read(key: _saltKey);
+    final expectedValue = await _secureStorage.read(key: _hashKey);
+    if (saltValue == null || expectedValue == null) return false;
+
+    final salt = base64Url.decode(saltValue);
+    final expected = base64Url.decode(expectedValue);
+    final derived = await _kdf.deriveKeyFromPassword(
+      password: pin,
+      nonce: salt,
+    );
+    final actual = await derived.extractBytes();
+    if (actual.length != expected.length) return false;
+
+    var difference = 0;
+    for (var index = 0; index < actual.length; index++) {
+      difference |= actual[index] ^ expected[index];
+    }
+    return difference == 0;
+  }
+
+  @override
+  Future<ParentControls> loadControls() async {
+    final values = await Future.wait<Object?>([
+      _preferences.getInt(_dailyLimitKey),
+      _preferences.getBool(_bedtimeEnabledKey),
+      _preferences.getInt(_bedtimeStartKey),
+      _preferences.getInt(_bedtimeEndKey),
+      _preferences.getBool(_soundEnabledKey),
+      _preferences.getBool(_reducedMotionKey),
+    ]);
+    return ParentControls(
+      dailyLimitMinutes: (values[0] as int?) ?? 60,
+      bedtimeEnabled: (values[1] as bool?) ?? false,
+      bedtimeStartMinute: (values[2] as int?) ?? 20 * 60,
+      bedtimeEndMinute: (values[3] as int?) ?? 7 * 60,
+      soundEnabled: (values[4] as bool?) ?? true,
+      reducedMotion: (values[5] as bool?) ?? false,
+    );
+  }
+
+  @override
+  Future<void> saveControls(ParentControls controls) async {
+    await Future.wait<void>([
+      _preferences.setInt(_dailyLimitKey, controls.dailyLimitMinutes),
+      _preferences.setBool(_bedtimeEnabledKey, controls.bedtimeEnabled),
+      _preferences.setInt(_bedtimeStartKey, controls.bedtimeStartMinute),
+      _preferences.setInt(_bedtimeEndKey, controls.bedtimeEndMinute),
+      _preferences.setBool(_soundEnabledKey, controls.soundEnabled),
+      _preferences.setBool(_reducedMotionKey, controls.reducedMotion),
+    ]);
+  }
+}
+
+/// In-memory implementation for widget tests and previews only.
+class MemoryParentAccessRepository implements ParentAccessRepository {
+  String? _pin;
+  ParentControls _controls = const ParentControls();
+
+  @override
+  Future<bool> hasPin() async => _pin != null;
+
+  @override
+  Future<void> setPin(String pin) async {
+    if (!RegExp(r'^\\d{6}$').hasMatch(pin)) {
+      throw ArgumentError.value(pin, 'pin', 'PIN must contain six digits.');
+    }
+    _pin = pin;
+  }
+
+  @override
+  Future<bool> verifyPin(String pin) async => _pin == pin;
+
+  @override
+  Future<ParentControls> loadControls() async => _controls;
+
+  @override
+  Future<void> saveControls(ParentControls controls) async {
+    _controls = controls;
+  }
+}
+).hasMatch(pin)) return false;
+    final saltValue = await _secureStorage.read(key: _saltKey);
+    final expectedValue = await _secureStorage.read(key: _hashKey);
+    if (saltValue == null || expectedValue == null) return false;
+
+    final salt = base64Url.decode(saltValue);
+    final expected = base64Url.decode(expectedValue);
+    final derived = await _kdf.deriveKeyFromPassword(
+      password: pin,
+      nonce: salt,
+    );
+    final actual = await derived.extractBytes();
+    if (actual.length != expected.length) return false;
+
+    var difference = 0;
+    for (var index = 0; index < actual.length; index++) {
+      difference |= actual[index] ^ expected[index];
+    }
+    return difference == 0;
+  }
+
+  @override
+  Future<ParentControls> loadControls() async {
+    final values = await Future.wait<Object?>([
+      _preferences.getInt(_dailyLimitKey),
+      _preferences.getBool(_bedtimeEnabledKey),
+      _preferences.getInt(_bedtimeStartKey),
+      _preferences.getInt(_bedtimeEndKey),
+      _preferences.getBool(_soundEnabledKey),
+      _preferences.getBool(_reducedMotionKey),
+    ]);
+    return ParentControls(
+      dailyLimitMinutes: (values[0] as int?) ?? 60,
+      bedtimeEnabled: (values[1] as bool?) ?? false,
+      bedtimeStartMinute: (values[2] as int?) ?? 20 * 60,
+      bedtimeEndMinute: (values[3] as int?) ?? 7 * 60,
+      soundEnabled: (values[4] as bool?) ?? true,
+      reducedMotion: (values[5] as bool?) ?? false,
+    );
+  }
+
+  @override
+  Future<void> saveControls(ParentControls controls) async {
+    await Future.wait<void>([
+      _preferences.setInt(_dailyLimitKey, controls.dailyLimitMinutes),
+      _preferences.setBool(_bedtimeEnabledKey, controls.bedtimeEnabled),
+      _preferences.setInt(_bedtimeStartKey, controls.bedtimeStartMinute),
+      _preferences.setInt(_bedtimeEndKey, controls.bedtimeEndMinute),
+      _preferences.setBool(_soundEnabledKey, controls.soundEnabled),
+      _preferences.setBool(_reducedMotionKey, controls.reducedMotion),
+    ]);
+  }
+}
+
+/// In-memory implementation for widget tests and previews only.
+class MemoryParentAccessRepository implements ParentAccessRepository {
+  String? _pin;
+  ParentControls _controls = const ParentControls();
+
+  @override
+  Future<bool> hasPin() async => _pin != null;
+
+  @override
+  Future<void> setPin(String pin) async {
+    if (!RegExp(r'^\d{6}).hasMatch(pin)) {
+      throw ArgumentError.value(pin, 'pin', 'PIN must contain six digits.');
+    }
+    _pin = pin;
+  }
+
+  @override
+  Future<bool> verifyPin(String pin) async => _pin == pin;
+
+  @override
+  Future<ParentControls> loadControls() async => _controls;
+
+  @override
+  Future<void> saveControls(ParentControls controls) async {
+    _controls = controls;
+  }
+}
+).hasMatch(pin)) {
       throw ArgumentError.value(pin, 'pin', 'PIN must contain six digits.');
     }
     _pin = pin;
