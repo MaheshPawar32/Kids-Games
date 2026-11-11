@@ -58,6 +58,7 @@ class _KidsGamesAppState extends State<KidsGamesApp>
   bool _isLoading = true;
   bool _hasLoadError = false;
   bool _parentUnlocked = false;
+  bool _isDisposing = false;
 
   GoRouter get _appRouter => _router ??= _createRouter();
 
@@ -134,7 +135,7 @@ class _KidsGamesAppState extends State<KidsGamesApp>
     }
     _dailyUsageSeconds =
         (_dailyUsageSeconds + seconds).clamp(0, 24 * 60 * 60).toInt();
-    if (mounted) {
+    if (mounted && !_isDisposing) {
       setState(() {});
       // Re-evaluate the child route guard as soon as a time limit is reached.
       _routerRefresh.value++;
@@ -325,8 +326,10 @@ class _KidsGamesAppState extends State<KidsGamesApp>
 
   @override
   void dispose() {
-    _recordUsageInterval();
+    _isDisposing = true;
     _usageTimer?.cancel();
+    _usageTimer = null;
+    _recordUsageInterval();
     WidgetsBinding.instance.removeObserver(this);
     _router?.dispose();
     _routerRefresh.dispose();
