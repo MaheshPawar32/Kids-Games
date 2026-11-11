@@ -42,7 +42,7 @@ class HomeScreen extends StatelessWidget {
               _HomeDashboard(
                 childName: childName,
                 grade: grade,
-                onProfileTap: () => _showProfile(context),
+                onProfileTap: () => context.push<void>('/parent-gate'),
               ),
               const _FeatureLandingPage(
                 title: 'Learning worlds',
@@ -81,21 +81,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  void _showProfile(BuildContext context) {
-    showDialog<void>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Explorer profile'),
-        content: Text('$childName\n$grade'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 class _HomeDashboard extends StatelessWidget {
@@ -160,7 +145,7 @@ class _HomeDashboard extends StatelessWidget {
                   onPressed: onProfileTap,
                   icon: const Icon(Icons.person_rounded, color: AppTheme.ink),
                   style: IconButton.styleFrom(backgroundColor: Colors.white),
-                  tooltip: 'Profile',
+                  tooltip: 'Parent area',
                 ),
               ],
             ),
