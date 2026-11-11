@@ -38,7 +38,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('create_redo_button')), findsOneWidget);
 
-    await tester.tap(find.byKey(const Key('create_redo_button')));
+    final redo = find.byKey(const Key('create_redo_button'));
+    await tester.ensureVisible(redo);
+    await tester.tap(redo);
     await tester.pumpAndSettle();
 
     final save = find.byKey(const Key('create_save_button'));
@@ -50,7 +52,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Picture saved in your gallery.'), findsOneWidget);
 
-    await tester.tap(find.byKey(const Key('create_gallery_button')));
+    final gallery = find.byKey(const Key('create_gallery_button'));
+    await tester.ensureVisible(gallery);
+    await tester.pumpAndSettle();
+    await tester.tap(gallery);
     await tester.pumpAndSettle();
     expect(find.text('My gallery'), findsOneWidget);
     expect(find.text('My picture'), findsOneWidget);
