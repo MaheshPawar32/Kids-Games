@@ -22,14 +22,22 @@ void main() {
     await tester.tap(find.text('The letter A'));
     await tester.pumpAndSettle();
 
-    expect(find.text('A is the first letter of the alphabet. Apple begins with A.'),
-        findsOneWidget);
+    expect(
+      find.text('A is the first letter of the alphabet. Apple begins with A.'),
+      findsOneWidget,
+    );
 
     const answers = [0, 1, 1];
     for (var index = 0; index < answers.length; index++) {
-      await tester.tap(find.byKey(Key('learn_answer_${answers[index]}')));
+      final answer = find.byKey(Key('learn_answer_${answers[index]}'));
+      await tester.ensureVisible(answer);
+      await tester.tap(answer);
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key('learn_next_button')));
+
+      final next = find.byKey(const Key('learn_next_button'));
+      await tester.ensureVisible(next);
+      await tester.pumpAndSettle();
+      await tester.tap(next);
       await tester.pumpAndSettle();
     }
 
