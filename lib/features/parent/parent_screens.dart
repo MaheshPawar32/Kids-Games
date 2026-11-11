@@ -612,7 +612,7 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
           const _ParentInfoCard(
             title: 'Settings are saved offline',
             message:
-                'The parent PIN is stored in encrypted secure storage. Time targets and bedtime preferences are saved on this device. Their enforcement is a separate release task and is not yet active.',
+                'The parent PIN is stored in encrypted secure storage. Daily play limits and bedtime schedules are saved on this device and pause child gameplay when active.',
           ),
           const SizedBox(height: 18),
           OutlinedButton.icon(
