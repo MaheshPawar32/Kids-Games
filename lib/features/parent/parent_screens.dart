@@ -279,7 +279,7 @@ class _ParentGateScreenState extends State<ParentGateScreen> {
 }
 
 
-class ChildAccessGuard extends StatelessWidget {
+class ChildAccessGuard extends StatefulWidget {
   const ChildAccessGuard({
     required this.repository,
     required this.dailyUsageSeconds,
@@ -294,9 +294,30 @@ class ChildAccessGuard extends StatelessWidget {
   final VoidCallback onParentTap;
 
   @override
+  State<ChildAccessGuard> createState() => _ChildAccessGuardState();
+}
+
+class _ChildAccessGuardState extends State<ChildAccessGuard> {
+  late Future<ParentControls> _controlsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _controlsFuture = widget.repository.loadControls();
+  }
+
+  @override
+  void didUpdateWidget(covariant ChildAccessGuard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.repository != widget.repository) {
+      _controlsFuture = widget.repository.loadControls();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<ParentControls>(
-      future: repository.loadControls(),
+      future: _controlsFuture,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Scaffold(
@@ -306,8 +327,8 @@ class ChildAccessGuard extends StatelessWidget {
         final controls = snapshot.data!;
         final bedtime = isWithinBedtimeSchedule(DateTime.now(), controls);
         final timeLimitReached =
-            dailyUsageSeconds >= controls.dailyLimitMinutes * 60;
-        if (!bedtime && !timeLimitReached) return child;
+            widget.dailyUsageSeconds >= controls.dailyLimitMinutes * 60;
+        if (!bedtime && !timeLimitReached) return widget.child;
         return Scaffold(
           backgroundColor: const Color(0xFFF4F6FC),
           body: SafeArea(
@@ -337,7 +358,7 @@ class ChildAccessGuard extends StatelessWidget {
                     const SizedBox(height: 24),
                     FilledButton.icon(
                       key: const Key('time_limit_parent_button'),
-                      onPressed: onParentTap,
+                      onPressed: widget.onParentTap,
                       icon: const Icon(Icons.family_restroom_rounded),
                       label: const Text('Parent area'),
                     ),
