@@ -209,10 +209,13 @@ class _KidsGamesAppState extends State<KidsGamesApp>
             if (profile == null) {
               return const _AppLoadingScreen();
             }
-            return HomeScreen(
-              childName: profile.name,
-              grade: profile.grade,
-              gameSessionRepository: _gameSessionRepository,
+            return _guardChildRoute(
+              context,
+              HomeScreen(
+                childName: profile.name,
+                grade: profile.grade,
+                gameSessionRepository: _gameSessionRepository,
+              ),
             );
           },
         ),
@@ -238,28 +241,42 @@ class _KidsGamesAppState extends State<KidsGamesApp>
           builder: (context, state) {
             final activityId = state.pathParameters['activityId'];
             if (activityId == 'shape_matching') {
-              return ShapeMatchingGameScreen(sessionRepository: _gameSessionRepository);
+              return _guardChildRoute(context, ShapeMatchingGameScreen(sessionRepository: _gameSessionRepository));
             }
             if (activityId == 'odd_one_out') {
-              return OddOneOutGameScreen(sessionRepository: _gameSessionRepository);
+              return _guardChildRoute(context, OddOneOutGameScreen(sessionRepository: _gameSessionRepository));
             }
             if (activityId == 'jigsaw_puzzles') {
-              return JigsawPuzzlesGameScreen(sessionRepository: _gameSessionRepository);
+              return _guardChildRoute(context, JigsawPuzzlesGameScreen(sessionRepository: _gameSessionRepository));
             }
             final matches = starterActivities.where((item) => item.id == activityId);
             if (matches.isEmpty) return const _UnknownActivityScreen();
-            return ActivityGameScreen(
-              activity: matches.first,
-              sessionRepository: _gameSessionRepository,
+            return _guardChildRoute(
+              context,
+              ActivityGameScreen(
+                activity: matches.first,
+                sessionRepository: _gameSessionRepository,
+              ),
             );
           },
         ),
         GoRoute(
           path: '/games/shape-matching',
-          builder: (context, state) =>
-              ShapeMatchingGameScreen(sessionRepository: _gameSessionRepository),
+          builder: (context, state) => _guardChildRoute(
+            context,
+            ShapeMatchingGameScreen(sessionRepository: _gameSessionRepository),
+          ),
         ),
       ],
+    );
+  }
+
+  Widget _guardChildRoute(BuildContext context, Widget child) {
+    return ChildAccessGuard(
+      repository: _parentAccessRepository,
+      dailyUsageSeconds: _dailyUsageSeconds,
+      child: child,
+      onParentTap: () => context.push<void>('/parent-gate'),
     );
   }
 
