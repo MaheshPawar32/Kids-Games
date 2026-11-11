@@ -92,7 +92,7 @@ class _CreateStudioScreenState extends State<CreateStudioScreen> {
       _strokes.add(
         _DrawingStroke(
           points: List<Offset>.unmodifiable(points),
-          colorValue: _eraser ? Colors.white.value : _selectedColor.value,
+          colorValue: _eraser ? Colors.white.toARGB32() : _selectedColor.toARGB32(),
           width: _brushSize,
         ),
       );
@@ -230,7 +230,7 @@ class _CreateStudioScreenState extends State<CreateStudioScreen> {
                 Text('My gallery',
                     style: Theme.of(sheetContext).textTheme.titleLarge),
                 const SizedBox(height: 6),
-                Text(_gallery.length.toString() + ' saved pictures on this device'),
+                Text('${_gallery.length} saved pictures on this device'),
                 const SizedBox(height: 12),
                 Expanded(
                   child: _gallery.isEmpty
@@ -279,11 +279,7 @@ class _CreateStudioScreenState extends State<CreateStudioScreen> {
   }
 
   String _dateLabel(DateTime date) =>
-      date.day.toString().padLeft(2, '0') +
-      '/' +
-      date.month.toString().padLeft(2, '0') +
-      '/' +
-      date.year.toString();
+      '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
 
   void _previewArtwork(_SavedArtwork artwork) {
     showDialog<void>(
@@ -508,7 +504,7 @@ class _CreateStudioScreenState extends State<CreateStudioScreen> {
               children: [
                 for (final color in _palette)
                   InkWell(
-                    key: Key('create_color_' + color.value.toRadixString(16)),
+                    key: Key('create_color_${color.toARGB32().toRadixString(16)}'),
                     customBorder: const CircleBorder(),
                     onTap: () {
                       setState(() {
