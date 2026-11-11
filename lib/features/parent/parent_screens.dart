@@ -278,6 +278,80 @@ class _ParentGateScreenState extends State<ParentGateScreen> {
   }
 }
 
+
+class ChildAccessGuard extends StatelessWidget {
+  const ChildAccessGuard({
+    required this.repository,
+    required this.dailyUsageSeconds,
+    required this.child,
+    required this.onParentTap,
+    super.key,
+  });
+
+  final ParentAccessRepository repository;
+  final int dailyUsageSeconds;
+  final Widget child;
+  final VoidCallback onParentTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<ParentControls>(
+      future: repository.loadControls(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        final controls = snapshot.data!;
+        final bedtime = isWithinBedtimeSchedule(DateTime.now(), controls);
+        final timeLimitReached =
+            dailyUsageSeconds >= controls.dailyLimitMinutes * 60;
+        if (!bedtime && !timeLimitReached) return child;
+        return Scaffold(
+          backgroundColor: const Color(0xFFF4F6FC),
+          body: SafeArea(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(28),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      bedtime ? '🌙' : '🌻',
+                      style: const TextStyle(fontSize: 76),
+                    ),
+                    const SizedBox(height: 18),
+                    Text(
+                      bedtime ? 'Bedtime now' : 'Great play today!',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      bedtime
+                          ? 'Your family bedtime schedule is active. Come back when it is time to play again.'
+                          : 'You have reached today’s app-time target. Take a break and come back tomorrow.',
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
+                    FilledButton.icon(
+                      key: const Key('time_limit_parent_button'),
+                      onPressed: onParentTap,
+                      icon: const Icon(Icons.family_restroom_rounded),
+                      label: const Text('Parent area'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
 class ParentDashboardScreen extends StatefulWidget {
   const ParentDashboardScreen({
     required this.parentRepository,
