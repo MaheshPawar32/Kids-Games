@@ -83,7 +83,8 @@ class _ParentGateScreenState extends State<ParentGateScreen> {
           break;
         case 'create':
           final value = _pin.text.trim();
-          if (!RegExp(r'^[0-9]{6}.hasMatch(value)) {
+          if (value.length != 6 ||
+              value.codeUnits.any((unit) => unit < 48 || unit > 57)) {
             _error = 'Choose a PIN with exactly six digits.';
           } else {
             _pendingPin = value;
