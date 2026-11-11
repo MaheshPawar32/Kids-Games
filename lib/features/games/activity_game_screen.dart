@@ -380,8 +380,16 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
                 ),
                 childWhenDragging: Opacity(opacity: 0.25, child: card),
                 child: Semantics(
-                  label: 'Drag ${option.label} to the answer area',
-                  child: card,
+                  button: true,
+                  label: 'Drag or tap ${option.label} to choose it',
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(18),
+                      onTap: () => _choose(index),
+                      child: card,
+                    ),
+                  ),
                 ),
               );
             },
