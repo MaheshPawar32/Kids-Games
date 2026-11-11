@@ -5,8 +5,8 @@ import 'package:kidsgames/features/games/flame_counting_game_screen.dart';
 
 void main() {
   testWidgets('Magic Counting opens the Flame garden game', (tester) async {
-    await tester.view.setPhysicalSize(const Size(900, 1600));
-    await tester.view.setDevicePixelRatio(1);
+    tester.view.physicalSize = const Size(900, 1600);
+    tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
