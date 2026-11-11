@@ -193,74 +193,7 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: round.options.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: 1.28,
-            ),
-            itemBuilder: (context, index) {
-              final option = round.options[index];
-              final selected = _answer == index;
-              final correct = index == round.correctIndex;
-              final color = answered && selected
-                  ? (correct
-                      ? const Color(0xFFE2F6EA)
-                      : const Color(0xFFFFE9E5))
-                  : Colors.white;
-              final borderColor = selected
-                  ? (correct ? Colors.green : Colors.deepOrange)
-                  : answered && correct
-                      ? Colors.green
-                      : const Color(0xFFE7EAF2);
-
-              return Material(
-                color: color,
-                borderRadius: BorderRadius.circular(20),
-                child: InkWell(
-                  key: Key('answer_$index'),
-                  borderRadius: BorderRadius.circular(20),
-                  onTap: answered ? null : () => _choose(index),
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: borderColor,
-                        width: selected || (answered && correct) ? 2 : 1,
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          option.emoji,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 32),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          option.label,
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
+          _activityAnswerArea(round, answered),
           if (answered) ...[
             const SizedBox(height: 18),
             Text(
@@ -285,6 +218,278 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
           ],
         ],
       ),
+    );
+  }
+
+
+  /// Uses hands-on interactions for activities where a tap-only quiz is not
+  /// the intended learning action. Every interaction still resolves through
+  /// [_choose], preserving scoring and session persistence.
+  Widget _activityAnswerArea(ActivityRound round, bool answered) {
+    const dragActivities = {
+      'complete_picture',
+      'shadow_matching',
+      'color_matching',
+      'alphabet_matching',
+      'big_small',
+      'missing_shapes',
+    };
+
+    if (widget.activity.id == 'find_differences') {
+      final symbols = round.cue
+          .split(RegExp(r'\\s+'))
+          .where((symbol) => symbol.isNotEmpty)
+          .toList(growable: false);
+      return Row(
+        children: List.generate(round.options.length, (index) {
+          final selected = _answer == index;
+          final symbol = index < symbols.length
+              ? symbols[index]
+              : round.options[index].emoji;
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Semantics(
+                button: true,
+                label: 'Item ${index + 1}',
+                child: Material(
+                  color: selected ? const Color(0xFFFFE9E5) : Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  child: InkWell(
+                    key: Key('answer_$index'),
+                    borderRadius: BorderRadius.circular(18),
+                    onTap: answered ? null : () => _choose(index),
+                    child: Container(
+                      constraints: const BoxConstraints(minHeight: 92),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(
+                          color: selected
+                              ? AppTheme.violet
+                              : const Color(0xFFE7EAF2),
+                          width: selected ? 3 : 1,
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(symbol, style: const TextStyle(fontSize: 28)),
+                          Text('${index + 1}',
+                              style: const TextStyle(fontWeight: FontWeight.w800)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }),
+      );
+    }
+
+    if (dragActivities.contains(widget.activity.id)) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          DragTarget<int>(
+            onWillAcceptWithDetails: (details) =>
+                !answered && details.data >= 0 &&
+                details.data < round.options.length,
+            onAcceptWithDetails: (details) => _choose(details.data),
+            builder: (context, candidates, rejected) {
+              final hovering = candidates.isNotEmpty;
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 160),
+                constraints: const BoxConstraints(minHeight: 104),
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: hovering
+                      ? const Color(0xFFE2F6EA)
+                      : Colors.white.withValues(alpha: 0.78),
+                  borderRadius: BorderRadius.circular(22),
+                  border: Border.all(
+                    color: hovering ? Colors.green : AppTheme.violet,
+                    width: 2,
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.touch_app_rounded, size: 26),
+                    const SizedBox(height: 6),
+                    Text(
+                      answered ? 'Piece placed!' : 'Drag the answer here',
+                      style: const TextStyle(fontWeight: FontWeight.w900),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 14),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: round.options.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 1.5,
+            ),
+            itemBuilder: (context, index) {
+              final option = round.options[index];
+              final selected = _answer == index;
+              final card = Container(
+                key: Key('answer_$index'),
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: selected ? const Color(0xFFE2F6EA) : Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(
+                    color: selected ? Colors.green : const Color(0xFFE7EAF2),
+                    width: selected ? 2 : 1,
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(option.emoji, style: const TextStyle(fontSize: 28)),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(option.label,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontWeight: FontWeight.w900)),
+                    ),
+                  ],
+                ),
+              );
+              if (answered) return card;
+              return Draggable<int>(
+                data: index,
+                feedback: Material(
+                  color: Colors.transparent,
+                  child: SizedBox(width: 145, child: card),
+                ),
+                childWhenDragging: Opacity(opacity: 0.25, child: card),
+                child: Semantics(
+                  label: 'Drag ${option.label} to the answer area',
+                  child: card,
+                ),
+              );
+            },
+          ),
+        ],
+      );
+    }
+
+    if (widget.activity.id == 'magic_counting') {
+      final object = round.cue
+          .split(RegExp(r'\\s+'))
+          .where((symbol) => symbol.isNotEmpty)
+          .first;
+      final count = round.cue
+          .split(RegExp(r'\\s+'))
+          .where((symbol) => symbol == object)
+          .length;
+      return Column(
+        children: [
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 12,
+            runSpacing: 12,
+            children: List.generate(count, (index) {
+              return Semantics(
+                label: 'Countable object ${index + 1}',
+                child: Container(
+                  width: 58,
+                  height: 58,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Text(object, style: const TextStyle(fontSize: 32)),
+                ),
+              );
+            }),
+          ),
+          const SizedBox(height: 18),
+          const Text('Touch each object, then choose the total.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.w700)),
+          const SizedBox(height: 12),
+          _standardAnswerGrid(round, answered),
+        ],
+      );
+    }
+
+    return _standardAnswerGrid(round, answered);
+  }
+
+  Widget _standardAnswerGrid(ActivityRound round, bool answered) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: round.options.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: 1.28,
+      ),
+      itemBuilder: (context, index) {
+        final option = round.options[index];
+        final selected = _answer == index;
+        final correct = index == round.correctIndex;
+        final color = answered && selected
+            ? (correct ? const Color(0xFFE2F6EA) : const Color(0xFFFFE9E5))
+            : Colors.white;
+        final borderColor = selected
+            ? (correct ? Colors.green : Colors.deepOrange)
+            : answered && correct
+                ? Colors.green
+                : const Color(0xFFE7EAF2);
+        return Material(
+          color: color,
+          borderRadius: BorderRadius.circular(20),
+          child: InkWell(
+            key: Key('answer_$index'),
+            borderRadius: BorderRadius.circular(20),
+            onTap: answered ? null : () => _choose(index),
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: borderColor,
+                  width: selected || (answered && correct) ? 2 : 1,
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(option.emoji,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 32)),
+                  const SizedBox(height: 5),
+                  Text(option.label,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w900)),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
