@@ -3,7 +3,6 @@ import 'dart:ui' as ui;
 
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
-import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_theme.dart';
