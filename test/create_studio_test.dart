@@ -53,7 +53,7 @@ void main() {
     expect(find.text('Picture saved in your gallery.'), findsOneWidget);
 
     final gallery = find.byKey(const Key('create_gallery_button'));
-    await tester.scrollUntilVisible(gallery, 250, scrollable: find.byType(Scrollable).first,);
+    await tester.scrollUntilVisible(gallery, -250);
     await tester.tap(gallery);
     await tester.pumpAndSettle();
     expect(find.text('My gallery'), findsOneWidget);
