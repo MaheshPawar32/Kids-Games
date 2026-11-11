@@ -33,18 +33,18 @@ void main() {
     await tester.pumpAndSettle();
 
     final undo = find.byKey(const Key('create_undo_button'));
-    await tester.ensureVisible(undo);
+    await tester.scrollUntilVisible(undo, 250);
     await tester.tap(undo);
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('create_redo_button')), findsOneWidget);
 
     final redo = find.byKey(const Key('create_redo_button'));
-    await tester.ensureVisible(redo);
+    await tester.scrollUntilVisible(redo, 250);
     await tester.tap(redo);
     await tester.pumpAndSettle();
 
     final save = find.byKey(const Key('create_save_button'));
-    await tester.ensureVisible(save);
+    await tester.scrollUntilVisible(save, 250);
     await tester.tap(save);
     await tester.pumpAndSettle();
     expect(find.text('Save your picture'), findsOneWidget);
@@ -53,8 +53,7 @@ void main() {
     expect(find.text('Picture saved in your gallery.'), findsOneWidget);
 
     final gallery = find.byKey(const Key('create_gallery_button'));
-    await tester.ensureVisible(gallery);
-    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(gallery, 250, scrollable: find.byType(Scrollable).first,);
     await tester.tap(gallery);
     await tester.pumpAndSettle();
     expect(find.text('My gallery'), findsOneWidget);
