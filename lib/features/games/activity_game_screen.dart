@@ -237,7 +237,7 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
 
     if (widget.activity.id == 'find_differences') {
       final symbols = round.cue
-          .split(RegExp(r'\\s+'))
+          .split(RegExp(r'\s+'))
           .where((symbol) => symbol.isNotEmpty)
           .toList(growable: false);
       return Row(
@@ -389,11 +389,11 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
 
     if (widget.activity.id == 'magic_counting') {
       final object = round.cue
-          .split(RegExp(r'\\s+'))
+          .split(RegExp(r'\s+'))
           .where((symbol) => symbol.isNotEmpty)
           .first;
       final count = round.cue
-          .split(RegExp(r'\\s+'))
+          .split(RegExp(r'\s+'))
           .where((symbol) => symbol == object)
           .length;
       return Column(
