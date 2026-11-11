@@ -30,12 +30,12 @@ void main() {
     const answers = [0, 1, 1];
     for (var index = 0; index < answers.length; index++) {
       final answer = find.byKey(Key('learn_answer_${answers[index]}'));
-      await tester.ensureVisible(answer);
+      await tester.scrollUntilVisible(answer, 250);
       await tester.tap(answer);
       await tester.pumpAndSettle();
 
       final next = find.byKey(const Key('learn_next_button'));
-      await tester.ensureVisible(next);
+      await tester.scrollUntilVisible(next, 250);
       await tester.pumpAndSettle();
       await tester.tap(next);
       await tester.pumpAndSettle();
