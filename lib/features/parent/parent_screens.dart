@@ -283,12 +283,16 @@ class ParentDashboardScreen extends StatefulWidget {
     required this.parentRepository,
     required this.gameSessionRepository,
     required this.onLock,
+    required this.onControlsChanged,
+    required this.dailyUsageSeconds,
     super.key,
   });
 
   final ParentAccessRepository parentRepository;
   final GameSessionRepository gameSessionRepository;
   final VoidCallback onLock;
+  final VoidCallback onControlsChanged;
+  final int dailyUsageSeconds;
 
   @override
   State<ParentDashboardScreen> createState() => _ParentDashboardScreenState();
@@ -311,7 +315,9 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
 
   Future<void> _save(ParentControls next) async {
     await widget.parentRepository.saveControls(next);
-    if (mounted) setState(() => _controls = Future.value(next));
+    if (!mounted) return;
+    setState(() => _controls = Future.value(next));
+    widget.onControlsChanged();
   }
 
   Future<int?> _chooseTime(BuildContext context, int currentMinute) async {
@@ -349,8 +355,18 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
         children: [
-          const Text('A clear view of learning on this device.',
-              style: TextStyle(color: Color(0xFF667085))),
+          const Text(
+            'A clear view of learning on this device.',
+            style: TextStyle(color: Color(0xFF667085)),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'Today’s app time: ${widget.dailyUsageSeconds ~/ 60} minutes',
+            style: const TextStyle(
+              color: Color(0xFF667085),
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           const SizedBox(height: 16),
           FutureBuilder<List<GameSession>>(
             future: _sessions,
@@ -617,4 +633,64 @@ class _ParentInfoCard extends StatelessWidget {
           ],
         ),
       );
+}
+
+class FamilyTimeLimitScreen extends StatelessWidget {
+  const FamilyTimeLimitScreen({
+    required this.bedtime,
+    required this.dailyLimitMinutes,
+    required this.onParentTap,
+    super.key,
+  });
+
+  final bool bedtime;
+  final int dailyLimitMinutes;
+  final VoidCallback onParentTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final title = bedtime
+        ? 'It’s bedtime'
+        : 'That’s a lot of learning for today!';
+    final message = bedtime
+        ? 'Your family bedtime schedule is active. Come back when your family time begins again.'
+        : 'You have reached today’s ${dailyLimitMinutes}-minute app-time limit. Take a break and come back tomorrow.';
+    return Scaffold(
+      backgroundColor: const Color(0xFFF4F6FC),
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(28),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    bedtime ? '🌙' : '🌻',
+                    style: const TextStyle(fontSize: 76),
+                  ),
+                  const SizedBox(height: 18),
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(message, textAlign: TextAlign.center),
+                  const SizedBox(height: 24),
+                  FilledButton.icon(
+                    key: const Key('time_limit_parent_button'),
+                    onPressed: onParentTap,
+                    icon: const Icon(Icons.family_restroom_rounded),
+                    label: const Text('Parent area'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
