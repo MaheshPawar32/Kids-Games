@@ -76,4 +76,23 @@ void main() {
     expect(prompts['number_sequencing'], contains('sequence'));
     expect(prompts['find_differences'], contains('different'));
   });
+  test('counting rounds display exactly the number in the answer key', () {
+    for (final round in activityRoundsFor('magic_counting')) {
+      final symbols = round.cue.split(RegExp(r'\\s+'));
+      final object = symbols.first;
+      final displayedCount = symbols.where((symbol) => symbol == object).length;
+      final answer = int.parse(round.options[round.correctIndex].label);
+      expect(displayedCount, answer, reason: round.prompt);
+    }
+  });
+
+  test('find-differences rounds point to the only outlier position', () {
+    for (final round in activityRoundsFor('find_differences')) {
+      final symbols = round.cue.split(RegExp(r'\\s+'));
+      expect(symbols, hasLength(round.options.length));
+      final chosen = symbols[round.correctIndex];
+      expect(symbols.where((symbol) => symbol == chosen), hasLength(1));
+    }
+  });
+
 }
