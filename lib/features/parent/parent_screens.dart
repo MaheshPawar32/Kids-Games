@@ -42,8 +42,8 @@ class _ParentGateScreenState extends State<ParentGateScreen> {
 
   void _newChallenge() {
     final random = Random.secure();
-    _a = 12 + random.nextInt(18);
-    _b = 3 + random.nextInt(8);
+    _a = 21 + random.nextInt(29);
+    _b = 11 + random.nextInt(19);
   }
 
   Future<void> _load() async {
