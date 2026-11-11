@@ -31,8 +31,8 @@ This is still **not a production-ready children's game release**. The 12 choice-
 | Dedicated game mechanics | Shape Matching, Odd One Out, Jigsaw Puzzles |
 | Other activities | 12 five-round choice-based activities with activity-specific prompts, cues, options, answer keys and explanations |
 | 3D asset pipeline | Blender scripts generate GLB and editable Blender sources; CI validates generated files |
-| Automated validation | Latest fully green run #135: analysis, 19 tests, Android debug APK build and artifact upload |
-| Pull request | PR #1 open as draft; no merge; main untouched |
+| Automated validation | Latest fully green run #138: analysis, tests, Android debug APK build and artifact upload |
+| Pull request | PR #1 open and unmerged; main untouched |
 
 ## Game scope and honest implementation level
 
@@ -77,7 +77,7 @@ Still needed:
 
 The Android project is now committed, so CI no longer needs to generate it transiently. The generated project includes Gradle Kotlin DSL files, wrapper, app manifests, launcher resources and Kotlin MainActivity.
 
-CI run #135:
+CI run #138:
 - Blender asset generation: passed
 - Flutter dependency resolution: passed
 - Dart formatting: passed
