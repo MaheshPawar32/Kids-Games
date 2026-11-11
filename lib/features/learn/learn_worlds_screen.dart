@@ -140,7 +140,6 @@ class _LearnWorldsScreenState extends State<LearnWorldsScreen> {
       MaterialPageRoute<void>(
         builder: (_) => _LearnLessonScreen(
           lesson: lesson,
-          completed: _completed.contains(lesson.id),
           onCompleted: () => _finishLesson(lesson.id),
         ),
       ),
@@ -319,12 +318,10 @@ class _LearnWorldsScreenState extends State<LearnWorldsScreen> {
 class _LearnLessonScreen extends StatefulWidget {
   const _LearnLessonScreen({
     required this.lesson,
-    required this.completed,
     required this.onCompleted,
   });
 
   final _LearnLesson lesson;
-  final bool completed;
   final Future<void> Function() onCompleted;
 
   @override
