@@ -29,6 +29,7 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
   int _round = 0;
   int _score = 0;
   int? _answer;
+  final Set<int> _countedObjects = <int>{};
   bool _paused = false;
   bool _finished = false;
   bool _saving = false;
@@ -72,6 +73,7 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
     setState(() {
       _round++;
       _answer = null;
+      _countedObjects.clear();
     });
   }
 
@@ -80,6 +82,7 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
       _round = 0;
       _score = 0;
       _answer = null;
+      _countedObjects.clear();
       _paused = false;
       _finished = false;
       _saving = false;
@@ -403,27 +406,66 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
             spacing: 12,
             runSpacing: 12,
             children: List.generate(count, (index) {
+              final isCounted = _countedObjects.contains(index);
               return Semantics(
+                button: true,
                 label: 'Countable object ${index + 1}',
-                child: Container(
-                  width: 58,
-                  height: 58,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
+                child: Material(
+                  color: isCounted
+                      ? const Color(0xFFE2F6EA)
+                      : Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  child: InkWell(
+                    key: Key('count_object_$index'),
                     borderRadius: BorderRadius.circular(16),
+                    onTap: answered
+                        ? null
+                        : () => setState(() {
+                              if (isCounted) {
+                                _countedObjects.remove(index);
+                              } else {
+                                _countedObjects.add(index);
+                              }
+                            }),
+                    child: Container(
+                      width: 58,
+                      height: 58,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: isCounted
+                              ? Colors.green
+                              : const Color(0xFFE7EAF2),
+                        ),
+                      ),
+                      child: Text(
+                        isCounted ? '✓' : object,
+                        style: const TextStyle(fontSize: 32),
+                      ),
+                    ),
                   ),
-                  child: Text(object, style: const TextStyle(fontSize: 32)),
                 ),
               );
             }),
           ),
           const SizedBox(height: 18),
-          const Text('Touch each object, then choose the total.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.w700)),
+          Text(
+            _countedObjects.length == count
+                ? 'Great counting! Now choose the total.'
+                : 'Touch each object once (${_countedObjects.length}/$count).',
+            key: const Key('counting_progress'),
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontWeight: FontWeight.w700),
+          ),
           const SizedBox(height: 12),
-          _standardAnswerGrid(round, answered),
+          IgnorePointer(
+            ignoring: _countedObjects.length != count,
+            child: Opacity(
+              opacity: _countedObjects.length == count ? 1 : 0.45,
+              child: _standardAnswerGrid(round, answered),
+            ),
+          ),
         ],
       );
     }
