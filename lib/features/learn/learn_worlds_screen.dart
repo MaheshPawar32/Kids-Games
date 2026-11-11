@@ -232,10 +232,7 @@ class _LearnWorldsScreenState extends State<LearnWorldsScreen> {
                                                 .textTheme.bodySmall),
                                         const SizedBox(height: 8),
                                         Text(
-                                          done.toString() +
-                                              ' of ' +
-                                              world.lessons.length.toString() +
-                                              ' lessons completed',
+                                          '$done of ${world.lessons.length} lessons completed',
                                           style: const TextStyle(
                                             fontSize: 11,
                                             color: Color(0xFF667085),
@@ -386,11 +383,7 @@ class _LearnLessonScreenState extends State<_LearnLessonScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'You answered ' +
-                      _correct.toString() +
-                      ' of ' +
-                      widget.lesson.questions.length.toString() +
-                      ' questions correctly.',
+                  'You answered $_correct of ${widget.lesson.questions.length} questions correctly.',
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
@@ -455,10 +448,7 @@ class _LearnLessonScreenState extends State<_LearnLessonScreen> {
           ),
           const SizedBox(height: 22),
           Text(
-            'Try it · ' +
-                (_question + 1).toString() +
-                ' of ' +
-                widget.lesson.questions.length.toString(),
+            'Try it · ${_question + 1} of ${widget.lesson.questions.length}',
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 10),
@@ -496,9 +486,7 @@ class _LearnLessonScreenState extends State<_LearnLessonScreen> {
             Text(
               _selected == question.answerIndex
                   ? 'That is right! Great noticing.'
-                  : 'Good try. The answer is ' +
-                      question.options[question.answerIndex] +
-                      '.',
+                  : 'Good try. The answer is ${question.options[question.answerIndex]}.',
               key: const Key('learn_answer_feedback'),
               style: const TextStyle(fontWeight: FontWeight.w700),
             ),
@@ -555,7 +543,7 @@ class _LearnProgressCard extends StatelessWidget {
                   child: Text('Your learning journey',
                       style: TextStyle(fontWeight: FontWeight.w900)),
                 ),
-                Text(completed.toString() + '/' + total.toString()),
+                Text('$completed/$total'),
               ],
             ),
             const SizedBox(height: 10),
