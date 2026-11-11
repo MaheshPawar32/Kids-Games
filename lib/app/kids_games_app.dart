@@ -48,6 +48,7 @@ class _KidsGamesAppState extends State<KidsGamesApp>
   final FamilyUsageRepository _familyUsageRepository =
       PreferencesFamilyUsageRepository();
   int _dailyUsageSeconds = 0;
+  late String _usageDayKey;
   DateTime? _usageIntervalStartedAt;
   Timer? _usageTimer;
   final ValueNotifier<int> _routerRefresh = ValueNotifier<int>(0);
@@ -64,6 +65,7 @@ class _KidsGamesAppState extends State<KidsGamesApp>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _usageDayKey = _dateKey(DateTime.now());
     _loadProfile();
     _refreshDailyUsage();
     _startUsageTracking();
@@ -88,10 +90,22 @@ class _KidsGamesAppState extends State<KidsGamesApp>
     }
   }
 
+  String _dateKey(DateTime value) =>
+      '${value.year.toString().padLeft(4, '0')}-'
+      '${value.month.toString().padLeft(2, '0')}-'
+      '${value.day.toString().padLeft(2, '0')}';
+
   Future<void> _refreshDailyUsage() async {
+    final now = DateTime.now();
+    final today = _dateKey(now);
     try {
-      final seconds = await _familyUsageRepository.loadTodaySeconds(DateTime.now());
-      if (mounted) setState(() => _dailyUsageSeconds = seconds);
+      final seconds = await _familyUsageRepository.loadTodaySeconds(now);
+      if (!mounted) return;
+      setState(() {
+        _usageDayKey = today;
+        _dailyUsageSeconds = seconds;
+      });
+      _routerRefresh.value++;
     } catch (_) {
       // Usage tracking is best-effort; app access remains available offline.
     }
@@ -100,10 +114,10 @@ class _KidsGamesAppState extends State<KidsGamesApp>
   void _startUsageTracking() {
     if (_usageTimer != null) return;
     _usageIntervalStartedAt = DateTime.now();
-    _usageTimer = Timer.periodic(const Duration(seconds: 30), (_) {
-      _recordUsageInterval();
-      if (mounted) setState(() {});
-    });
+    _usageTimer = Timer.periodic(
+      const Duration(seconds: 30),
+      (_) => _recordUsageInterval(),
+    );
   }
 
   void _recordUsageInterval() {
@@ -113,8 +127,25 @@ class _KidsGamesAppState extends State<KidsGamesApp>
     final seconds = now.difference(started).inSeconds;
     if (seconds <= 0) return;
     _usageIntervalStartedAt = now;
-    _dailyUsageSeconds += seconds;
-    _familyUsageRepository.saveTodaySeconds(_dailyUsageSeconds, now);
+    final today = _dateKey(now);
+    if (_usageDayKey != today) {
+      _usageDayKey = today;
+      _dailyUsageSeconds = 0;
+    }
+    _dailyUsageSeconds =
+        (_dailyUsageSeconds + seconds).clamp(0, 24 * 60 * 60).toInt();
+    if (mounted) {
+      setState(() {});
+      // Re-evaluate the child route guard as soon as a time limit is reached.
+      _routerRefresh.value++;
+    }
+    unawaited(
+      _familyUsageRepository
+          .saveTodaySeconds(_dailyUsageSeconds, now)
+          .catchError((Object _) {
+        // A storage failure must not crash play; the next interval retries.
+      }),
+    );
   }
 
   Future<void> _loadProfile() async {
