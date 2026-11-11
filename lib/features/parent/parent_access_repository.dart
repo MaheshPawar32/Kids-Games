@@ -179,3 +179,15 @@ class MemoryParentAccessRepository implements ParentAccessRepository {
     _controls = controls;
   }
 }
+
+bool isWithinBedtimeSchedule(DateTime now, ParentControls controls) {
+  if (!controls.bedtimeEnabled) return false;
+  final currentMinute = now.hour * 60 + now.minute;
+  final start = controls.bedtimeStartMinute.clamp(0, 1439);
+  final end = controls.bedtimeEndMinute.clamp(0, 1439);
+  if (start == end) return false;
+  if (start < end) {
+    return currentMinute >= start && currentMinute < end;
+  }
+  return currentMinute >= start || currentMinute < end;
+}
