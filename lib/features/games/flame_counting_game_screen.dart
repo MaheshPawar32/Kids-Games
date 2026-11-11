@@ -162,8 +162,14 @@ class _FlameCountingGameScreenState extends State<FlameCountingGameScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton(
-                        onPressed: _restart,
-                        child: const Text('Play again'),
+                        onPressed: _saving
+                            ? null
+                            : _saveError
+                                ? _saveResult
+                                : _restart,
+                        child: Text(
+                          _saveError ? 'Retry saving' : 'Play again',
+                        ),
                       ),
                     ),
                   ],
