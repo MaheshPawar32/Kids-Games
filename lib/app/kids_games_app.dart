@@ -6,6 +6,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 import '../features/games/activity.dart';
 import '../features/games/activity_game_screen.dart';
+import '../features/games/flame_counting_game_screen.dart';
 import '../features/games/shape_matching/shape_matching_game_screen.dart';
 import '../features/games/odd_one_out/odd_one_out_game_screen.dart';
 import '../features/games/jigsaw_puzzles/jigsaw_puzzles_game_screen.dart';
@@ -272,6 +273,12 @@ class _KidsGamesAppState extends State<KidsGamesApp>
           path: '/games/:activityId',
           builder: (context, state) {
             final activityId = state.pathParameters['activityId'];
+            if (activityId == 'magic_counting') {
+              return _guardChildRoute(
+                context,
+                FlameCountingGameScreen(sessionRepository: _gameSessionRepository),
+              );
+            }
             if (activityId == 'shape_matching') {
               return _guardChildRoute(context, ShapeMatchingGameScreen(sessionRepository: _gameSessionRepository));
             }
