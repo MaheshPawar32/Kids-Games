@@ -26,14 +26,14 @@ class PreferencesFamilyUsageRepository implements FamilyUsageRepository {
       _preferences.getInt(_secondsKey),
     ]);
     if (values[0] != _date(now)) return 0;
-    return (values[1] as int?)?.clamp(0, 24 * 60 * 60) ?? 0;
+    return ((values[1] as int?) ?? 0).clamp(0, 24 * 60 * 60).toInt();
   }
 
   @override
   Future<void> saveTodaySeconds(int seconds, DateTime now) async {
     await Future.wait<void>([
       _preferences.setString(_dateKey, _date(now)),
-      _preferences.setInt(_secondsKey, seconds.clamp(0, 24 * 60 * 60)),
+      _preferences.setInt(_secondsKey, seconds.clamp(0, 24 * 60 * 60).toInt()),
     ]);
   }
 }
@@ -57,6 +57,6 @@ class MemoryFamilyUsageRepository implements FamilyUsageRepository {
   @override
   Future<void> saveTodaySeconds(int seconds, DateTime now) async {
     _date = _dateFor(now);
-    _seconds = seconds.clamp(0, 24 * 60 * 60);
+    _seconds = seconds.clamp(0, 24 * 60 * 60).toInt();
   }
 }
