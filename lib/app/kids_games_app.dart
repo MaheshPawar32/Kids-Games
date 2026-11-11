@@ -12,6 +12,8 @@ import '../features/home/home_screen.dart';
 import '../features/onboarding/child_profile.dart';
 import '../features/onboarding/child_profile_repository.dart';
 import '../features/onboarding/child_setup_screen.dart';
+import '../features/parent/parent_access_repository.dart';
+import '../features/parent/parent_screens.dart';
 import 'store/kids_games_store.dart';
 import 'theme/app_theme.dart';
 
@@ -19,11 +21,13 @@ class KidsGamesApp extends StatefulWidget {
   const KidsGamesApp({
     this.profileRepository,
     this.gameSessionRepository,
+    this.parentAccessRepository,
     super.key,
   });
 
   final ChildProfileRepository? profileRepository;
   final GameSessionRepository? gameSessionRepository;
+  final ParentAccessRepository? parentAccessRepository;
 
   @override
   State<KidsGamesApp> createState() => _KidsGamesAppState();
@@ -35,12 +39,15 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
   final KidsGamesStore _store = KidsGamesStore();
   late final GameSessionRepository _gameSessionRepository =
       widget.gameSessionRepository ?? MemoryGameSessionRepository();
+  late final ParentAccessRepository _parentAccessRepository =
+      widget.parentAccessRepository ?? SecureParentAccessRepository();
   final ValueNotifier<int> _routerRefresh = ValueNotifier<int>(0);
 
   GoRouter? _router;
   ChildProfile? _profile;
   bool _isLoading = true;
   bool _hasLoadError = false;
+  bool _parentUnlocked = false;
 
   GoRouter get _appRouter => _router ??= _createRouter();
 
@@ -103,6 +110,14 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
           return currentPath == '/setup' ? null : '/setup';
         }
 
+        if (currentPath == '/parent' && !_parentUnlocked) {
+          return '/parent-gate';
+        }
+
+        if (currentPath == '/parent-gate' && _parentUnlocked) {
+          return '/parent';
+        }
+
         if (currentPath == '/loading' ||
             currentPath == '/setup' ||
             currentPath == '/error') {
@@ -142,6 +157,21 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
           },
         ),
         GoRoute(
+          path: '/parent-gate',
+          builder: (context, state) => ParentGateScreen(
+            repository: _parentAccessRepository,
+            onAuthenticated: () => _unlockParent(context),
+          ),
+        ),
+        GoRoute(
+          path: '/parent',
+          builder: (context, state) => ParentDashboardScreen(
+            parentRepository: _parentAccessRepository,
+            gameSessionRepository: _gameSessionRepository,
+            onLock: () => _lockParent(context),
+          ),
+        ),
+        GoRoute(
           path: '/games/:activityId',
           builder: (context, state) {
             final activityId = state.pathParameters['activityId'];
@@ -169,6 +199,18 @@ class _KidsGamesAppState extends State<KidsGamesApp> {
         ),
       ],
     );
+  }
+
+  void _unlockParent(BuildContext context) {
+    setState(() => _parentUnlocked = true);
+    _routerRefresh.value++;
+    context.go('/parent');
+  }
+
+  void _lockParent(BuildContext context) {
+    setState(() => _parentUnlocked = false);
+    _routerRefresh.value++;
+    context.go('/home');
   }
 
   @override
