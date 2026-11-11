@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -14,6 +16,7 @@ import '../features/onboarding/child_profile_repository.dart';
 import '../features/onboarding/child_setup_screen.dart';
 import '../features/parent/parent_access_repository.dart';
 import '../features/parent/parent_screens.dart';
+import '../features/parent/family_usage_repository.dart';
 import 'store/kids_games_store.dart';
 import 'theme/app_theme.dart';
 
@@ -42,6 +45,11 @@ class _KidsGamesAppState extends State<KidsGamesApp>
       widget.gameSessionRepository ?? MemoryGameSessionRepository();
   late final ParentAccessRepository _parentAccessRepository =
       widget.parentAccessRepository ?? SecureParentAccessRepository();
+  final FamilyUsageRepository _familyUsageRepository =
+      PreferencesFamilyUsageRepository();
+  int _dailyUsageSeconds = 0;
+  DateTime? _usageIntervalStartedAt;
+  Timer? _usageTimer;
   final ValueNotifier<int> _routerRefresh = ValueNotifier<int>(0);
 
   GoRouter? _router;
@@ -57,6 +65,8 @@ class _KidsGamesAppState extends State<KidsGamesApp>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _loadProfile();
+    _refreshDailyUsage();
+    _startUsageTracking();
   }
 
   @override
@@ -64,10 +74,47 @@ class _KidsGamesAppState extends State<KidsGamesApp>
     final backgrounded = state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden ||
         state == AppLifecycleState.detached;
-    if (!backgrounded || !_parentUnlocked || !mounted) return;
-    setState(() => _parentUnlocked = false);
-    _routerRefresh.value++;
-    _router?.go('/home');
+    if (backgrounded) {
+      _recordUsageInterval();
+      _usageTimer?.cancel();
+      _usageTimer = null;
+      if (_parentUnlocked && mounted) {
+        setState(() => _parentUnlocked = false);
+        _routerRefresh.value++;
+        _router?.go('/home');
+      }
+    } else if (state == AppLifecycleState.resumed) {
+      _startUsageTracking();
+    }
+  }
+
+  Future<void> _refreshDailyUsage() async {
+    try {
+      final seconds = await _familyUsageRepository.loadTodaySeconds(DateTime.now());
+      if (mounted) setState(() => _dailyUsageSeconds = seconds);
+    } catch (_) {
+      // Usage tracking is best-effort; app access remains available offline.
+    }
+  }
+
+  void _startUsageTracking() {
+    if (_usageTimer != null) return;
+    _usageIntervalStartedAt = DateTime.now();
+    _usageTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+      _recordUsageInterval();
+    });
+  }
+
+  void _recordUsageInterval() {
+    final started = _usageIntervalStartedAt;
+    if (started == null) return;
+    final now = DateTime.now();
+    final seconds = now.difference(started).inSeconds;
+    if (seconds <= 0) return;
+    _usageIntervalStartedAt = now;
+    _dailyUsageSeconds += seconds;
+    _familyUsageRepository.saveTodaySeconds(_dailyUsageSeconds, now);
+    if (mounted) setState(() {});
   }
 
   Future<void> _loadProfile() async {
@@ -182,6 +229,8 @@ class _KidsGamesAppState extends State<KidsGamesApp>
             parentRepository: _parentAccessRepository,
             gameSessionRepository: _gameSessionRepository,
             onLock: () => _lockParent(context),
+            dailyUsageSeconds: _dailyUsageSeconds,
+            onControlsChanged: _refreshDailyUsage,
           ),
         ),
         GoRoute(
@@ -228,6 +277,8 @@ class _KidsGamesAppState extends State<KidsGamesApp>
 
   @override
   void dispose() {
+    _recordUsageInterval();
+    _usageTimer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     _router?.dispose();
     _routerRefresh.dispose();
