@@ -102,6 +102,7 @@ class _KidsGamesAppState extends State<KidsGamesApp>
     _usageIntervalStartedAt = DateTime.now();
     _usageTimer = Timer.periodic(const Duration(seconds: 30), (_) {
       _recordUsageInterval();
+      if (mounted) setState(() {});
     });
   }
 
@@ -114,7 +115,6 @@ class _KidsGamesAppState extends State<KidsGamesApp>
     _usageIntervalStartedAt = now;
     _dailyUsageSeconds += seconds;
     _familyUsageRepository.saveTodaySeconds(_dailyUsageSeconds, now);
-    if (mounted) setState(() {});
   }
 
   Future<void> _loadProfile() async {
