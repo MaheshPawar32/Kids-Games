@@ -118,9 +118,7 @@ class _ParentGateScreenState extends State<ParentGateScreen> {
             _newChallenge();
             _error = 'Complete the adult check again before retrying.';
           } else {
-            _error = 'Incorrect PIN. ' +
-                (5 - _failures).toString() +
-                ' attempts left.';
+            _error = 'Incorrect PIN. ${5 - _failures} attempts left.';
           }
           break;
       }
