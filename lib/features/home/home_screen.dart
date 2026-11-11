@@ -9,6 +9,8 @@ import '../../core/assets/kids_games_3d_assets.dart';
 import '../../core/widgets/three_d_asset_preview.dart';
 import '../games/activity.dart';
 import '../../data/repositories/game_session_repository.dart';
+import '../learn/learn_worlds_screen.dart';
+import '../create/create_studio_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
@@ -44,28 +46,9 @@ class HomeScreen extends StatelessWidget {
                 grade: grade,
                 onProfileTap: () => context.push<void>('/parent-gate'),
               ),
-              const _FeatureLandingPage(
-                title: 'Learning worlds',
-                subtitle: 'Choose a world and discover something new.',
-                items: [
-                  _LandingItem('Alphabet & Phonics', 'Letters, sounds and first words', '🔤', 0xFFFFD36E),
-                  _LandingItem('Numbers & Maths', 'Count, compare and solve', '🔢', 0xFF8FD8F4),
-                  _LandingItem('Shapes & Patterns', 'Explore colors and patterns', '🔺', 0xFF9DE2C2),
-                  _LandingItem('Animals & Nature', 'Meet the world around you', '🦋', 0xFFFFA98F),
-                  _LandingItem('Stories & Reading', 'Listen, read and imagine', '📚', 0xFFC8B7F7),
-                  _LandingItem('Science Discovery', 'Ask, explore and experiment', '🔬', 0xFF8FD8F4),
-                ],
-              ),
+              const LearnWorldsScreen(),
               const _GamesPage(),
-              const _FeatureLandingPage(
-                title: 'Creative studio',
-                subtitle: 'A space for drawing, music and imagination.',
-                items: [
-                  _LandingItem('Drawing & Coloring', 'Make your own colorful artwork', '🎨', 0xFFFFA98F),
-                  _LandingItem('Guided Drawing', 'Follow friendly step-by-step hints', '✏️', 0xFFFFD36E),
-                  _LandingItem('Music & Rhythm', 'Explore sounds and simple rhythms', '🎵', 0xFFB7A8F5),
-                ],
-              ),
+              const CreateStudioScreen(),
               _RewardsPage(gameSessionRepository: gameSessionRepository),
             ],
           ),
