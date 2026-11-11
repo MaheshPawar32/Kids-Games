@@ -78,4 +78,51 @@ void main() {
     expect(find.text('The third fruit is a pear; the others are apples.'),
         findsOneWidget);
   });
+  testWidgets('missing numbers accepts a dragged number', (tester) async {
+    tester.view.physicalSize = const Size(1200, 1800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await pumpActivity(tester, 'missing_numbers');
+
+    final target = find.text('Drag the missing number here');
+    final answer = find.byKey(const Key('answer_0'));
+    await tester.ensureVisible(target);
+    await tester.ensureVisible(answer);
+    await tester.pumpAndSettle();
+
+    await tester.drag(
+      answer,
+      tester.getCenter(target) - tester.getCenter(answer),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Amazing! ⭐'), findsOneWidget);
+  });
+
+  testWidgets('pattern continuation accepts a dragged next item',
+      (tester) async {
+    tester.view.physicalSize = const Size(1200, 1800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await pumpActivity(tester, 'what_comes_next');
+
+    final target = find.text('Drag the next pattern item here');
+    final answer = find.byKey(const Key('answer_0'));
+    await tester.ensureVisible(target);
+    await tester.ensureVisible(answer);
+    await tester.pumpAndSettle();
+
+    await tester.drag(
+      answer,
+      tester.getCenter(target) - tester.getCenter(answer),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Amazing! ⭐'), findsOneWidget);
+  });
+
 }
