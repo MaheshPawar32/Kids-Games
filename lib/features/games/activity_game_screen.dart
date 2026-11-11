@@ -236,6 +236,8 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
       'alphabet_matching',
       'big_small',
       'missing_shapes',
+      'missing_numbers',
+      'what_comes_next',
     };
 
     if (widget.activity.id == 'find_differences') {
@@ -324,7 +326,17 @@ class _ActivityGameScreenState extends State<ActivityGameScreen> {
                     const Icon(Icons.touch_app_rounded, size: 26),
                     const SizedBox(height: 6),
                     Text(
-                      answered ? 'Piece placed!' : 'Drag the answer here',
+                      answered
+                          ? (widget.activity.id == 'missing_numbers'
+                              ? 'Number placed!'
+                              : widget.activity.id == 'what_comes_next'
+                                  ? 'Pattern completed!'
+                                  : 'Piece placed!')
+                          : widget.activity.id == 'missing_numbers'
+                              ? 'Drag the missing number here'
+                              : widget.activity.id == 'what_comes_next'
+                                  ? 'Drag the next pattern item here'
+                                  : 'Drag the answer here',
                       style: const TextStyle(fontWeight: FontWeight.w900),
                     ),
                   ],
