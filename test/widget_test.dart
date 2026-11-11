@@ -4,6 +4,7 @@ import 'package:kidsgames/app/kids_games_app.dart';
 import 'package:kidsgames/features/onboarding/child_profile.dart';
 import 'package:kidsgames/features/onboarding/child_profile_repository.dart';
 import 'package:kidsgames/data/repositories/game_session_repository.dart';
+import 'package:kidsgames/features/parent/parent_access_repository.dart';
 
 class _FakeChildProfileRepository implements ChildProfileRepository {
   _FakeChildProfileRepository({this.profile});
@@ -30,7 +31,10 @@ void main() {
   ) async {
     final repository = _FakeChildProfileRepository();
 
-    await tester.pumpWidget(KidsGamesApp(profileRepository: repository));
+    await tester.pumpWidget(KidsGamesApp(
+      profileRepository: repository,
+      parentAccessRepository: MemoryParentAccessRepository(),
+    ));
     await tester.pumpAndSettle();
 
     expect(find.text('Welcome to your play world!'), findsOneWidget);
@@ -58,7 +62,10 @@ void main() {
       profile: const ChildProfile(name: 'Leo', grade: 'UKG'),
     );
 
-    await tester.pumpWidget(KidsGamesApp(profileRepository: repository));
+    await tester.pumpWidget(KidsGamesApp(
+      profileRepository: repository,
+      parentAccessRepository: MemoryParentAccessRepository(),
+    ));
     await tester.pumpAndSettle();
 
     expect(find.text('Hello, Leo!'), findsOneWidget);
@@ -70,7 +77,10 @@ void main() {
       profile: const ChildProfile(name: 'Mia', grade: 'Grade 2'),
     );
 
-    await tester.pumpWidget(KidsGamesApp(profileRepository: repository));
+    await tester.pumpWidget(KidsGamesApp(
+      profileRepository: repository,
+      parentAccessRepository: MemoryParentAccessRepository(),
+    ));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Games').last);
@@ -87,7 +97,10 @@ void main() {
       profile: const ChildProfile(name: 'Sam', grade: 'Grade 1'),
     );
 
-    await tester.pumpWidget(KidsGamesApp(profileRepository: repository));
+    await tester.pumpWidget(KidsGamesApp(
+      profileRepository: repository,
+      parentAccessRepository: MemoryParentAccessRepository(),
+    ));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Games').last);
@@ -117,7 +130,10 @@ void main() {
       profile: const ChildProfile(name: 'Ava', grade: 'Grade 1'),
     );
 
-    await tester.pumpWidget(KidsGamesApp(profileRepository: repository));
+    await tester.pumpWidget(KidsGamesApp(
+      profileRepository: repository,
+      parentAccessRepository: MemoryParentAccessRepository(),
+    ));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Games').last);
     await tester.pumpAndSettle();
@@ -208,7 +224,10 @@ void main() {
       profile: const ChildProfile(name: 'Ava', grade: 'Grade 1'),
     );
 
-    await tester.pumpWidget(KidsGamesApp(profileRepository: repository));
+    await tester.pumpWidget(KidsGamesApp(
+      profileRepository: repository,
+      parentAccessRepository: MemoryParentAccessRepository(),
+    ));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Games').last);
     await tester.pumpAndSettle();
