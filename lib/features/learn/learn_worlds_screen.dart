@@ -196,7 +196,7 @@ class _LearnWorldsScreenState extends State<LearnWorldsScreen> {
                           borderRadius: BorderRadius.circular(22),
                           clipBehavior: Clip.antiAlias,
                           child: InkWell(
-                            key: Key('learn_world_' + world.id),
+                            key: Key('learn_world_${world.id}'),
                             onTap: () => _showWorld(context, world),
                             child: Padding(
                               padding: const EdgeInsets.all(16),
@@ -463,7 +463,7 @@ class _LearnLessonScreenState extends State<_LearnLessonScreen> {
                 color: _optionColor(question, index),
                 borderRadius: BorderRadius.circular(16),
                 child: InkWell(
-                  key: Key('learn_answer_' + index.toString()),
+                  key: Key('learn_answer_$index'),
                   borderRadius: BorderRadius.circular(16),
                   onTap: _answered ? null : () => _select(index),
                   child: Padding(
