@@ -8,6 +8,7 @@ class GameSession {
     required this.score,
     required this.totalRounds,
     required this.completedAt,
+    this.level,
   });
 
   final String id;
@@ -16,15 +17,20 @@ class GameSession {
   final int totalRounds;
   final DateTime completedAt;
 
+  /// Level played, for level-based games. Null for sessions saved before
+  /// levels existed.
+  final int? level;
+
   double get accuracy => totalRounds == 0 ? 0 : score / totalRounds;
 
   Map<String, Object?> toMap() => {
-        'id': id,
-        'activity_id': activityId,
-        'score': score,
-        'total_rounds': totalRounds,
-        'completed_at_micros': completedAt.microsecondsSinceEpoch,
-      };
+    'id': id,
+    'activity_id': activityId,
+    'score': score,
+    'total_rounds': totalRounds,
+    'completed_at_micros': completedAt.microsecondsSinceEpoch,
+    if (level != null) 'level': level,
+  };
 
   factory GameSession.fromMap(Map<dynamic, dynamic> map) {
     final micros = map['completed_at_micros'];
@@ -34,6 +40,7 @@ class GameSession {
       score: (map['score'] as num).toInt(),
       totalRounds: (map['total_rounds'] as num).toInt(),
       completedAt: DateTime.fromMicrosecondsSinceEpoch((micros as num).toInt()),
+      level: (map['level'] as num?)?.toInt(),
     );
   }
 }
@@ -59,13 +66,13 @@ class ActivityProgress {
       totalQuestions == 0 ? 0 : totalCorrect / totalQuestions;
 
   static ActivityProgress empty(String activityId) => ActivityProgress(
-        activityId: activityId,
-        sessionsPlayed: 0,
-        bestScore: 0,
-        totalCorrect: 0,
-        totalQuestions: 0,
-        lastPlayedAt: null,
-      );
+    activityId: activityId,
+    sessionsPlayed: 0,
+    bestScore: 0,
+    totalCorrect: 0,
+    totalQuestions: 0,
+    lastPlayedAt: null,
+  );
 }
 
 abstract interface class GameSessionRepository {
@@ -87,8 +94,7 @@ class HiveGameSessionRepository implements GameSessionRepository {
   @override
   ValueListenable<int> get revision => _revision;
 
-  Box<dynamic> get _box =>
-      _providedBox ?? Hive.box<dynamic>(boxName);
+  Box<dynamic> get _box => _providedBox ?? Hive.box<dynamic>(boxName);
 
   @override
   Future<void> recordSession(GameSession session) async {
@@ -120,8 +126,9 @@ class HiveGameSessionRepository implements GameSessionRepository {
 
   @override
   Future<ActivityProgress> progressFor(String activityId) async {
-    final sessions =
-        _allSessions().where((session) => session.activityId == activityId);
+    final sessions = _allSessions().where(
+      (session) => session.activityId == activityId,
+    );
     var plays = 0;
     var best = 0;
     var correct = 0;
@@ -176,8 +183,9 @@ class MemoryGameSessionRepository implements GameSessionRepository {
 
   @override
   Future<ActivityProgress> progressFor(String activityId) async {
-    final sessions =
-        _sessions.where((session) => session.activityId == activityId);
+    final sessions = _sessions.where(
+      (session) => session.activityId == activityId,
+    );
     var plays = 0;
     var best = 0;
     var correct = 0;
