@@ -275,7 +275,7 @@ def puzzle_outline(half=0.38, neck=0.10, steps=14):
 
 def build_puzzle(m):
     prism_xz("Puzzle_Piece", puzzle_outline(), 0.24, m["green"])
-    cylinder("Puzzle_Shine", (-0.05, -0.13, 0.05), 0.10, 0.04, m["cream"])
+    cylinder("Puzzle_Shine", (0.10, -0.13, -0.10), 0.08, 0.04, m["cream"])
 
 
 BUILDERS = {
