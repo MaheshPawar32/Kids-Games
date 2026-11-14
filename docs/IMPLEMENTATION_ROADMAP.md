@@ -1,84 +1,35 @@
 # Implementation roadmap
 
-Updated: 2026-11-10  
-Branch: `feature/complete-app-workflows`
+Updated: 2026-11-14 · Branch: `feature/complete-app-workflows`
 
-## Phase 1 — Foundation
-- [x] Flutter source scaffold, theme and app entry point
-- [x] 15-game catalogue and reusable activity data model
-- [x] Target dependencies declared and dependency resolution verified in CI
-- [x] Blender generation scripts and CI asset validation
-- [x] Generate and commit the Android platform project
-- [x] Run Android debug APK build in CI
-- [ ] Run signed Android release AAB build in CI
+See `MASTER_PROJECT_AUDIT.md` for evidence behind each item.
 
-## Phase 2 — Onboarding and navigation
-- [x] Child profile and grade selection (Nursery, LKG, UKG, Grades 1–5)
-- [x] Local child profile save/restore
-- [x] Five-tab home shell and Games catalogue navigation
-- [ ] Splash and welcome experience
-- [ ] Parent gate
-- [ ] Adventure map and world selection
+## Done
 
-## Phase 3 — First playable versions of all catalogue activities
+- [x] Android project, application ID `com.dev.kidsgames`, CI debug APK build
+- [x] Child profile with grade (Nursery–Grade 5), saved and restored
+- [x] Five-tab shell; Parent Gate (adult check + PIN); daily limit and bedtime
+- [x] All 15 games with 1000 generated levels each, grade-based difficulty, stars, unlocking and Next level
+- [x] Every level of every question game validated for correctness by an automated test
+- [x] Drag-into-gap with tap alternative, spot-the-difference, compare two pictures, tap-in-order
+- [x] Flame: Magic Counting (moving targets, decoys, count totals) and Jigsaw (interlocking pieces, snapping)
+- [x] Level progress in Hive (schema v1); sessions record their level
+- [x] Original sound effects; parent sound and reduced-motion settings applied in games
+- [x] 3D icon defects fixed (play, medal, book, puzzle piece)
 
-All 15 catalogue entries now have a playable route. The 12 choice-based activities share a five-round question engine with activity-specific cues, prompts, options, answer keys and explanations. This is the first playable version, not the final differentiated game design for every activity.
+## Next (in priority order)
 
-- [x] Complete Picture — five visual completion rounds
-- [x] Shadow Matching — five silhouette-clue rounds
-- [x] Color Matching — five color identification rounds
-- [x] Shape Matching — dedicated matching screen
-- [x] Alphabet Matching — five initial-letter rounds
-- [x] Animal Recognition — five animal sound/identity rounds
-- [x] Odd One Out — dedicated themed rounds
-- [x] Big & Small — five size-comparison rounds
-- [x] Missing Numbers — five number-line rounds
-- [x] Missing Shapes — five repeating-pattern rounds
-- [x] Find Differences — five visual odd-detail rounds
-- [x] Magic Counting — five object-counting rounds
-- [x] Number Sequencing — five counting-sequence rounds
-- [x] What Comes Next — five repeating-sequence rounds
-- [x] Jigsaw Puzzles — dedicated drag-and-drop puzzle
-
-Still required within this phase:
-- [ ] Replace choice-only mechanics with age-appropriate gestures where appropriate
-- [ ] Difficulty settings for age/grade and progressive challenge
-- [ ] Sound, spoken prompts, haptics and accessible alternatives
-- [ ] Persist results, retries and activity mastery
-- [ ] Expand question banks and review educational correctness with educators/parents
-
-## Phase 4 — Learning and creativity
-- [ ] Phonics, tracing, spelling and vocabulary
-- [ ] Mathematics and guided practice
-- [ ] Drawing, coloring and guided drawing
-- [ ] Music, stories, science discovery and life skills
-
-## Phase 5 — Motivation and progress
-- [ ] Buddy collection, XP, badges and unlocks
-- [ ] Daily missions and achievement gallery
-- [ ] Mastery tracking and smart revision
-- [ ] Rewards and progress backed by local persistence
-
-## Phase 6 — Parent tools
-- [ ] Parent Gate and dashboard
-- [ ] Weekly report and learning history
-- [ ] Screen-time limits and bedtime
-- [ ] Accessibility preferences and offline content controls
-- [ ] Safe reset/export safeguards and privacy controls
-
-## Phase 7 — 3D runtime and release readiness
-- [x] Generate Android platform project and verify application ID `com.dev.kidsgames`
-- [ ] Integrate Flutter Scene build hook and native GPU requirements
-- [ ] Verify GLB rendering, animation clips and memory behavior on physical devices
-- [ ] Integrate Flame only for game loops that need its 2D engine
-- [ ] Optimize and visually approve production assets; record licenses/attributions
-- [ ] Airplane-mode, lifecycle interruption, persistence and migration tests
-- [ ] Accessibility, localization and child-safety review
-- [ ] Performance profiling across low/mid/high-range Android devices
-- [ ] Privacy policy, Play Data Safety, content rating and Families policy review
-- [ ] Release keystore, signed AAB, internal testing and pre-launch report
-- [ ] Final Play Store listing and release approval
+1. Verify on an Android device or emulator: levels, Flame games, audio, Flutter Scene gallery.
+2. Release basics: app label "Kids Games", launcher icon, signing config that reads `key.properties`.
+3. Home dashboard with real data: continue playing, daily mission, stars total, recommended next level.
+4. Rewards: stars per game, buddy unlocks based on stars, streaks.
+5. Spoken prompts (offline text-to-speech) and animal sounds.
+6. Learn: more lessons per world, letter and number tracing.
+7. Multiple child profiles with per-child progress (needs a migration for existing sessions).
+8. Remove unused dependencies; run the Khronos glTF Validator in CI.
+9. Characters: Fox, Rabbit, Panda, Elephant, Monkey as 3D buddies (only Baby Lion exists).
+10. Store listing, privacy policy and signed AAB (owner inputs; see `RELEASE_READINESS.md`).
 
 ## Release rule
 
-A green analyzer/test run is necessary but not sufficient. Do not mark the app publish-ready until Android release builds, physical-device runtime checks, data/privacy compliance and Play Console pre-launch testing have all passed.
+Green CI is necessary but not sufficient. The app is not publish-ready until a signed release build has been tested on physical devices and the Play Families declarations are complete.
