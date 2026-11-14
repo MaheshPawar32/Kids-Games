@@ -8,9 +8,7 @@ void main() {
     tester,
   ) async {
     final repository = MemoryParentAccessRepository();
-    await repository.saveControls(
-      const ParentControls(dailyLimitMinutes: 30),
-    );
+    await repository.saveControls(const ParentControls(dailyLimitMinutes: 30));
 
     await tester.pumpWidget(
       MaterialApp(
@@ -59,9 +57,7 @@ void main() {
     tester,
   ) async {
     final repository = MemoryParentAccessRepository();
-    await repository.saveControls(
-      const ParentControls(dailyLimitMinutes: 60),
-    );
+    await repository.saveControls(const ParentControls(dailyLimitMinutes: 60));
 
     await tester.pumpWidget(
       MaterialApp(

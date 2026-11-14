@@ -96,22 +96,25 @@ void main() {
     expect(await repository.recentSessions(limit: 0), isEmpty);
   });
 
-  test('memory repository notifies listeners when a session is saved', () async {
-    final memory = MemoryGameSessionRepository();
-    var notifications = 0;
-    memory.revision.addListener(() => notifications++);
+  test(
+    'memory repository notifies listeners when a session is saved',
+    () async {
+      final memory = MemoryGameSessionRepository();
+      var notifications = 0;
+      memory.revision.addListener(() => notifications++);
 
-    await memory.recordSession(
-      GameSession(
-        id: 'shape_1',
-        activityId: 'shape_matching',
-        score: 5,
-        totalRounds: 5,
-        completedAt: DateTime(2026, 11, 10),
-      ),
-    );
+      await memory.recordSession(
+        GameSession(
+          id: 'shape_1',
+          activityId: 'shape_matching',
+          score: 5,
+          totalRounds: 5,
+          completedAt: DateTime(2026, 11, 10),
+        ),
+      );
 
-    expect(notifications, 1);
-    expect(await memory.totalSessions(), 1);
-  });
+      expect(notifications, 1);
+      expect(await memory.totalSessions(), 1);
+    },
+  );
 }

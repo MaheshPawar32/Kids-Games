@@ -27,9 +27,15 @@ class HomeScreen extends StatelessWidget {
   static const _destinations = [
     NavigationDestination(icon: Icon(Icons.home_rounded), label: 'Home'),
     NavigationDestination(icon: Icon(Icons.menu_book_rounded), label: 'Learn'),
-    NavigationDestination(icon: Icon(Icons.sports_esports_rounded), label: 'Games'),
+    NavigationDestination(
+      icon: Icon(Icons.sports_esports_rounded),
+      label: 'Games',
+    ),
     NavigationDestination(icon: Icon(Icons.brush_rounded), label: 'Create'),
-    NavigationDestination(icon: Icon(Icons.emoji_events_rounded), label: 'Rewards'),
+    NavigationDestination(
+      icon: Icon(Icons.emoji_events_rounded),
+      label: 'Rewards',
+    ),
   ];
 
   @override
@@ -63,7 +69,6 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
 }
 
 class _HomeDashboard extends StatelessWidget {
@@ -203,9 +208,15 @@ class _HomeDashboard extends StatelessWidget {
           sliver: SliverToBoxAdapter(
             child: Row(
               children: [
-                Text('Try a game', style: Theme.of(context).textTheme.titleLarge),
+                Text(
+                  'Try a game',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
                 const Spacer(),
-                Text('6 featured games', style: Theme.of(context).textTheme.bodyMedium),
+                Text(
+                  '6 featured games',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ],
             ),
           ),
@@ -256,9 +267,14 @@ class _GamesPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Game world', style: Theme.of(context).textTheme.headlineMedium),
+                Text(
+                  'Game world',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
                 const SizedBox(height: 5),
-                const Text('Explore all 15 offline learning activities. Pick a challenge and learn by playing.'),
+                const Text(
+                  'Explore all 15 offline learning activities. Pick a challenge and learn by playing.',
+                ),
               ],
             ),
           ),
@@ -347,9 +363,7 @@ class _ActivityGrid extends StatelessWidget {
                       activity.description,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
+                      style: Theme.of(context).textTheme.bodySmall
                           ?.copyWith(fontSize: 11),
                     ),
                   ],
@@ -394,19 +408,42 @@ class _RewardsPage extends StatelessWidget {
 
   Widget _buildProgress(BuildContext context, List<GameSession> sessions) {
     final totalCorrect = sessions.fold<int>(0, (sum, item) => sum + item.score);
-    final totalQuestions =
-        sessions.fold<int>(0, (sum, item) => sum + item.totalRounds);
+    final totalQuestions = sessions.fold<int>(
+      0,
+      (sum, item) => sum + item.totalRounds,
+    );
     final perfectGames = sessions
         .where((item) => item.totalRounds > 0 && item.score == item.totalRounds)
         .length;
-    final accuracy =
-        totalQuestions == 0 ? 0 : (totalCorrect / totalQuestions * 100).round();
+    final accuracy = totalQuestions == 0
+        ? 0
+        : (totalCorrect / totalQuestions * 100).round();
 
     final badges = <_ProgressBadge>[
-      _ProgressBadge('First Steps', 'Finish your first game', '🌱', sessions.isNotEmpty),
-      _ProgressBadge('Bright Spark', 'Finish five games', '✨', sessions.length >= 5),
-      _ProgressBadge('Learning Star', 'Finish fifteen games', '⭐', sessions.length >= 15),
-      _ProgressBadge('Perfect Player', 'Get every answer right', '🏆', perfectGames > 0),
+      _ProgressBadge(
+        'First Steps',
+        'Finish your first game',
+        '🌱',
+        sessions.isNotEmpty,
+      ),
+      _ProgressBadge(
+        'Bright Spark',
+        'Finish five games',
+        '✨',
+        sessions.length >= 5,
+      ),
+      _ProgressBadge(
+        'Learning Star',
+        'Finish fifteen games',
+        '⭐',
+        sessions.length >= 15,
+      ),
+      _ProgressBadge(
+        'Perfect Player',
+        'Get every answer right',
+        '🏆',
+        perfectGames > 0,
+      ),
     ];
 
     return SingleChildScrollView(
@@ -626,7 +663,8 @@ class _SessionTile extends StatelessWidget {
       ),
     );
     final date = session.completedAt.toLocal();
-    final dateLabel = '${date.day.toString().padLeft(2, '0')}/'
+    final dateLabel =
+        '${date.day.toString().padLeft(2, '0')}/'
         '${date.month.toString().padLeft(2, '0')}/${date.year}';
 
     return Container(
@@ -657,10 +695,7 @@ class _SessionTile extends StatelessWidget {
                   activity.title,
                   style: const TextStyle(fontWeight: FontWeight.w900),
                 ),
-                Text(
-                  dateLabel,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+                Text(dateLabel, style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
           ),
@@ -745,8 +780,7 @@ class _ThreeDIconGalleryDialogState extends State<_ThreeDIconGalleryDialog> {
                     key: ValueKey(selectedPath),
                     assetPath: selectedPath,
                     scale: 1.0,
-                    semanticsLabel:
-                        '3D ${_labelFor(_selectedAsset)} preview',
+                    semanticsLabel: '3D ${_labelFor(_selectedAsset)} preview',
                   ),
                 ),
               ),

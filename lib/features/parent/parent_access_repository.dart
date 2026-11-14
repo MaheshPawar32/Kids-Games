@@ -55,8 +55,8 @@ class SecureParentAccessRepository implements ParentAccessRepository {
   SecureParentAccessRepository({
     FlutterSecureStorage? secureStorage,
     SharedPreferencesAsync? preferences,
-  })  : _secureStorage = secureStorage ?? const FlutterSecureStorage(),
-        _preferences = preferences ?? SharedPreferencesAsync();
+  }) : _secureStorage = secureStorage ?? const FlutterSecureStorage(),
+       _preferences = preferences ?? SharedPreferencesAsync();
 
   static const _saltKey = 'parent_pin_salt_v1';
   static const _hashKey = 'parent_pin_hash_v1';

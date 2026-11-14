@@ -17,10 +17,7 @@ void main() {
       await repository.saveTodaySeconds(1250, firstDay);
 
       expect(await repository.loadTodaySeconds(firstDay), 1250);
-      expect(
-        await repository.loadTodaySeconds(DateTime(2026, 11, 12, 9)),
-        0,
-      );
+      expect(await repository.loadTodaySeconds(DateTime(2026, 11, 12, 9)), 0);
     });
 
     test('clamps negative and excessive usage values', () async {
@@ -47,17 +44,38 @@ void main() {
     );
 
     test('handles same-day bedtime window', () {
-      expect(isWithinBedtimeSchedule(DateTime(2026, 11, 11, 7, 59), daytime), false);
+      expect(
+        isWithinBedtimeSchedule(DateTime(2026, 11, 11, 7, 59), daytime),
+        false,
+      );
       expect(isWithinBedtimeSchedule(DateTime(2026, 11, 11, 8), daytime), true);
-      expect(isWithinBedtimeSchedule(DateTime(2026, 11, 11, 19, 59), daytime), true);
-      expect(isWithinBedtimeSchedule(DateTime(2026, 11, 11, 20), daytime), false);
+      expect(
+        isWithinBedtimeSchedule(DateTime(2026, 11, 11, 19, 59), daytime),
+        true,
+      );
+      expect(
+        isWithinBedtimeSchedule(DateTime(2026, 11, 11, 20), daytime),
+        false,
+      );
     });
 
     test('handles overnight bedtime window', () {
-      expect(isWithinBedtimeSchedule(DateTime(2026, 11, 11, 19, 59), overnight), false);
-      expect(isWithinBedtimeSchedule(DateTime(2026, 11, 11, 20), overnight), true);
-      expect(isWithinBedtimeSchedule(DateTime(2026, 11, 12, 6, 59), overnight), true);
-      expect(isWithinBedtimeSchedule(DateTime(2026, 11, 12, 7), overnight), false);
+      expect(
+        isWithinBedtimeSchedule(DateTime(2026, 11, 11, 19, 59), overnight),
+        false,
+      );
+      expect(
+        isWithinBedtimeSchedule(DateTime(2026, 11, 11, 20), overnight),
+        true,
+      );
+      expect(
+        isWithinBedtimeSchedule(DateTime(2026, 11, 12, 6, 59), overnight),
+        true,
+      );
+      expect(
+        isWithinBedtimeSchedule(DateTime(2026, 11, 12, 7), overnight),
+        false,
+      );
     });
 
     test('disabled schedule never blocks access', () {

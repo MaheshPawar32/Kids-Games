@@ -14,87 +14,248 @@ class _LearnWorldsScreenState extends State<LearnWorldsScreen> {
   bool _loading = true;
 
   static const _worlds = <_LearnWorld>[
-    _LearnWorld('letters', 'Alphabet & Phonics',
-        'Letters, first sounds and words', '🔤', Color(0xFFFFE8AF), [
-      _LearnLesson('letter_a', 'The letter A', '🍎',
+    _LearnWorld(
+      'letters',
+      'Alphabet & Phonics',
+      'Letters, first sounds and words',
+      '🔤',
+      Color(0xFFFFE8AF),
+      [
+        _LearnLesson(
+          'letter_a',
+          'The letter A',
+          '🍎',
           'A is the first letter of the alphabet. Apple begins with A.',
-          'Say the sound, trace the letter in the air, then find its picture.', [
-        _LearnQuestion('Which word begins with A?', ['Apple', 'Ball', 'Cat'], 0),
-        _LearnQuestion('Find the letter A.', ['B', 'A', 'C'], 1),
-        _LearnQuestion('Which picture matches A?', ['🐶', '🍎', '🐟'], 1),
-      ]),
-      _LearnLesson('letter_b', 'The letter B', '⚽',
+          'Say the sound, trace the letter in the air, then find its picture.',
+          [
+            _LearnQuestion('Which word begins with A?', [
+              'Apple',
+              'Ball',
+              'Cat',
+            ], 0),
+            _LearnQuestion('Find the letter A.', ['B', 'A', 'C'], 1),
+            _LearnQuestion('Which picture matches A?', ['🐶', '🍎', '🐟'], 1),
+          ],
+        ),
+        _LearnLesson(
+          'letter_b',
+          'The letter B',
+          '⚽',
           'B begins words like ball, bat and banana.',
-          'Press your lips together gently to make the beginning B sound.', [
-        _LearnQuestion('Which word begins with B?', ['Dog', 'Ball', 'Sun'], 1),
-        _LearnQuestion('Find the letter B.', ['D', 'P', 'B'], 2),
-        _LearnQuestion('Which picture starts with B?', ['🍌', '🍎', '🐘'], 0),
-      ]),
-    ]),
-    _LearnWorld('numbers', 'Numbers & Maths',
-        'Counting, comparing and little puzzles', '🔢', Color(0xFFDDF4FF), [
-      _LearnLesson('count_to_five', 'Count to five', '⭐',
+          'Press your lips together gently to make the beginning B sound.',
+          [
+            _LearnQuestion('Which word begins with B?', [
+              'Dog',
+              'Ball',
+              'Sun',
+            ], 1),
+            _LearnQuestion('Find the letter B.', ['D', 'P', 'B'], 2),
+            _LearnQuestion('Which picture starts with B?', [
+              '🍌',
+              '🍎',
+              '🐘',
+            ], 0),
+          ],
+        ),
+      ],
+    ),
+    _LearnWorld(
+      'numbers',
+      'Numbers & Maths',
+      'Counting, comparing and little puzzles',
+      '🔢',
+      Color(0xFFDDF4FF),
+      [
+        _LearnLesson(
+          'count_to_five',
+          'Count to five',
+          '⭐',
           'Counting helps us know how many things we have. Count each star once.',
-          'Point to each object as you count: one, two, three, four, five.', [
-        _LearnQuestion('How many stars are here? ⭐ ⭐ ⭐', ['2', '3', '4'], 1),
-        _LearnQuestion('What number comes after 2?', ['1', '3', '5'], 1),
-        _LearnQuestion('Which group has five dots?', ['● ●', '● ● ●', '● ● ● ● ●'], 2),
-      ]),
-      _LearnLesson('shapes_count', 'Count the shapes', '🔺',
+          'Point to each object as you count: one, two, three, four, five.',
+          [
+            _LearnQuestion('How many stars are here? ⭐ ⭐ ⭐', [
+              '2',
+              '3',
+              '4',
+            ], 1),
+            _LearnQuestion('What number comes after 2?', ['1', '3', '5'], 1),
+            _LearnQuestion('Which group has five dots?', [
+              '● ●',
+              '● ● ●',
+              '● ● ● ● ●',
+            ], 2),
+          ],
+        ),
+        _LearnLesson(
+          'shapes_count',
+          'Count the shapes',
+          '🔺',
           'A circle, a triangle and a square are different shapes.',
-          'Look carefully at each shape before you count it.', [
-        _LearnQuestion('How many sides does a triangle have?', ['2', '3', '4'], 1),
-        _LearnQuestion('Which shape has no corners?', ['Circle', 'Square', 'Triangle'], 0),
-        _LearnQuestion('Which shape has four equal sides?', ['Circle', 'Square', 'Oval'], 1),
-      ]),
-    ]),
-    _LearnWorld('patterns', 'Shapes & Patterns',
-        'Notice what repeats and what comes next', '🔺', Color(0xFFE1F7E9), [
-      _LearnLesson('repeat_pattern', 'Find the pattern', '🔵',
+          'Look carefully at each shape before you count it.',
+          [
+            _LearnQuestion('How many sides does a triangle have?', [
+              '2',
+              '3',
+              '4',
+            ], 1),
+            _LearnQuestion('Which shape has no corners?', [
+              'Circle',
+              'Square',
+              'Triangle',
+            ], 0),
+            _LearnQuestion('Which shape has four equal sides?', [
+              'Circle',
+              'Square',
+              'Oval',
+            ], 1),
+          ],
+        ),
+      ],
+    ),
+    _LearnWorld(
+      'patterns',
+      'Shapes & Patterns',
+      'Notice what repeats and what comes next',
+      '🔺',
+      Color(0xFFE1F7E9),
+      [
+        _LearnLesson(
+          'repeat_pattern',
+          'Find the pattern',
+          '🔵',
           'A pattern is a part that repeats in the same order.',
-          'Look at the first two shapes. Then see which shape repeats next.', [
-        _LearnQuestion('🔴 🔵 🔴 ?', ['🔵', '🟢', '⭐'], 0),
-        _LearnQuestion('⭐ 🌙 ⭐ 🌙 ?', ['🌙', '⭐', '🔺'], 1),
-        _LearnQuestion('🟩 🟩 🔴 🟩 🟩 ?', ['🔵', '🔴', '⭐'], 1),
-      ]),
-    ]),
-    _LearnWorld('animals', 'Animals & Nature',
-        'Discover animal homes and the natural world', '🦋', Color(0xFFFFE6DE), [
-      _LearnLesson('animal_homes', 'Animal homes', '🐝',
+          'Look at the first two shapes. Then see which shape repeats next.',
+          [
+            _LearnQuestion('🔴 🔵 🔴 ?', ['🔵', '🟢', '⭐'], 0),
+            _LearnQuestion('⭐ 🌙 ⭐ 🌙 ?', ['🌙', '⭐', '🔺'], 1),
+            _LearnQuestion('🟩 🟩 🔴 🟩 🟩 ?', ['🔵', '🔴', '⭐'], 1),
+          ],
+        ),
+      ],
+    ),
+    _LearnWorld(
+      'animals',
+      'Animals & Nature',
+      'Discover animal homes and the natural world',
+      '🦋',
+      Color(0xFFFFE6DE),
+      [
+        _LearnLesson(
+          'animal_homes',
+          'Animal homes',
+          '🐝',
           'Bees live in hives and birds build nests. Fish live in water.',
-          'Think about what each animal needs to stay safe and find food.', [
-        _LearnQuestion('Where does a bird lay its eggs?', ['Nest', 'Hive', 'Pond'], 0),
-        _LearnQuestion('Where do fish live?', ['Tree', 'Water', 'Desert'], 1),
-        _LearnQuestion('Which animal makes a hive?', ['Bee', 'Lion', 'Rabbit'], 0),
-      ]),
-      _LearnLesson('animal_food', 'What animals eat', '🥕',
+          'Think about what each animal needs to stay safe and find food.',
+          [
+            _LearnQuestion('Where does a bird lay its eggs?', [
+              'Nest',
+              'Hive',
+              'Pond',
+            ], 0),
+            _LearnQuestion('Where do fish live?', [
+              'Tree',
+              'Water',
+              'Desert',
+            ], 1),
+            _LearnQuestion('Which animal makes a hive?', [
+              'Bee',
+              'Lion',
+              'Rabbit',
+            ], 0),
+          ],
+        ),
+        _LearnLesson(
+          'animal_food',
+          'What animals eat',
+          '🥕',
           'Different animals eat different foods. Rabbits enjoy plants and carrots.',
-          'Match an animal with food it can eat.', [
-        _LearnQuestion('Which food does a rabbit eat?', ['Carrot', 'Stone', 'Soap'], 0),
-        _LearnQuestion('What do cows eat?', ['Grass', 'Plastic', 'Metal'], 0),
-        _LearnQuestion('Which animal eats fish?', ['Penguin', 'Giraffe', 'Cow'], 0),
-      ]),
-    ]),
-    _LearnWorld('reading', 'Stories & Reading',
-        'Read tiny stories and remember what happens', '📚', Color(0xFFEDE5FF), [
-      _LearnLesson('tiny_story', 'Mia and the red kite', '🪁',
+          'Match an animal with food it can eat.',
+          [
+            _LearnQuestion('Which food does a rabbit eat?', [
+              'Carrot',
+              'Stone',
+              'Soap',
+            ], 0),
+            _LearnQuestion('What do cows eat?', [
+              'Grass',
+              'Plastic',
+              'Metal',
+            ], 0),
+            _LearnQuestion('Which animal eats fish?', [
+              'Penguin',
+              'Giraffe',
+              'Cow',
+            ], 0),
+          ],
+        ),
+      ],
+    ),
+    _LearnWorld(
+      'reading',
+      'Stories & Reading',
+      'Read tiny stories and remember what happens',
+      '📚',
+      Color(0xFFEDE5FF),
+      [
+        _LearnLesson(
+          'tiny_story',
+          'Mia and the red kite',
+          '🪁',
           'Mia took her red kite to the park. The wind helped it fly high in the sky.',
-          'Read the story slowly. Remember who went to the park and what she carried.', [
-        _LearnQuestion('Who went to the park?', ['Mia', 'A lion', 'A robot'], 0),
-        _LearnQuestion('What color was the kite?', ['Blue', 'Red', 'Green'], 1),
-        _LearnQuestion('What helped the kite fly?', ['Rain', 'Wind', 'Snow'], 1),
-      ]),
-    ]),
-    _LearnWorld('science', 'Science Discovery',
-        'Explore simple facts about our world', '🔬', Color(0xFFDDF4FF), [
-      _LearnLesson('sun_shadow', 'Sun and shadows', '☀️',
+          'Read the story slowly. Remember who went to the park and what she carried.',
+          [
+            _LearnQuestion('Who went to the park?', [
+              'Mia',
+              'A lion',
+              'A robot',
+            ], 0),
+            _LearnQuestion('What color was the kite?', [
+              'Blue',
+              'Red',
+              'Green',
+            ], 1),
+            _LearnQuestion('What helped the kite fly?', [
+              'Rain',
+              'Wind',
+              'Snow',
+            ], 1),
+          ],
+        ),
+      ],
+    ),
+    _LearnWorld(
+      'science',
+      'Science Discovery',
+      'Explore simple facts about our world',
+      '🔬',
+      Color(0xFFDDF4FF),
+      [
+        _LearnLesson(
+          'sun_shadow',
+          'Sun and shadows',
+          '☀️',
           'When an object blocks light, it can make a shadow.',
-          'Stand near a light and look at the shadow made by your hand.', [
-        _LearnQuestion('What helps make a shadow?', ['Blocked light', 'Music', 'A smell'], 0),
-        _LearnQuestion('Where is a shadow easy to see?', ['Bright sunlight', 'Dark cupboard', 'Under a blanket'], 0),
-        _LearnQuestion('Can your hand make a shadow?', ['Yes', 'No', 'Only underwater'], 0),
-      ]),
-    ]),
+          'Stand near a light and look at the shadow made by your hand.',
+          [
+            _LearnQuestion('What helps make a shadow?', [
+              'Blocked light',
+              'Music',
+              'A smell',
+            ], 0),
+            _LearnQuestion('Where is a shadow easy to see?', [
+              'Bright sunlight',
+              'Dark cupboard',
+              'Under a blanket',
+            ], 0),
+            _LearnQuestion('Can your hand make a shadow?', [
+              'Yes',
+              'No',
+              'Only underwater',
+            ], 0),
+          ],
+        ),
+      ],
+    ),
   ];
 
   @override
@@ -132,10 +293,7 @@ class _LearnWorldsScreenState extends State<LearnWorldsScreen> {
     if (mounted) setState(() => _completed = next);
   }
 
-  Future<void> _openLesson(
-    BuildContext context,
-    _LearnLesson lesson,
-  ) async {
+  Future<void> _openLesson(BuildContext context, _LearnLesson lesson) async {
     await Navigator.of(context).push<void>(
       MaterialPageRoute<void>(
         builder: (_) => _LearnLessonScreen(
@@ -166,8 +324,10 @@ class _LearnWorldsScreenState extends State<LearnWorldsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Learning worlds',
-                              style: Theme.of(context).textTheme.headlineMedium),
+                          Text(
+                            'Learning worlds',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
                           const SizedBox(height: 6),
                           const Text(
                             'Explore a short lesson, try a few questions and collect learning stars.',
@@ -221,15 +381,20 @@ class _LearnWorldsScreenState extends State<LearnWorldsScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(world.title,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w900,
-                                              fontSize: 15,
-                                            )),
+                                        Text(
+                                          world.title,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w900,
+                                            fontSize: 15,
+                                          ),
+                                        ),
                                         const SizedBox(height: 4),
-                                        Text(world.subtitle,
-                                            style: Theme.of(context)
-                                                .textTheme.bodySmall),
+                                        Text(
+                                          world.subtitle,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall,
+                                        ),
                                         const SizedBox(height: 8),
                                         Text(
                                           '$done of ${world.lessons.length} lessons completed',
@@ -270,8 +435,10 @@ class _LearnWorldsScreenState extends State<LearnWorldsScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(world.title,
-                  style: Theme.of(sheetContext).textTheme.titleLarge),
+              Text(
+                world.title,
+                style: Theme.of(sheetContext).textTheme.titleLarge,
+              ),
               const SizedBox(height: 6),
               Text(world.subtitle),
               const SizedBox(height: 14),
@@ -313,10 +480,7 @@ class _LearnWorldsScreenState extends State<LearnWorldsScreen> {
 }
 
 class _LearnLessonScreen extends StatefulWidget {
-  const _LearnLessonScreen({
-    required this.lesson,
-    required this.onCompleted,
-  });
+  const _LearnLessonScreen({required this.lesson, required this.onCompleted});
 
   final _LearnLesson lesson;
   final Future<void> Function() onCompleted;
@@ -411,7 +575,8 @@ class _LearnLessonScreenState extends State<_LearnLessonScreen> {
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: LinearProgressIndicator(
-              value: (_question + (_answered ? 1 : 0)) /
+              value:
+                  (_question + (_answered ? 1 : 0)) /
                   widget.lesson.questions.length,
               minHeight: 8,
             ),
@@ -424,11 +589,15 @@ class _LearnLessonScreenState extends State<_LearnLessonScreen> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  Text(widget.lesson.emoji,
-                      style: const TextStyle(fontSize: 52)),
+                  Text(
+                    widget.lesson.emoji,
+                    style: const TextStyle(fontSize: 52),
+                  ),
                   const SizedBox(height: 10),
-                  Text('Discover',
-                      style: Theme.of(context).textTheme.titleLarge),
+                  Text(
+                    'Discover',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                   const SizedBox(height: 8),
                   Text(widget.lesson.fact, textAlign: TextAlign.center),
                   const SizedBox(height: 12),
@@ -439,8 +608,10 @@ class _LearnLessonScreenState extends State<_LearnLessonScreen> {
                       color: const Color(0xFFEAF0FF),
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: Text(widget.lesson.practice,
-                        textAlign: TextAlign.center),
+                    child: Text(
+                      widget.lesson.practice,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ],
               ),
@@ -452,9 +623,10 @@ class _LearnLessonScreenState extends State<_LearnLessonScreen> {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 10),
-          Text(question.prompt,
-              style: const TextStyle(
-                  fontWeight: FontWeight.w800, fontSize: 18)),
+          Text(
+            question.prompt,
+            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+          ),
           const SizedBox(height: 12),
           for (var index = 0; index < question.options.length; index++)
             Padding(
@@ -475,7 +647,9 @@ class _LearnLessonScreenState extends State<_LearnLessonScreen> {
                       question.options[index],
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                          fontWeight: FontWeight.w800, fontSize: 16),
+                        fontWeight: FontWeight.w800,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),
@@ -496,9 +670,11 @@ class _LearnLessonScreenState extends State<_LearnLessonScreen> {
               onPressed: _saving ? null : _next,
               child: _saving
                   ? const CircularProgressIndicator()
-                  : Text(_question == widget.lesson.questions.length - 1
-                      ? 'Finish lesson'
-                      : 'Next question'),
+                  : Text(
+                      _question == widget.lesson.questions.length - 1
+                          ? 'Finish lesson'
+                          : 'Next question',
+                    ),
             ),
           ],
         ],
@@ -515,10 +691,7 @@ class _LearnLessonScreenState extends State<_LearnLessonScreen> {
 }
 
 class _LearnProgressCard extends StatelessWidget {
-  const _LearnProgressCard({
-    required this.completed,
-    required this.total,
-  });
+  const _LearnProgressCard({required this.completed, required this.total});
 
   final int completed;
   final int total;
@@ -536,12 +709,16 @@ class _LearnProgressCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.auto_awesome_rounded,
-                    color: Color(0xFFE6A700)),
+                const Icon(
+                  Icons.auto_awesome_rounded,
+                  color: Color(0xFFE6A700),
+                ),
                 const SizedBox(width: 8),
                 const Expanded(
-                  child: Text('Your learning journey',
-                      style: TextStyle(fontWeight: FontWeight.w900)),
+                  child: Text(
+                    'Your learning journey',
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                  ),
                 ),
                 Text('$completed/$total'),
               ],

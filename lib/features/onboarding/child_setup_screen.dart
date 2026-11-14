@@ -5,10 +5,7 @@ import '../../app/theme/app_theme.dart';
 import 'child_profile.dart';
 
 class ChildSetupScreen extends StatefulWidget {
-  const ChildSetupScreen({
-    required this.onComplete,
-    super.key,
-  });
+  const ChildSetupScreen({required this.onComplete, super.key});
 
   final Future<void> Function(ChildProfile profile) onComplete;
 
@@ -46,9 +43,7 @@ class _ChildSetupScreenState extends State<ChildSetupScreen> {
 
     setState(() => _isSaving = true);
     try {
-      await widget.onComplete(
-        ChildProfile(name: name, grade: _selectedGrade!),
-      );
+      await widget.onComplete(ChildProfile(name: name, grade: _selectedGrade!));
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -182,7 +177,8 @@ class _ChildSetupScreenState extends State<ChildSetupScreen> {
                 height: 56,
                 child: ElevatedButton(
                   key: const Key('start_adventure_button'),
-                  onPressed: _nameController.text.trim().isNotEmpty &&
+                  onPressed:
+                      _nameController.text.trim().isNotEmpty &&
                           _selectedGrade != null &&
                           !_isSaving
                       ? _continue

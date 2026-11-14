@@ -7,7 +7,7 @@ abstract interface class FamilyUsageRepository {
 
 class PreferencesFamilyUsageRepository implements FamilyUsageRepository {
   PreferencesFamilyUsageRepository({SharedPreferencesAsync? preferences})
-      : _preferences = preferences ?? SharedPreferencesAsync();
+    : _preferences = preferences ?? SharedPreferencesAsync();
 
   static const _dateKey = 'family_usage_date_v1';
   static const _secondsKey = 'family_usage_seconds_v1';

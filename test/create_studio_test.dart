@@ -16,9 +16,7 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
-    await tester.pumpWidget(
-      const MaterialApp(home: CreateStudioScreen()),
-    );
+    await tester.pumpWidget(const MaterialApp(home: CreateStudioScreen()));
     await tester.pumpAndSettle();
 
     final canvas = find.byKey(const Key('create_drawing_canvas'));

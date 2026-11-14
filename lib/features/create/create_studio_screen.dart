@@ -42,7 +42,9 @@ class _CreateStudioScreenState extends State<CreateStudioScreen> {
   Future<void> _loadGallery() async {
     try {
       final raw = await _preferences.getString(_storageKey);
-      final decoded = raw == null ? <dynamic>[] : jsonDecode(raw) as List<dynamic>;
+      final decoded = raw == null
+          ? <dynamic>[]
+          : jsonDecode(raw) as List<dynamic>;
       final items = decoded
           .whereType<Map<dynamic, dynamic>>()
           .map(_SavedArtwork.fromMap)
@@ -92,7 +94,9 @@ class _CreateStudioScreenState extends State<CreateStudioScreen> {
       _strokes.add(
         _DrawingStroke(
           points: List<Offset>.unmodifiable(points),
-          colorValue: _eraser ? Colors.white.toARGB32() : _selectedColor.toARGB32(),
+          colorValue: _eraser
+              ? Colors.white.toARGB32()
+              : _selectedColor.toARGB32(),
           width: _brushSize,
         ),
       );
@@ -121,7 +125,9 @@ class _CreateStudioScreenState extends State<CreateStudioScreen> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Start a fresh page?'),
-        content: const Text('This clears the current drawing. Saved pictures stay in your gallery.'),
+        content: const Text(
+          'This clears the current drawing. Saved pictures stay in your gallery.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
@@ -146,7 +152,9 @@ class _CreateStudioScreenState extends State<CreateStudioScreen> {
 
   Future<void> _saveArtwork() async {
     if (_strokes.isEmpty) {
-      setState(() => _message = 'Draw something first, then save your picture.');
+      setState(
+        () => _message = 'Draw something first, then save your picture.',
+      );
       return;
     }
     final name = await showDialog<String>(
@@ -206,7 +214,9 @@ class _CreateStudioScreenState extends State<CreateStudioScreen> {
       });
     } catch (_) {
       if (mounted) {
-        setState(() => _message = 'We could not save this picture. Please try again.');
+        setState(
+          () => _message = 'We could not save this picture. Please try again.',
+        );
       }
     }
   }
@@ -227,8 +237,10 @@ class _CreateStudioScreenState extends State<CreateStudioScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('My gallery',
-                    style: Theme.of(sheetContext).textTheme.titleLarge),
+                Text(
+                  'My gallery',
+                  style: Theme.of(sheetContext).textTheme.titleLarge,
+                ),
                 const SizedBox(height: 6),
                 Text('${_gallery.length} saved pictures on this device'),
                 const SizedBox(height: 12),
@@ -349,10 +361,14 @@ class _CreateStudioScreenState extends State<CreateStudioScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Creative studio',
-                                style: Theme.of(context).textTheme.headlineMedium),
+                            Text(
+                              'Creative studio',
+                              style: Theme.of(context).textTheme.headlineMedium,
+                            ),
                             const SizedBox(height: 5),
-                            const Text('Draw, choose colors and save your own pictures.'),
+                            const Text(
+                              'Draw, choose colors and save your own pictures.',
+                            ),
                           ],
                         ),
                       ),
@@ -380,8 +396,10 @@ class _CreateStudioScreenState extends State<CreateStudioScreen> {
                           child: GestureDetector(
                             key: const Key('create_drawing_canvas'),
                             behavior: HitTestBehavior.opaque,
-                            onPanStart: (details) => _startStroke(details, size),
-                            onPanUpdate: (details) => _extendStroke(details, size),
+                            onPanStart: (details) =>
+                                _startStroke(details, size),
+                            onPanUpdate: (details) =>
+                                _extendStroke(details, size),
                             onPanEnd: (_) => _finishStroke(),
                             child: DecoratedBox(
                               decoration: BoxDecoration(
@@ -462,10 +480,7 @@ class _CreateStudioScreenState extends State<CreateStudioScreen> {
                   const Text(
                     'Your pictures stay on this device. You can open the gallery to view or delete them.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Color(0xFF667085),
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: Color(0xFF667085), fontSize: 12),
                   ),
                 ],
               ),
@@ -485,8 +500,10 @@ class _CreateStudioScreenState extends State<CreateStudioScreen> {
             Row(
               children: [
                 const Expanded(
-                  child: Text('Choose a color',
-                      style: TextStyle(fontWeight: FontWeight.w800)),
+                  child: Text(
+                    'Choose a color',
+                    style: TextStyle(fontWeight: FontWeight.w800),
+                  ),
                 ),
                 FilterChip(
                   label: const Text('Eraser'),
@@ -504,7 +521,9 @@ class _CreateStudioScreenState extends State<CreateStudioScreen> {
               children: [
                 for (final color in _palette)
                   InkWell(
-                    key: Key('create_color_${color.toARGB32().toRadixString(16)}'),
+                    key: Key(
+                      'create_color_${color.toARGB32().toRadixString(16)}',
+                    ),
                     customBorder: const CircleBorder(),
                     onTap: () {
                       setState(() {
@@ -532,8 +551,10 @@ class _CreateStudioScreenState extends State<CreateStudioScreen> {
             const SizedBox(height: 10),
             Row(
               children: [
-                const Text('Brush size',
-                    style: TextStyle(fontWeight: FontWeight.w800)),
+                const Text(
+                  'Brush size',
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                ),
                 const Spacer(),
                 Text(_brushSize.round().toString()),
               ],
@@ -565,10 +586,10 @@ class _DrawingStroke {
   final double width;
 
   Map<String, Object> toMap() => {
-        'color': colorValue,
-        'width': width,
-        'points': points.map((point) => [point.dx, point.dy]).toList(),
-      };
+    'color': colorValue,
+    'width': width,
+    'points': points.map((point) => [point.dx, point.dy]).toList(),
+  };
 
   factory _DrawingStroke.fromMap(Map<dynamic, dynamic> map) {
     final rawPoints = map['points'] as List<dynamic>? ?? [];
@@ -578,10 +599,12 @@ class _DrawingStroke {
       points: rawPoints
           .whereType<List<dynamic>>()
           .where((point) => point.length == 2)
-          .map((point) => Offset(
-                (point[0] as num).toDouble(),
-                (point[1] as num).toDouble(),
-              ))
+          .map(
+            (point) => Offset(
+              (point[0] as num).toDouble(),
+              (point[1] as num).toDouble(),
+            ),
+          )
           .toList(growable: false),
     );
   }
@@ -601,18 +624,19 @@ class _SavedArtwork {
   final List<_DrawingStroke> strokes;
 
   Map<String, Object> toMap() => {
-        'id': id,
-        'title': title,
-        'saved_at': savedAt.toIso8601String(),
-        'strokes': strokes.map((stroke) => stroke.toMap()).toList(),
-      };
+    'id': id,
+    'title': title,
+    'saved_at': savedAt.toIso8601String(),
+    'strokes': strokes.map((stroke) => stroke.toMap()).toList(),
+  };
 
   factory _SavedArtwork.fromMap(Map<dynamic, dynamic> map) {
     final rawStrokes = map['strokes'] as List<dynamic>? ?? [];
     return _SavedArtwork(
       id: map['id'] as String,
       title: map['title'] as String,
-      savedAt: DateTime.tryParse(map['saved_at'] as String? ?? '') ??
+      savedAt:
+          DateTime.tryParse(map['saved_at'] as String? ?? '') ??
           DateTime.fromMillisecondsSinceEpoch(0),
       strokes: rawStrokes
           .whereType<Map<dynamic, dynamic>>()
@@ -647,13 +671,7 @@ class _DrawingPainter extends CustomPainter {
       );
     }
     if (activePoints != null) {
-      _paintStroke(
-        canvas,
-        size,
-        activePoints!,
-        activeColor,
-        activeWidth,
-      );
+      _paintStroke(canvas, size, activePoints!, activeColor, activeWidth);
     }
   }
 

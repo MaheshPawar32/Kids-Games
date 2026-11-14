@@ -9,9 +9,8 @@ abstract interface class ChildProfileRepository {
 }
 
 class PreferencesChildProfileRepository implements ChildProfileRepository {
-  PreferencesChildProfileRepository({
-    SharedPreferencesAsync? preferences,
-  }) : _preferences = preferences ?? SharedPreferencesAsync();
+  PreferencesChildProfileRepository({SharedPreferencesAsync? preferences})
+    : _preferences = preferences ?? SharedPreferencesAsync();
 
   static const _nameKey = 'child_profile_name';
   static const _gradeKey = 'child_profile_grade';

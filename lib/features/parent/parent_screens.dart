@@ -181,31 +181,40 @@ class _ParentGateScreenState extends State<ParentGateScreen> {
                           const CircleAvatar(
                             radius: 34,
                             backgroundColor: Color(0xFFE9EEFF),
-                            child: Icon(Icons.family_restroom_rounded,
-                                size: 34, color: AppTheme.ink),
+                            child: Icon(
+                              Icons.family_restroom_rounded,
+                              size: 34,
+                              color: AppTheme.ink,
+                            ),
                           ),
                           const SizedBox(height: 18),
-                          Text(title,
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.headlineSmall),
+                          Text(
+                            title,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
                           const SizedBox(height: 8),
                           Text(description, textAlign: TextAlign.center),
                           const SizedBox(height: 22),
                           if (adult) ...[
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  vertical: 18, horizontal: 14),
+                                vertical: 18,
+                                horizontal: 14,
+                              ),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFF3F5FF),
                                 borderRadius: BorderRadius.circular(18),
                               ),
-                              child: Text('$_a × $_b = ?',
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.w900,
-                                    color: AppTheme.ink,
-                                  )),
+                              child: Text(
+                                '$_a × $_b = ?',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w900,
+                                  color: AppTheme.ink,
+                                ),
+                              ),
                             ),
                             const SizedBox(height: 14),
                             TextField(
@@ -237,13 +246,15 @@ class _ParentGateScreenState extends State<ParentGateScreen> {
                             ),
                           if (_error != null) ...[
                             const SizedBox(height: 12),
-                            Text(_error!,
-                                key: const Key('parent_gate_error'),
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Color(0xFFB42318),
-                                  fontWeight: FontWeight.w600,
-                                )),
+                            Text(
+                              _error!,
+                              key: const Key('parent_gate_error'),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Color(0xFFB42318),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ],
                           const SizedBox(height: 18),
                           FilledButton(
@@ -254,7 +265,9 @@ class _ParentGateScreenState extends State<ParentGateScreen> {
                                     width: 18,
                                     height: 18,
                                     child: CircularProgressIndicator(
-                                        strokeWidth: 2))
+                                      strokeWidth: 2,
+                                    ),
+                                  )
                                 : Text(switch (_step) {
                                     'adult' => 'Verify adult',
                                     'create' => 'Continue',
@@ -277,7 +290,6 @@ class _ParentGateScreenState extends State<ParentGateScreen> {
     );
   }
 }
-
 
 class ChildAccessGuard extends StatefulWidget {
   const ChildAccessGuard({
@@ -426,10 +438,8 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
     return selected == null ? null : selected.hour * 60 + selected.minute;
   }
 
-  String _formatTime(int minute) => TimeOfDay(
-        hour: minute ~/ 60,
-        minute: minute % 60,
-      ).format(context);
+  String _formatTime(int minute) =>
+      TimeOfDay(hour: minute ~/ 60, minute: minute % 60).format(context);
 
   @override
   Widget build(BuildContext context) {
@@ -477,11 +487,16 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
               }
               final sessions = snapshot.data!;
               final correct = sessions.fold<int>(
-                  0, (total, item) => total + item.score);
+                0,
+                (total, item) => total + item.score,
+              );
               final questions = sessions.fold<int>(
-                  0, (total, item) => total + item.totalRounds);
-              final accuracy =
-                  questions == 0 ? 0 : (correct / questions * 100).round();
+                0,
+                (total, item) => total + item.totalRounds,
+              );
+              final accuracy = questions == 0
+                  ? 0
+                  : (correct / questions * 100).round();
               return Row(
                 children: [
                   Expanded(
@@ -504,8 +519,10 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
             },
           ),
           const SizedBox(height: 22),
-          Text('Family settings',
-              style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            'Family settings',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           const SizedBox(height: 10),
           FutureBuilder<ParentControls>(
             future: _controls,
@@ -520,8 +537,10 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Daily app-time target',
-                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        const Text(
+                          'Daily app-time target',
+                          style: TextStyle(fontWeight: FontWeight.w800),
+                        ),
                         const SizedBox(height: 4),
                         const Text(
                           'Choose a family target for daily app use.',
@@ -536,15 +555,16 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                             isDense: true,
                           ),
                           items: const [30, 45, 60, 90, 120]
-                              .map((minutes) => DropdownMenuItem(
-                                    value: minutes,
-                                    child: Text('$minutes minutes'),
-                                  ))
+                              .map(
+                                (minutes) => DropdownMenuItem(
+                                  value: minutes,
+                                  child: Text('$minutes minutes'),
+                                ),
+                              )
                               .toList(),
                           onChanged: (minutes) {
                             if (minutes != null) {
-                              _save(value.copyWith(
-                                  dailyLimitMinutes: minutes));
+                              _save(value.copyWith(dailyLimitMinutes: minutes));
                             }
                           },
                         ),
@@ -557,40 +577,43 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                       children: [
                         SwitchListTile.adaptive(
                           contentPadding: EdgeInsets.zero,
-                          title: const Text('Bedtime schedule',
-                              style: TextStyle(fontWeight: FontWeight.w800)),
+                          title: const Text(
+                            'Bedtime schedule',
+                            style: TextStyle(fontWeight: FontWeight.w800),
+                          ),
                           subtitle: const Text(
-                              'Save the hours when app access should be paused.'),
+                            'Save the hours when app access should be paused.',
+                          ),
                           value: value.bedtimeEnabled,
-                          onChanged: (enabled) => _save(
-                              value.copyWith(bedtimeEnabled: enabled)),
+                          onChanged: (enabled) =>
+                              _save(value.copyWith(bedtimeEnabled: enabled)),
                         ),
                         const Divider(height: 12),
                         ListTile(
                           contentPadding: EdgeInsets.zero,
                           title: const Text('Bedtime starts'),
-                          trailing:
-                              Text(_formatTime(value.bedtimeStartMinute)),
+                          trailing: Text(_formatTime(value.bedtimeStartMinute)),
                           onTap: () async {
                             final minute = await _chooseTime(
-                                context, value.bedtimeStartMinute);
+                              context,
+                              value.bedtimeStartMinute,
+                            );
                             if (minute != null) {
-                              _save(value.copyWith(
-                                  bedtimeStartMinute: minute));
+                              _save(value.copyWith(bedtimeStartMinute: minute));
                             }
                           },
                         ),
                         ListTile(
                           contentPadding: EdgeInsets.zero,
                           title: const Text('Bedtime ends'),
-                          trailing:
-                              Text(_formatTime(value.bedtimeEndMinute)),
+                          trailing: Text(_formatTime(value.bedtimeEndMinute)),
                           onTap: () async {
                             final minute = await _chooseTime(
-                                context, value.bedtimeEndMinute);
+                              context,
+                              value.bedtimeEndMinute,
+                            );
                             if (minute != null) {
-                              _save(value.copyWith(
-                                  bedtimeEndMinute: minute));
+                              _save(value.copyWith(bedtimeEndMinute: minute));
                             }
                           },
                         ),
@@ -603,24 +626,28 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                       children: [
                         SwitchListTile.adaptive(
                           contentPadding: EdgeInsets.zero,
-                          title: const Text('Game sounds',
-                              style: TextStyle(fontWeight: FontWeight.w800)),
-                          subtitle:
-                              const Text('Family preference for audio.'),
+                          title: const Text(
+                            'Game sounds',
+                            style: TextStyle(fontWeight: FontWeight.w800),
+                          ),
+                          subtitle: const Text('Family preference for audio.'),
                           value: value.soundEnabled,
-                          onChanged: (enabled) => _save(
-                              value.copyWith(soundEnabled: enabled)),
+                          onChanged: (enabled) =>
+                              _save(value.copyWith(soundEnabled: enabled)),
                         ),
                         const Divider(height: 12),
                         SwitchListTile.adaptive(
                           contentPadding: EdgeInsets.zero,
-                          title: const Text('Reduce motion',
-                              style: TextStyle(fontWeight: FontWeight.w800)),
+                          title: const Text(
+                            'Reduce motion',
+                            style: TextStyle(fontWeight: FontWeight.w800),
+                          ),
                           subtitle: const Text(
-                              'Preference for calmer movement and transitions.'),
+                            'Preference for calmer movement and transitions.',
+                          ),
                           value: value.reducedMotion,
-                          onChanged: (enabled) => _save(
-                              value.copyWith(reducedMotion: enabled)),
+                          onChanged: (enabled) =>
+                              _save(value.copyWith(reducedMotion: enabled)),
                         ),
                       ],
                     ),
@@ -632,8 +659,7 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
           const SizedBox(height: 16),
           const _ParentInfoCard(
             title: 'Settings are saved offline',
-            message:
-                'The parent PIN is stored in encrypted secure storage. Daily play limits and bedtime schedules are saved on this device and pause child gameplay when active.',
+            message: 'The parent PIN is stored in encrypted secure storage. Daily play limits and bedtime schedules are saved on this device and pause child gameplay when active.',
           ),
           const SizedBox(height: 18),
           OutlinedButton.icon(
@@ -671,9 +697,10 @@ class _ParentMetric extends StatelessWidget {
         children: [
           Icon(icon, color: AppTheme.ink),
           const SizedBox(height: 8),
-          Text(value,
-              style:
-                  const TextStyle(fontSize: 24, fontWeight: FontWeight.w900)),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
+          ),
           Text(label, style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
@@ -688,46 +715,39 @@ class _ParentSettingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Material(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        clipBehavior: Clip.antiAlias,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: child,
-        ),
-      );
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(20),
+    clipBehavior: Clip.antiAlias,
+    child: Padding(padding: const EdgeInsets.all(16), child: child),
+  );
 }
 
 class _ParentInfoCard extends StatelessWidget {
-  const _ParentInfoCard({
-    required this.title,
-    required this.message,
-  });
+  const _ParentInfoCard({required this.title, required this.message});
 
   final String title;
   final String message;
 
   @override
   Widget build(BuildContext context) => _ParentSettingCard(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Icon(Icons.privacy_tip_outlined, color: AppTheme.ink),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title,
-                      style: const TextStyle(fontWeight: FontWeight.w800)),
-                  const SizedBox(height: 5),
-                  Text(message, style: Theme.of(context).textTheme.bodySmall),
-                ],
-              ),
-            ),
-          ],
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Icon(Icons.privacy_tip_outlined, color: AppTheme.ink),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
+              const SizedBox(height: 5),
+              Text(message, style: Theme.of(context).textTheme.bodySmall),
+            ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 }
 
 class FamilyTimeLimitScreen extends StatelessWidget {

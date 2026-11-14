@@ -11,9 +11,7 @@ void main() {
   testWidgets('learning lesson can be completed and progress is shown', (
     tester,
   ) async {
-    await tester.pumpWidget(
-      const MaterialApp(home: LearnWorldsScreen()),
-    );
+    await tester.pumpWidget(const MaterialApp(home: LearnWorldsScreen()));
     await tester.pumpAndSettle();
 
     expect(find.text('Learning worlds'), findsOneWidget);
