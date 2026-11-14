@@ -9,20 +9,24 @@ import '../../core/assets/kids_games_3d_assets.dart';
 import '../../core/widgets/three_d_asset_preview.dart';
 import '../games/activity.dart';
 import '../../data/repositories/game_session_repository.dart';
+import '../../data/repositories/level_progress_repository.dart';
 import '../learn/learn_worlds_screen.dart';
 import '../create/create_studio_screen.dart';
+import 'today_panel.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
     required this.childName,
     required this.grade,
     required this.gameSessionRepository,
+    required this.levelProgressRepository,
     super.key,
   });
 
   final String childName;
   final String grade;
   final GameSessionRepository gameSessionRepository;
+  final LevelProgressRepository levelProgressRepository;
 
   static const _destinations = [
     NavigationDestination(icon: Icon(Icons.home_rounded), label: 'Home'),
@@ -50,6 +54,8 @@ class HomeScreen extends StatelessWidget {
               _HomeDashboard(
                 childName: childName,
                 grade: grade,
+                gameSessionRepository: gameSessionRepository,
+                levelProgressRepository: levelProgressRepository,
                 onProfileTap: () => context.push<void>('/parent-gate'),
               ),
               const LearnWorldsScreen(),
@@ -75,11 +81,15 @@ class _HomeDashboard extends StatelessWidget {
   const _HomeDashboard({
     required this.childName,
     required this.grade,
+    required this.gameSessionRepository,
+    required this.levelProgressRepository,
     required this.onProfileTap,
   });
 
   final String childName;
   final String grade;
+  final GameSessionRepository gameSessionRepository;
+  final LevelProgressRepository levelProgressRepository;
   final VoidCallback onProfileTap;
 
   @override
@@ -142,64 +152,9 @@ class _HomeDashboard extends StatelessWidget {
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           sliver: SliverToBoxAdapter(
-            child: Container(
-              height: 178,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF72CFF2), Color(0xFF9B8BF0)],
-                ),
-                borderRadius: BorderRadius.circular(28),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x2672BFE8),
-                    blurRadius: 18,
-                    offset: Offset(0, 8),
-                  ),
-                ],
-              ),
-              child: Stack(
-                children: [
-                  Positioned(
-                    right: 6,
-                    bottom: -2,
-                    width: 156,
-                    height: 156,
-                    child: SvgPicture.asset(
-                      'assets/illustrations/adventure_island.svg',
-                    ),
-                  ),
-                  const Positioned(
-                    left: 20,
-                    top: 22,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Your next',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          'BIG ADVENTURE',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Learn something amazing today!',
-                          style: TextStyle(color: Colors.white, fontSize: 11),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+            child: TodayPanel(
+              sessionRepository: gameSessionRepository,
+              progressRepository: levelProgressRepository,
             ),
           ),
         ),

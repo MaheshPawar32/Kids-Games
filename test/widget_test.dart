@@ -192,6 +192,16 @@ void main() {
 
     await tester.pageBack();
     await tester.pumpAndSettle();
+
+    // Home now continues the game just played and counts today's level.
+    await tester.tap(find.text('Home').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Continue playing'), findsOneWidget);
+    expect(find.text('🧩 Complete Picture'), findsOneWidget);
+    expect(find.text('Play level 2'), findsOneWidget);
+    expect(find.text('1/3'), findsOneWidget);
+    expect(find.text('Level 2 · ⭐ 3 stars'), findsOneWidget);
+
     await tester.tap(find.text('Rewards').last);
     await tester.pumpAndSettle();
     expect(find.text('Your progress & rewards'), findsOneWidget);

@@ -281,6 +281,7 @@ class _KidsGamesAppState extends State<KidsGamesApp>
                 childName: profile.name,
                 grade: profile.grade,
                 gameSessionRepository: _gameSessionRepository,
+                levelProgressRepository: _levelProgressRepository,
               ),
             );
           },
