@@ -99,11 +99,16 @@ def torus(name, location, major, minor, material, rotation=(math.pi / 2, 0, 0)):
     return assign(obj, material)
 
 
-def prism_xz(name, points, depth, material):
-    """Create a closed polygon prism whose visible face points toward -Y."""
+def prism_xz(name, points, depth, material, y=0.0):
+    """Create a closed polygon prism whose visible face points toward -Y.
+
+    [y] offsets the prism along the viewing axis. Details placed on a
+    thicker base (a disc or coin) must sit in front of it (negative y),
+    otherwise the base hides them completely.
+    """
     count = len(points)
-    vertices = [(x, -depth / 2, z) for x, z in points]
-    vertices += [(x, depth / 2, z) for x, z in points]
+    vertices = [(x, y - depth / 2, z) for x, z in points]
+    vertices += [(x, y + depth / 2, z) for x, z in points]
     faces = [tuple(range(count)), tuple(range(count, count * 2))[::-1]]
     for i in range(count):
         j = (i + 1) % count
@@ -186,10 +191,15 @@ def build_home(m):
 
 
 def build_book(m):
-    cube("Book_Pages", (0, 0, 0), (1.05, 0.38, 0.78), m["cream"], 0.055)
-    cube("Book_Left_Cover", (-0.50, -0.22, 0), (0.08, 0.08, 0.84), m["blue"], 0.035)
-    cube("Book_Right_Cover", (0.50, -0.22, 0), (0.08, 0.08, 0.84), m["purple"], 0.035)
-    cube("Book_Spine", (0, -0.25, 0), (0.10, 0.08, 0.84), m["gold"], 0.025)
+    """A closed storybook standing upright, cover facing the viewer."""
+    cube("Book_Front_Cover", (0, -0.17, 0), (0.80, 0.07, 1.00), m["blue"], 0.03)
+    cube("Book_Back_Cover", (0, 0.17, 0), (0.80, 0.07, 1.00), m["blue"], 0.03)
+    # Pages are inset so their cream edge shows on three sides.
+    cube("Book_Pages", (0.03, 0, 0), (0.72, 0.28, 0.92), m["cream"], 0.02)
+    cube("Book_Spine", (-0.40, 0, 0), (0.09, 0.42, 1.00), m["purple"], 0.035)
+    cube("Book_Title_Label", (0.04, -0.215, 0.18), (0.50, 0.03, 0.20), m["cream"], 0.012)
+    prism_xz("Book_Cover_Star", star_points(0.15, 0.07, 5, -0.18), 0.04,
+             m["yellow"], y=-0.215)
 
 
 def build_gear(m):
@@ -215,7 +225,8 @@ def build_speaker(m):
 
 def build_play(m):
     cylinder("Play_Disc", (0, 0, 0), 0.62, 0.22, m["green"])
-    prism_xz("Play_Triangle", [(-0.18, -0.28), (0.34, 0), (-0.18, 0.28)], 0.10, m["cream"])
+    prism_xz("Play_Triangle", [(-0.18, -0.28), (0.34, 0), (-0.18, 0.28)],
+             0.10, m["cream"], y=-0.15)
 
 
 def build_pause(m):
@@ -235,14 +246,36 @@ def build_medal(m):
     prism_xz("Medal_Ribbon_Left", [(-0.32, 0.68), (-0.05, 0.68), (-0.12, 0.20), (-0.36, 0.05)], 0.10, m["blue"])
     prism_xz("Medal_Ribbon_Right", [(0.05, 0.68), (0.32, 0.68), (0.36, 0.05), (0.12, 0.20)], 0.10, m["coral"])
     cylinder("Medal_Main", (0, 0, -0.10), 0.40, 0.18, m["gold"])
-    prism_xz("Medal_Star", star_points(0.23, 0.11, 5, -0.10), 0.10, m["cream"])
+    prism_xz("Medal_Star", star_points(0.23, 0.11, 5, -0.10), 0.10,
+             m["cream"], y=-0.13)
+
+
+def puzzle_outline(half=0.38, neck=0.10, steps=14):
+    """Classic jigsaw piece: tabs on top and right, a blank on the left."""
+
+    def arc(cx, cz, start, end):
+        radius = math.hypot(neck, neck)
+        return [
+            (cx + math.cos(a) * radius, cz + math.sin(a) * radius)
+            for a in (start + (end - start) * i / steps for i in range(steps + 1))
+        ]
+
+    s, d = half, neck
+    points = [(-s, -s), (s, -s)]
+    # Right edge (upwards): tab pointing out (+x).
+    points += arc(s + d, 0, math.radians(-135), math.radians(135))
+    points.append((s, s))
+    # Top edge (leftwards): tab pointing up (+z).
+    points += arc(0, s + d, math.radians(-45), math.radians(225))
+    points.append((-s, s))
+    # Left edge (downwards): blank cut inwards (+x).
+    points += arc(-s + d, 0, math.radians(135), math.radians(-135))
+    return points
 
 
 def build_puzzle(m):
-    cube("Puzzle_Core", (0, 0, 0), (0.78, 0.30, 0.78), m["green"], 0.10)
-    sphere("Puzzle_Top_Knob", (0, -0.02, 0.42), (0.20, 0.18, 0.19), m["green"])
-    sphere("Puzzle_Right_Knob", (0.42, -0.02, 0), (0.18, 0.18, 0.20), m["green"])
-    sphere("Puzzle_Accent", (-0.16, -0.18, 0.15), (0.075, 0.03, 0.075), m["cream"])
+    prism_xz("Puzzle_Piece", puzzle_outline(), 0.24, m["green"])
+    cylinder("Puzzle_Shine", (-0.05, -0.13, 0.05), 0.10, 0.04, m["cream"])
 
 
 BUILDERS = {
