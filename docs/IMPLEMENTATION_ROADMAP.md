@@ -1,45 +1,35 @@
 # Implementation roadmap
 
-## Phase 1 — Foundation
-- [x] Repository setup and Flutter source scaffold
-- [x] Theme tokens and reusable project entry point
-- [x] Starter buddy and adventure illustrations
-- [x] 15-game catalogue data
-- [ ] Generate Android platform folder locally
-- [ ] Run dependency resolution, analyzer and widget tests
+Updated: 2026-11-14 · Branch: `feature/complete-app-workflows`
 
-## Phase 2 — Onboarding and navigation
-- [ ] Splash and welcome
-- [ ] Parent gate
-- [x] Child profile and grade selection (Nursery, LKG, UKG, Grades 1–5)
-- [x] Child home and five-tab navigation
-- [ ] Adventure map and world selection
+See `MASTER_PROJECT_AUDIT.md` for evidence behind each item.
 
-## Phase 3 — Mini-games
-- [x] Shape Matching (five playable rounds, feedback, score and replay)
-- [ ] Complete Picture
-- [ ] Shadow Matching
-- [ ] Color Matching
-- [ ] Alphabet Matching
-- [ ] Animal Recognition
-- [ ] Odd One Out
-- [ ] Big & Small
-- [ ] Missing Numbers
-- [ ] Missing Shapes
-- [ ] Find Differences
-- [ ] Magic Counting
-- [ ] Number Sequencing
-- [ ] What Comes Next
-- [ ] Jigsaw Puzzles
+## Done
 
-## Phase 4 — Learning and creativity
-Phonics, tracing, spelling, vocabulary, mathematics, drawing, coloring, guided drawing, music, stories, science discovery and life skills.
+- [x] Android project, application ID `com.dev.kidsgames`, CI debug APK build
+- [x] Child profile with grade (Nursery–Grade 5), saved and restored
+- [x] Five-tab shell; Parent Gate (adult check + PIN); daily limit and bedtime
+- [x] All 15 games with 1000 generated levels each, grade-based difficulty, stars, unlocking and Next level
+- [x] Every level of every question game validated for correctness by an automated test
+- [x] Drag-into-gap with tap alternative, spot-the-difference, compare two pictures, tap-in-order
+- [x] Flame: Magic Counting (moving targets, decoys, count totals) and Jigsaw (interlocking pieces, snapping)
+- [x] Level progress in Hive (schema v1); sessions record their level
+- [x] Original sound effects; parent sound and reduced-motion settings applied in games
+- [x] 3D icon defects fixed (play, medal, book, puzzle piece)
 
-## Phase 5 — Motivation and progress
-Buddy collection, XP, badges, unlocks, daily missions, achievement gallery, mastery tracking and smart revision.
+## Next (in priority order)
 
-## Phase 6 — Parent tools
-Parent dashboard, weekly report, screen-time limits, bedtime, accessibility preferences, offline content controls and reset/export safeguards.
+1. Verify on an Android device or emulator: levels, Flame games, audio, Flutter Scene gallery.
+2. Release basics: app label "Kids Games", launcher icon, signing config that reads `key.properties`.
+3. Home dashboard with real data: continue playing, daily mission, stars total, recommended next level.
+4. Rewards: stars per game, buddy unlocks based on stars, streaks.
+5. Spoken prompts (offline text-to-speech) and animal sounds.
+6. Learn: more lessons per world, letter and number tracing.
+7. Multiple child profiles with per-child progress (needs a migration for existing sessions).
+8. Remove unused dependencies; run the Khronos glTF Validator in CI.
+9. Characters: Fox, Rabbit, Panda, Elephant, Monkey as 3D buddies (only Baby Lion exists).
+10. Store listing, privacy policy and signed AAB (owner inputs; see `RELEASE_READINESS.md`).
 
-## Phase 7 — Release readiness
-Airplane-mode tests, interruption handling, different screen sizes, accessibility review, performance profiling, data-safety review and Play Store preparation.
+## Release rule
+
+Green CI is necessary but not sufficient. The app is not publish-ready until a signed release build has been tested on physical devices and the Play Families declarations are complete.

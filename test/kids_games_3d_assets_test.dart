@@ -17,8 +17,14 @@ void main() {
       expect(KidsGames3DAssets.shapes, hasLength(10));
       expect(KidsGames3DAssets.props, hasLength(11));
       expect(KidsGames3DAssets.environments, hasLength(3));
-      expect(KidsGames3DAssets.numbers['20'], 'assets/models/numbers/number_20.glb');
-      expect(KidsGames3DAssets.letters['z'], 'assets/models/letters/letter_z.glb');
+      expect(
+        KidsGames3DAssets.numbers['20'],
+        'assets/models/numbers/number_20.glb',
+      );
+      expect(
+        KidsGames3DAssets.letters['z'],
+        'assets/models/letters/letter_z.glb',
+      );
     });
 
     test('resolves the trophy icon path', () {

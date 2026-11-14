@@ -19,12 +19,12 @@ This is the phase gate and delivery checklist for the premium 3D Android app. An
 - [x] Integrate GoRouter for loading, setup, home and Shape Matching routes
 - [x] Add a guarded Android-only platform setup script that verifies app ID/minSdk and enables Flutter GPU metadata
 - [x] Add a Flutter Scene setup script that installs the official asset pipeline and coding-agent skills without overwriting an existing custom build hook
-- [ ] Resolve dependencies on CI and record the resulting solver output
+- [x] Resolve dependencies on CI and record the resulting solver output
 - [ ] Generate and commit pubspec.lock
 - [ ] Generate Android platform folder locally and inspect Gradle/manifest settings
 - [ ] Run flutter_scene:init and flutter_scene:skills on the development workstation; inspect generated files
 - [ ] Compile the VxStore integration against the pinned dependency graph
-- [ ] Verify an Android debug APK build
+- [x] Verify an Android debug APK build in CI (debug only; not a release artifact)
 
 ## Phase 2 — Flutter Scene 3D prototype
 

@@ -15,3 +15,7 @@ build/
 /android/captures/
 /android/.cxx/
 /android/.externalNativeBuild/
+
+# Release signing material must never be committed.
+*.jks
+*.keystore
